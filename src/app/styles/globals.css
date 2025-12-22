@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1a1a1a;
+  --color-dark-gray: #0e0e0e;
+  --color-deep-gray: #7a7a7a;
+  --color-mid-gray: #c8c8c8;
+  --color-main-white: #ffffff;
+}
+
+html[lang="ar"] * {
+  font-family: var(--font-arabic), sans-serif !important;
+}
+
+html[lang="en"] * {
+  font-family: var(--font-montserrat), sans-serif !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none !important;
+}
+
+::view-transition-group(root) {
+  z-index: auto !important;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+  will-change: transform, opacity, clip-path;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 10000;
+  animation: none !important;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+  animation: none !important;
+}

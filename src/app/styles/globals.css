@@ -16,6 +16,11 @@ html[lang="en"] * {
   font-family: var(--font-montserrat), sans-serif !important;
 }
 
+body {
+  background-color: #000000;
+}
+
+/* Navigation Effect */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none !important;
@@ -39,4 +44,39 @@ html[lang="en"] * {
 ::view-transition-old(root) {
   z-index: 1;
   animation: none !important;
+}
+
+/* Hide scrollbar for all elements */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.parallax img,
+.parallax video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.parallax {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }

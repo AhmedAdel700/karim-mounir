@@ -12,6 +12,7 @@ export default function Header() {
   const viewRouter = useTransitionRouter();
   const t = useTranslations("header");
   const [scrolled, setScrolled] = useState(false);
+  const [showHeader, setShowHeader] = useState(true);
   const [langOpen, setLangOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const locale = useLocale();
@@ -23,6 +24,7 @@ export default function Header() {
   const mobileRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const ticking = useRef(false);
+  const lastScrollY = useRef(0);
   const THRESHOLD = 12;
 
   const LINKS = [
@@ -40,7 +42,25 @@ export default function Header() {
       if (ticking.current) return;
       ticking.current = true;
       requestAnimationFrame(() => {
-        setScrolled(window.scrollY > THRESHOLD);
+        const currentY = window.scrollY;
+        const prevY = lastScrollY.current;
+
+        setScrolled(currentY > THRESHOLD);
+
+        const isScrollingDown = currentY > prevY;
+
+        if (currentY <= THRESHOLD) {
+          // At the top, always show header (over hero)
+          setShowHeader(true);
+        } else if (isScrollingDown) {
+          // Scroll down: hide header
+          setShowHeader(false);
+        } else {
+          // Scroll up: show header again
+          setShowHeader(true);
+        }
+
+        lastScrollY.current = currentY;
         ticking.current = false;
       });
     };
@@ -92,7 +112,7 @@ export default function Header() {
         },
       ],
       {
-        duration: 1500,
+        duration: 1000,
         easing: "cubic-bezier(0.87, 0, 0.13, 1)",
         fill: "forwards",
         pseudoElement: "::view-transition-old(root)",
@@ -109,7 +129,7 @@ export default function Header() {
         },
       ],
       {
-        duration: 1500,
+        duration: 1000,
         easing: "cubic-bezier(0.87, 0, 0.13, 1)",
         fill: "forwards",
         pseudoElement: "::view-transition-new(root)",
@@ -122,7 +142,10 @@ export default function Header() {
       className={clsx(
         "fixed top-0 left-0 w-full z-[100] flex items-center justify-between px-6",
         "transition-all duration-500 ease-in-out",
-        scrolled ? "backdrop-blur-md bg-white/5" : "bg-transparent"
+        scrolled ? "backdrop-blur-md bg-white/5" : "bg-transparent",
+        showHeader
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-full opacity-0"
       )}
     >
       {/* Brand */}

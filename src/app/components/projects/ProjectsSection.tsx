@@ -193,11 +193,35 @@ export default function ProjectsSection() {
       }
     });
 
-    // Ensure descriptions are visible (no animation)
+    // Animate all card text elements (just like intro/outro) with delay
     cards.forEach((card) => {
-      const description = card.querySelector(".card-description");
-      if (description) {
-        gsap.set(description, { x: 0, opacity: 1 });
+      const cardTextEls = gsap.utils.toArray<HTMLElement>(
+        card.querySelectorAll(".card-text-animate")
+      );
+
+      if (cardTextEls.length) {
+        gsap.set(cardTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
+        gsap.fromTo(
+          cardTextEls,
+          { y: 60, opacity: 0, filter: "blur(8px)" },
+          {
+            delay: 0.8,
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1.1,
+            ease: "power3.out",
+            stagger: 0.15,
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: card,
+              start: "top center",
+              end: "bottom center",
+              scrub: false,
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
       }
     });
 
@@ -316,10 +340,11 @@ export default function ProjectsSection() {
           end: "top top",
           onUpdate: (self) => {
             const progress = self.progress;
+            const scaleValue = 1.05 - progress * 0.05;
             if (cardImg) {
-              gsap.set(cardImg, {
-                scale: 1.05 - progress * 0.05,
-              });
+              gsap.set(cardImg, { scale: scaleValue });
+            } else if (imgContainer) {
+              gsap.set(imgContainer, { scale: scaleValue });
             }
             if (imgContainer) {
               gsap.set(imgContainer, {
@@ -460,13 +485,17 @@ export default function ProjectsSection() {
             </h2>
             <div className="flex flex-col gap-4 max-w-sm text-white/70">
               <p className="intro-animate text-lg leading-relaxed">
-                Curated concepts that merge architecture, motion, and tactile UI. Scroll to explore the spaces.
+                Curated concepts that merge architecture, motion, and tactile
+                UI. Scroll to explore the spaces.
               </p>
               <div className="intro-animate flex items-center gap-3">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" /> Live concepts
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />{" "}
+                  Live concepts
                 </span>
-                <span className="text-sm text-white/60">Optimized for smooth scroll</span>
+                <span className="text-sm text-white/60">
+                  Optimized for smooth scroll
+                </span>
               </div>
             </div>
           </div>
@@ -504,41 +533,42 @@ export default function ProjectsSection() {
             {/* Card Wrapper */}
             <div className="card-wrapper relative w-[100vw] h-full will-change-transform left-0">
               {/* Image Container */}
-              <div
-                className={`card-img ${
-                  index === 0
-                    ? "absolute inset-0 w-full h-full overflow-hidden rounded-[150px]"
-                    : "fixed inset-0 left-0 w-[100vw] h-[100vh] overflow-hidden"
-                }`}
-              >
-                <img
-                  src={project.image.src}
-                  alt={project.title}
-                  className={`absolute top-0 left-0 w-full h-full object-cover will-change-transform ${
-                    index === 0 ? "scale-[1.5]" : "scale-[1.1]"
-                  }`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/10 pointer-events-none" />
-              </div>
+              {index === 0 ? (
+                <div className="card-img absolute inset-0 w-full h-full overflow-hidden rounded-[150px] z-0">
+                  <img
+                    src={project.image.src}
+                    alt={project.title}
+                    className="absolute top-0 left-0 w-full h-full object-cover will-change-transform scale-[1.5]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/10 pointer-events-none" />
+                </div>
+              ) : (
+                <div
+                  className="card-img fixed inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
+                  style={{ backgroundImage: `url(${project.image.src})` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/10 pointer-events-none" />
+                </div>
+              )}
 
               {/* Content */}
               <div className="card-content absolute inset-0 w-full h-full flex items-end justify-start z-10 px-6 md:px-12 pb-12">
                 <div className="card-copy max-w-4xl space-y-4 md:space-y-6">
-                  <div className="flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/70">
+                  <div className="card-text-animate flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/70">
                     <span className="h-px w-10 bg-white/40" />
                     Project {project.id.toString().padStart(2, "0")}
                   </div>
-                  <div className="card-title text-left">
+                  <div className="card-title text-left card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl">
                       {project.title}
                     </h2>
                   </div>
-                  <div className="card-description max-w-2xl">
+                  <div className="card-description max-w-2xl card-text-animate">
                     <p className="text-lg md:text-xl leading-relaxed text-white/85">
                       {project.description}
                     </p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm text-white/75">
+                  <div className="card-text-animate flex flex-wrap items-center gap-3 md:gap-4 text-sm text-white/75">
                     <span className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1">
                       Spatial Design
                     </span>
@@ -572,7 +602,8 @@ export default function ProjectsSection() {
             Architecture reimagined for the virtual age
           </h2>
           <p className="outro-animate text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-            Let’s build immersive worlds where brand, product, and space blend seamlessly.
+            Lets build immersive worlds where brand, product, and space blend
+            seamlessly.
           </p>
           <div className="outro-animate flex flex-wrap items-center justify-center gap-4">
             <button className="px-5 py-3 rounded-full bg-white text-black font-semibold tracking-tight hover:bg-white/90 transition-colors">

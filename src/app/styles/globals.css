@@ -17,6 +17,7 @@ html[lang="en"] * {
 }
 
 body {
+  margin: 0;
   background-color: #000000;
 }
 
@@ -79,4 +80,77 @@ section {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+/* Projects Section Styles */
+.projects-cards img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  font-family: "Inter", sans-serif;
+}
+
+.projects-cards h2 {
+  font-size: 5rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.1rem;
+}
+
+.projects-cards p {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.projects .char {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.projects .char span {
+  transform: translateX(100%);
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Initial states for cards - GSAP will override these */
+.projects-cards .card-img img {
+  transform: scale(1.05);
+}
+
+.projects-cards .card:first-child .card-img {
+  transform: scale(0.5);
+  border-radius: 400px;
+}
+
+.projects-cards .card:first-child .card-img img {
+  transform: scale(1.5);
+}
+
+.projects-cards .card:not(:first-child) .card-img {
+  border-radius: 0; /* allow later cards to fill as full-bleed backgrounds */
+}
+
+.projects-cards {
+  height: auto; /* allow all pinned cards to flow without clipping */
+  min-height: 100vh;
+  overflow: visible; /* keep scaled images fully visible */
+}
+
+.projects-cards .project-card {
+  overflow: visible; /* avoid cutting scaled images at card edges */
+  width: 100vw; /* ensure full viewport width */
+  min-height: 100vh; /* ensure full viewport height */
+  padding: 0; /* remove inner padding so media fills the frame */
+}
+
+@media (max-width: 900px) {
+  .projects-cards h2 {
+    font-size: 2rem;
+    letter-spacing: 0;
+  }
 }

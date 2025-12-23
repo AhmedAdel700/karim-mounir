@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -382,7 +383,6 @@ export default function ProjectsSection() {
     const widths: number[] = [];
     const xPercents: number[] = [];
     const pixelsPerSecond = (config.speed || 1) * 100;
-    let totalWidth: number;
 
     gsap.set(items, {
       xPercent: (i: number, el: any) => {
@@ -397,7 +397,7 @@ export default function ProjectsSection() {
     });
 
     gsap.set(items, { x: 0 });
-    totalWidth =
+    const totalWidth =
       items[length - 1].offsetLeft +
       (xPercents[length - 1] / 100) * widths[length - 1] -
       startX +

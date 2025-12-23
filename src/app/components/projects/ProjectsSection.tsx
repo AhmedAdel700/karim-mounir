@@ -126,7 +126,7 @@ export default function ProjectsSection() {
         introEls,
         { y: 60, opacity: 0, filter: "blur(8px)" },
         {
-          delay: 0.5,
+          delay: 0.1,
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
@@ -151,7 +151,7 @@ export default function ProjectsSection() {
         outroEls,
         { y: 70, opacity: 0, filter: "blur(10px)" },
         {
-          delay: 0.5,
+          delay: 0.1,
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
@@ -194,35 +194,34 @@ export default function ProjectsSection() {
     });
 
     // Animate all card text elements (just like intro/outro) with delay
-    cards.forEach((card) => {
+    cards.forEach((card, index) => {
+      if (index === 0) return; // 🔥 card #1 handled separately
+
       const cardTextEls = gsap.utils.toArray<HTMLElement>(
         card.querySelectorAll(".card-text-animate")
       );
 
-      if (cardTextEls.length) {
-        gsap.set(cardTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
-        gsap.fromTo(
-          cardTextEls,
-          { y: 60, opacity: 0, filter: "blur(8px)" },
-          {
-            delay: 0.8,
-            y: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 1.1,
-            ease: "power3.out",
-            stagger: 0.15,
-            immediateRender: false,
-            scrollTrigger: {
-              trigger: card,
-              start: "top center",
-              end: "bottom center",
-              scrub: false,
-              toggleActions: "play reverse play reverse",
-            },
-          }
-        );
-      }
+      if (!cardTextEls.length) return;
+
+      gsap.set(cardTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
+
+      gsap.fromTo(
+        cardTextEls,
+        { y: 60, opacity: 0, filter: "blur(8px)" },
+        {
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: card,
+            start: "top center",
+            toggleActions: "play reverse play reverse",
+          },
+        }
+      );
     });
 
     // Animation functions
@@ -244,8 +243,16 @@ export default function ProjectsSection() {
       gsap.set(cardImg, { scale: 1.5 });
 
       const marquee = introCard.querySelector(".card-marquee .marquee");
-      const titleChars = introCard.querySelector(".char span");
-      const description = introCard.querySelector(".card-description");
+      //   const titleChars = introCard.querySelector(".char span");
+      //   const description = introCard.querySelector(".card-description");
+
+      const introTextEls = introCard.querySelectorAll(".card-text-animate");
+
+      gsap.set(introTextEls, {
+        opacity: 0,
+        y: 60,
+        filter: "blur(8px)",
+      });
 
       ScrollTrigger.create({
         trigger: introCard,
@@ -256,6 +263,25 @@ export default function ProjectsSection() {
           const imgScale = 0.5 + progress * 0.5;
           const borderRadius = 400 - progress * 375;
           const imgInnerScale = 1.5 - progress * 0.5;
+          const cardTextEls = introCard.querySelectorAll(".card-text-animate");
+
+          const textStart = 0.15;
+          const textEnd = 0.55;
+
+          const textProgress = gsap.utils.clamp(
+            0,
+            1,
+            (progress - textStart) / (textEnd - textStart)
+          );
+
+          gsap.to(cardTextEls, {
+            opacity: textProgress,
+            y: 120 * (1 - textProgress),
+            filter: `blur(${10 * (1 - textProgress)}px)`,
+            duration: 1.25, // 🔥 inertia (slows fast scroll)
+            ease: "power3.out",
+            overwrite: "auto", // 🔥 prevents tween stacking
+          });
 
           if (cardImgWrapper) {
             gsap.set(cardImgWrapper, {
@@ -279,16 +305,6 @@ export default function ProjectsSection() {
             } else if (imgScale > 0.75) {
               gsap.set(marquee, { opacity: 0 });
             }
-          }
-
-          if (progress >= 1 && !(introCard as any).contentRevealed) {
-            (introCard as any).contentRevealed = true;
-            animateContentIn(titleChars);
-          }
-
-          if (progress < 1 && (introCard as any).contentRevealed) {
-            (introCard as any).contentRevealed = false;
-            animateContentOut(titleChars);
           }
         },
       });

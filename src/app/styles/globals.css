@@ -18,7 +18,14 @@ html[lang="en"] * {
 
 body {
   margin: 0;
-  background-color: #000000;
+  background-color: var(--color-dark-gray);
+  color: var(--color-main-white);
+  color-scheme: dark;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-mid-gray) 40%, transparent);
+  color: var(--color-main-white);
 }
 
 /* Navigation Effect */
@@ -153,4 +160,11 @@ section {
     font-size: 2rem;
     letter-spacing: 0;
   }
+}
+
+/* Services Section - Override global section styles */
+.services-section {
+  height: auto !important;
+  min-height: 100vh;
+  overflow: visible !important;
 }

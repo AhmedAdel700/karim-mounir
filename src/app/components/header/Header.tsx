@@ -31,8 +31,10 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const ticking = useRef(false);
   const lastScrollY = useRef(0);
+  const lastDirection = useRef<"up" | "down">("up");
   const logoRef = useRef<HTMLDivElement>(null);
   const THRESHOLD = 12;
+  const DIRECTION_EPS = 6; // small buffer to ignore tiny scroll jitters
 
   const LINKS = [
     { href: "/about", label: t("About") },
@@ -112,15 +114,19 @@ export default function Header() {
       requestAnimationFrame(() => {
         const currentY = window.scrollY;
         const prevY = lastScrollY.current;
+        const delta = currentY - prevY;
 
         setScrolled(currentY > THRESHOLD);
 
-        const isScrollingDown = currentY > prevY;
+        // Ignore tiny direction changes to prevent header popping when scroll eases out
+        if (Math.abs(delta) > DIRECTION_EPS) {
+          lastDirection.current = delta > 0 ? "down" : "up";
+        }
 
         if (currentY <= THRESHOLD) {
           // At the top, always show header (over hero)
           setShowHeader(true);
-        } else if (isScrollingDown) {
+        } else if (lastDirection.current === "down") {
           // Scroll down: hide header
           setShowHeader(false);
         } else {

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -16,39 +16,44 @@ import p4 from "@/app/images/p4.png";
 
 interface ProjectCard {
   id: number;
-  title: string;
-  description: string;
+  title: string; // category name
+  description: string; // short pitch for the category
   image: StaticImageData;
+  cta: string;
 }
 
 const projectCards: ProjectCard[] = [
   {
     id: 1,
-    title: "Virtual Office",
+    title: "Workplace Futures",
     description:
-      "Redefining workspaces with immersive virtual environments that foster collaboration and creativity.",
+      "Signature offices, experience centers, and HQs built for hybrid teams with tactile, cinematic UI.",
     image: p1,
+    cta: "Explore workplaces",
   },
   {
     id: 2,
-    title: "Digital Workspace",
+    title: "Experience Hubs",
     description:
-      "Redefining workspaces with immersive virtual environments that foster collaboration and creativity.",
+      "Retail, hospitality, and destination experiences where motion, light, and space move together.",
     image: p2,
+    cta: "View experience hubs",
   },
   {
     id: 3,
-    title: "Creative Studio",
+    title: "Product Worlds",
     description:
-      "Redefining workspaces with immersive virtual environments that foster collaboration and creativity.",
+      "Launch stages and digital twins that let customers touch the product narrative before it ships.",
     image: p3,
+    cta: "Open product worlds",
   },
   {
     id: 4,
-    title: "Innovation Hub",
+    title: "Brand Environments",
     description:
-      "Redefining workspaces with immersive virtual environments that foster collaboration and creativity.",
+      "Flagship installations and pop-ups that translate brand DNA into spatial stories with measurable lift.",
     image: p4,
+    cta: "See brand environments",
   },
 ];
 
@@ -126,7 +131,7 @@ export default function ProjectsSection() {
         introEls,
         { y: 60, opacity: 0, filter: "blur(8px)" },
         {
-          delay: 0.1,
+          delay: 0.35,
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
@@ -151,7 +156,7 @@ export default function ProjectsSection() {
         outroEls,
         { y: 70, opacity: 0, filter: "blur(10px)" },
         {
-          delay: 0.1,
+          delay: 0.35,
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
@@ -211,6 +216,7 @@ export default function ProjectsSection() {
         {
           y: 0,
           opacity: 1,
+          delay: 0.2,
           filter: "blur(0px)",
           duration: 1.1,
           ease: "power3.out",
@@ -488,26 +494,27 @@ export default function ProjectsSection() {
       {/* Intro Section */}
       <section
         ref={introRef}
-        className="relative w-full h-screen bg-gradient-to-b from-black via-[#0c0c0c] to-black text-white flex items-center px-6"
+        className="relative w-full h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray) 70%,var(--color-primary))] to-[var(--color-primary)] text-white flex items-center px-6"
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 md:space-y-10">
           <div className="intro-animate flex items-center gap-3 text-sm uppercase tracking-[0.35em] text-white/60">
             <span className="h-px w-12 bg-white/40" />
-            Projects Spotlight
+            Project Categories
           </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
             <h2 className="intro-animate text-4xl md:text-6xl font-semibold leading-[1.05] tracking-[-0.06em] md:max-w-3xl">
-              Immersive environments crafted for modern, digital-first brands.
+              Four experience categories engineered for digital-first brands.
             </h2>
             <div className="flex flex-col gap-4 max-w-sm text-white/70">
               <p className="intro-animate text-lg leading-relaxed">
-                Curated concepts that merge architecture, motion, and tactile
-                UI. Scroll to explore the spaces.
+                Choose a category to view its case studies and tailored
+                engagement models. Each track blends architecture, motion, and
+                tactile UI.
               </p>
               <div className="intro-animate flex items-center gap-3">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-white/80 bg-white/5 backdrop-blur-sm">
                   <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />{" "}
-                  Live concepts
+                  Live categories
                 </span>
                 <span className="text-sm text-white/60">
                   Optimized for smooth scroll
@@ -519,7 +526,7 @@ export default function ProjectsSection() {
       </section>
 
       {/* Cards Section */}
-      <section className="projects-cards relative flex flex-col bg-[#0f0f0f] text-white gap-[25vh]">
+      <section className="projects-cards relative flex flex-col bg-[var(--color-primary)] text-white gap-[25vh]">
         {projectCards.map((project, index) => (
           <div
             key={project.id}
@@ -551,19 +558,33 @@ export default function ProjectsSection() {
               {/* Image Container */}
               {index === 0 ? (
                 <div className="card-img absolute inset-0 w-full h-full overflow-hidden rounded-[150px] z-0">
-                  <img
+                  <Image
                     src={project.image.src}
                     alt={project.title}
+                    width={400}
+                    height={400}
                     className="absolute top-0 left-0 w-full h-full object-cover will-change-transform scale-[1.5]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/10 pointer-events-none" />
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(26,26,26,0.82) 0%, rgba(26,26,26,0.55) 55%, rgba(26,26,26,0.15) 100%)",
+                    }}
+                  />
                 </div>
               ) : (
                 <div
                   className="card-img fixed inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
                   style={{ backgroundImage: `url(${project.image.src})` }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/10 pointer-events-none" />
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(26,26,26,0.82) 0%, rgba(26,26,26,0.55) 55%, rgba(26,26,26,0.15) 100%)",
+                    }}
+                  />
                 </div>
               )}
 
@@ -572,7 +593,7 @@ export default function ProjectsSection() {
                 <div className="card-copy max-w-4xl space-y-4 md:space-y-6">
                   <div className="card-text-animate flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/70">
                     <span className="h-px w-10 bg-white/40" />
-                    Project {project.id.toString().padStart(2, "0")}
+                    Category {project.id.toString().padStart(2, "0")}
                   </div>
                   <div className="card-title text-left card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl">
@@ -584,16 +605,28 @@ export default function ProjectsSection() {
                       {project.description}
                     </p>
                   </div>
-                  <div className="card-text-animate flex flex-wrap items-center gap-3 md:gap-4 text-sm text-white/75">
-                    <span className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1">
-                      Spatial Design
-                    </span>
-                    <span className="rounded-full border border-white/15 px-3 py-1">
-                      Interactive
-                    </span>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                      Future-ready
-                    </span>
+                  <div className="card-text-animate">
+                    <button
+                      className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold tracking-tight text-black transition duration-400 ease-out hover:-translate-y-0.5"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, var(--color-main-white), rgba(200,200,200,0.9) 45%, rgba(26,26,26,0.9) 140%)",
+                        boxShadow:
+                          "0 14px 50px rgba(14,14,14,0.45), 0 0 28px rgba(200,200,200,0.22), 0 0 0 1px rgba(200,200,200,0.08) inset",
+                      }}
+                    >
+                      <span className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
+                        <span className="absolute inset-0 blur-2xl bg-white/25" />
+                        <span className="absolute inset-0 bg-gradient-to-r from-[rgba(200,200,200,0.25)] via-[rgba(255,255,255,0.45)] to-[rgba(26,26,26,0.3)]" />
+                      </span>
+                      <span className="absolute inset-y-0 left-[-40%] w-[40%] -skew-x-12 bg-white/50 opacity-50 transition-all duration-700 group-hover:translate-x-[220%]" />
+                      <span className="relative z-10 text-[var(--color-primary)]">
+                        {project.cta}
+                      </span>
+                      <span className="relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white text-[11px] transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]">
+                        →
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -605,28 +638,29 @@ export default function ProjectsSection() {
       {/* Outro Section */}
       <section
         ref={outroRef}
-        className="relative w-full h-screen bg-gradient-to-t from-black via-[#0b0b0b] to-black text-white flex items-center px-6"
+        className="relative w-full h-screen bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
         <div className="max-w-5xl mx-auto w-full space-y-8 text-center">
           <div className="flex justify-center">
             <span className="outro-animate inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/75 bg-white/5 backdrop-blur-sm">
               <span className="size-2 rounded-full bg-cyan-400" />
-              Next-gen experiences
+              Choose your build track
             </span>
           </div>
           <h2 className="outro-animate text-4xl md:text-6xl font-semibold leading-[1.05] tracking-[-0.06em]">
-            Architecture reimagined for the virtual age
+            Pick a category and we assemble the right squad, playbooks, and sprints
           </h2>
           <p className="outro-animate text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-            Lets build immersive worlds where brand, product, and space blend
-            seamlessly.
+            From discovery to launch, we orchestrate motion, environment, and
+            product storytelling so every space feels alive, measurable, and
+            repeatable.
           </p>
           <div className="outro-animate flex flex-wrap items-center justify-center gap-4">
             <button className="px-5 py-3 rounded-full bg-white text-black font-semibold tracking-tight hover:bg-white/90 transition-colors">
-              Start a project
+              Book a category walkthrough
             </button>
             <button className="px-5 py-3 rounded-full border border-white/20 text-white font-medium tracking-tight hover:border-white/40 transition-colors">
-              View capabilities
+              Download process & pricing
             </button>
           </div>
         </div>

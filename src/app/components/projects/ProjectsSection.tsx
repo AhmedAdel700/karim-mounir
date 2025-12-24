@@ -6,7 +6,7 @@ import Image, { StaticImageData } from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import Lenis from "lenis";
+import { useLenis } from "lenis/react";
 
 // Import your images
 import p1 from "@/app/images/p1.png";
@@ -16,8 +16,8 @@ import p4 from "@/app/images/p4.png";
 
 interface ProjectCard {
   id: number;
-  title: string; // category name
-  description: string; // short pitch for the category
+  title: string;
+  description: string;
   image: StaticImageData;
   cta: string;
 }
@@ -69,51 +69,17 @@ export default function ProjectsSection() {
   const introRef = useRef<HTMLElement>(null);
   const outroRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
-  const lenisRef = useRef<Lenis | null>(null);
+  const lenis = useLenis();
 
   useEffect(() => {
+    if (!lenis) return;
+
     gsap.registerPlugin(ScrollTrigger, SplitText);
-
-    const lenis = new Lenis();
-    lenisRef.current = lenis;
-
-    let currentScroll = 0;
-    const onLenisScroll = ({ scroll }: any) => {
-      currentScroll = scroll;
-      ScrollTrigger.update();
-    };
-
-    lenis.on("scroll", onLenisScroll);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
-    gsap.ticker.lagSmoothing(0);
-
-    // Let ScrollTrigger work with Lenis' virtual scroll
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length && value !== undefined) {
-          lenis.scrollTo(value, { immediate: true });
-        }
-        return currentScroll;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-      pinType: document.documentElement.style.transform ? "transform" : "fixed",
-    });
-    ScrollTrigger.defaults({ scroller: document.documentElement });
 
     // Setup marquee animation
     setupMarqueeAnimation();
 
-    // Intro/outro text animations (hero-style word rise)
+    // Intro/outro text animations
     const introEls = introRef.current
       ? gsap.utils.toArray<HTMLElement>(
           introRef.current.querySelectorAll(".intro-animate")
@@ -138,12 +104,10 @@ export default function ProjectsSection() {
           duration: 1.1,
           ease: "power3.out",
           stagger: 0.12,
-          immediateRender: false,
           scrollTrigger: {
             trigger: introRef.current,
             start: "top center",
             end: "bottom center",
-            scrub: false,
             toggleActions: "play reverse play reverse",
           },
         }
@@ -163,12 +127,10 @@ export default function ProjectsSection() {
           duration: 1.15,
           ease: "power3.out",
           stagger: 0.14,
-          immediateRender: false,
           scrollTrigger: {
             trigger: outroRef.current,
             start: "top center",
             end: "bottom center",
-            scrub: false,
             toggleActions: "play reverse play reverse",
           },
         }
@@ -198,9 +160,9 @@ export default function ProjectsSection() {
       }
     });
 
-    // Animate all card text elements (just like intro/outro) with delay
+    // Animate all card text elements
     cards.forEach((card, index) => {
-      if (index === 0) return; // 🔥 card #1 handled separately
+      if (index === 0) return;
 
       const cardTextEls = gsap.utils.toArray<HTMLElement>(
         card.querySelectorAll(".card-text-animate")
@@ -245,69 +207,55 @@ export default function ProjectsSection() {
     if (introCard) {
       const cardImgWrapper = introCard.querySelector(".card-img");
       const cardImg = introCard.querySelector(".card-img img");
-      gsap.set(cardImgWrapper, { scale: 0.5, borderRadius: "400px" });
-      gsap.set(cardImg, { scale: 1.5 });
-
-      const marquee = introCard.querySelector(".card-marquee .marquee");
-      //   const titleChars = introCard.querySelector(".char span");
-      //   const description = introCard.querySelector(".card-description");
-
       const introTextEls = introCard.querySelectorAll(".card-text-animate");
 
-      gsap.set(introTextEls, {
-        opacity: 0,
-        y: 60,
-        filter: "blur(8px)",
-      });
+      gsap.set(cardImgWrapper, { scale: 0.5, borderRadius: "400px" });
+      gsap.set(cardImg, { scale: 1.5 });
+      gsap.set(introTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
 
       ScrollTrigger.create({
         trigger: introCard,
         start: "top top",
-        end: "+=300vh",
+        end: "+=600vh",
+        scrub: 1.2,
         onUpdate: (self) => {
           const progress = self.progress;
+
+          // Image scaling
           const imgScale = 0.5 + progress * 0.5;
           const borderRadius = 400 - progress * 375;
           const imgInnerScale = 1.5 - progress * 0.5;
-          const cardTextEls = introCard.querySelectorAll(".card-text-animate");
+          if (cardImgWrapper)
+            gsap.set(cardImgWrapper, {
+              scale: imgScale,
+              borderRadius: borderRadius + "px",
+            });
+          if (cardImg) gsap.set(cardImg, { scale: imgInnerScale });
 
+          // Text animation
           const textStart = 0.15;
           const textEnd = 0.55;
-
-          const textProgress = gsap.utils.clamp(
+          let textProgress = gsap.utils.clamp(
             0,
             1,
             (progress - textStart) / (textEnd - textStart)
           );
 
-          gsap.to(cardTextEls, {
+          // Force final values at the very end
+          if (progress >= 1) textProgress = 1;
+
+          gsap.set(introTextEls, {
             opacity: textProgress,
-            y: 120 * (1 - textProgress),
-            filter: `blur(${10 * (1 - textProgress)}px)`,
-            duration: 1.25, // 🔥 inertia (slows fast scroll)
-            ease: "power3.out",
-            overwrite: "auto", // 🔥 prevents tween stacking
+            y: 60 * (1 - textProgress),
+            filter: `blur(${8 * (1 - textProgress)}px)`,
           });
 
-          if (cardImgWrapper) {
-            gsap.set(cardImgWrapper, {
-              scale: imgScale,
-              borderRadius: borderRadius + "px",
-            });
-          }
-
-          if (cardImg) {
-            gsap.set(cardImg, {
-              scale: imgInnerScale,
-            });
-          }
-
+          // Marquee fade
+          const marquee = introCard.querySelector(".card-marquee .marquee");
           if (marquee) {
-            if (imgScale >= 0.5 && imgScale <= 0.75) {
+            if (imgScale <= 0.75) {
               const fadeProgress = (imgScale - 0.5) / (0.75 - 0.5);
               gsap.set(marquee, { opacity: 1 - fadeProgress });
-            } else if (imgScale < 0.5) {
-              gsap.set(marquee, { opacity: 1 });
             } else if (imgScale > 0.75) {
               gsap.set(marquee, { opacity: 0 });
             }
@@ -317,13 +265,14 @@ export default function ProjectsSection() {
     }
 
     // Pin cards
+    const scrollMultiplier = 2.5; // 2.5x normal scroll
     cards.forEach((card, index) => {
       const isLastCard = index === cards.length - 1;
 
       ScrollTrigger.create({
         trigger: card,
         start: "top top",
-        end: isLastCard ? "+=100vh" : "top top",
+        end: isLastCard ? `+=${100 * scrollMultiplier}vh` : `top top`,
         endTrigger: isLastCard ? null : cards[cards.length - 1],
         pin: true,
         pinSpacing: isLastCard,
@@ -399,12 +348,9 @@ export default function ProjectsSection() {
     ScrollTrigger.refresh();
 
     return () => {
-      lenis.destroy();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
-      lenis.off("scroll", onLenisScroll);
     };
-  }, []);
+  }, [lenis]);
 
   const setupMarqueeAnimation = () => {
     const marqueeItems = gsap.utils.toArray(".marquee h2");
@@ -575,7 +521,7 @@ export default function ProjectsSection() {
                 </div>
               ) : (
                 <div
-                  className="card-img fixed inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
+                  className="card-img absolute inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
                   style={{ backgroundImage: `url(${project.image.src})` }}
                 >
                   <div
@@ -648,7 +594,8 @@ export default function ProjectsSection() {
             </span>
           </div>
           <h2 className="outro-animate text-4xl md:text-6xl font-semibold leading-[1.05] tracking-[-0.06em]">
-            Pick a category and we assemble the right squad, playbooks, and sprints
+            Pick a category and we assemble the right squad, playbooks, and
+            sprints
           </h2>
           <p className="outro-animate text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
             From discovery to launch, we orchestrate motion, environment, and

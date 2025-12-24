@@ -66,8 +66,6 @@ export default function Header() {
 
     const computeOffset = () => {
       if (!logoRef.current || !headerRef.current) return;
-
-      const logoHeight = logoRef.current.offsetHeight;
       const headerHeight = headerRef.current.offsetHeight;
 
       // Calculate distance from center of viewport to center of header

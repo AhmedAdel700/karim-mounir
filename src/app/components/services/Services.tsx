@@ -1,256 +1,169 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
+import React, { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Hammer, Home, Layout, Ruler } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface Service {
-  id: number;
-  title: string;
-  description: string;
-  highlights: string[];
-  icon: ReactNode;
-  tone: string;
-}
-
-const services: Service[] = [
+const services = [
   {
-    id: 1,
+    number: "01",
     title: "Interior Design",
-    description: "Spatial experiences with human-first ergonomics and flow.",
-    highlights: [
-      "Concept to install",
-      "Material curation",
-      "Mood-led lighting",
-    ],
-    icon: <Home className="w-9 h-9" />,
-    tone: "from-[var(--color-mid-gray)] via-[var(--color-deep-gray)] to-[var(--color-dark-gray)]",
+    description:
+      "Creative interior solutions that combine aesthetics and functionality",
   },
   {
-    id: 2,
-    title: "Architecture Studio",
-    description: "Bold, efficient forms that balance emotion with precision.",
-    highlights: ["Sustainable envelopes", "Permit-ready sets", "BIM-first"],
-    icon: <Ruler className="w-9 h-9" />,
-    tone: "from-[var(--color-mid-gray)] via-[var(--color-primary)] to-[var(--color-dark-gray)]",
+    number: "02",
+    title: "Architectural Design",
+    description: "Innovative architectural concepts tailored to your vision",
   },
   {
-    id: 3,
+    number: "03",
+    title: "3D Visualization",
+    description: "Realistic 3D renders to visualize spaces before execution",
+  },
+  {
+    number: "04",
+    title: "Fit-Out & Execution",
+    description: "High-quality interior fit-out with precise project execution",
+  },
+  {
+    number: "05",
     title: "Space Planning",
-    description: "Smarter circulation, smarter adjacencies, smarter impact.",
-    highlights: ["Program mapping", "Circulation audits", "Density tuning"],
-    icon: <Layout className="w-9 h-9" />,
-    tone: "from-[var(--color-mid-gray)] via-[var(--color-deep-gray)] to-[var(--color-primary)]",
-  },
-  {
-    id: 4,
-    title: "Custom Furniture",
-    description: "Signature pieces engineered for daily use and longevity.",
-    highlights: [
-      "Prototype to production",
-      "Premium finishes",
-      "Bespoke sizing",
-    ],
-    icon: <Hammer className="w-9 h-9" />,
-    tone: "from-[var(--color-mid-gray)] via-[var(--color-primary)] to-[var(--color-dark-gray)]",
+    description: "Optimized layouts designed for comfort, flow, and efficiency",
   },
 ];
 
-export default function Services() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement[]>([]);
+export default function ScrollServices() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const activeIndexRef = useRef(0);
 
-  useGSAP(
-    () => {
-      if (!sectionRef.current) return;
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
-      const headerEls =
-        headerRef.current?.querySelectorAll<HTMLElement>(
-          ".service-header-animate"
-        ) ?? [];
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-      if (headerEls.length) {
-        gsap.fromTo(
-          headerEls,
-          { y: 60, opacity: 0, filter: "blur(12px)" },
-          {
-            y: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 1.2,
-            ease: "power2.out",
-            stagger: 0.12,
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top 80%",
-            },
-          }
-        );
-      }
+    gsap.registerPlugin(ScrollTrigger);
 
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
-        const badge = card.querySelector(".service-badge");
-        const listItems = card.querySelectorAll(".service-list-item");
-        const spine = card.querySelector(".service-spine");
+    const total = services.length;
 
-        gsap.fromTo(
-          card,
-          { y: 100, opacity: 0, filter: "blur(14px)" },
-          {
-            y: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 1.1,
-            ease: "power2.out",
-            delay: index * 0.08,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+    const st = ScrollTrigger.create({
+      trigger: container,
+      start: "top top",
+      // Shorter scroll distance - 300px per service instead of full viewport
+      end: () => "+=" + 300 * (total - 1),
+      pin: true,
+      scrub: 0, // Much more immediate response
+      snap: {
+        snapTo: 1 / (total - 1),
+        duration: 0.2,
+        ease: "power4.inOut",
+        delay: 0,
+      },
+      onUpdate: (self) => {
+        const idx = Math.round(self.progress * (total - 1));
+        if (idx !== activeIndexRef.current) {
+          activeIndexRef.current = idx;
+          setActiveIndex(idx);
+        }
+      },
+    });
 
-        gsap.to(badge, {
-          y: -6,
-          duration: 3.2,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
+    ScrollTrigger.refresh();
 
-        gsap.from(listItems, {
-          x: -10,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 80%",
-          },
-        });
-
-        gsap.fromTo(
-          spine,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-    },
-    { scope: sectionRef }
-  );
+    return () => {
+      st.kill();
+    };
+  }, []);
 
   return (
     <section
-      ref={sectionRef}
-      className="services-section relative w-full overflow-visible bg-gradient-to-b from-[var(--color-dark-gray)] via-[var(--color-primary)] to-[var(--color-dark-gray)] text-[var(--color-main-white)]"
+      ref={containerRef}
+      className="services-section relative w-screen h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-b border-deep-gray"
     >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute -right-24 top-40 h-80 w-80 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_50%)]" />
+      {services.map((service, index) => {
+        const isActive = index === activeIndex;
+        const isPrev = index < activeIndex;
+        const isNext = index > activeIndex;
+
+        let opacity = 0;
+        let blur = 20;
+        let translateY = 0;
+
+        if (isActive) {
+          opacity = 1;
+          blur = 0;
+          translateY = 0;
+        } else if (isPrev) {
+          opacity = 0;
+          blur = 20;
+          translateY = -50;
+        } else if (isNext) {
+          opacity = 0;
+          blur = 20;
+          translateY = 50;
+        }
+
+        return (
+          <div
+            key={index}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{
+              opacity,
+              filter: `blur(${blur}px)`,
+              transform: `translateY(${translateY}px)`,
+              transition: "all 0.8s cubic-bezier(0.4,0,0.2,1)",
+              pointerEvents: isActive ? "auto" : "none",
+            }}
+          >
+            <div className="text-center px-8 max-w-4xl">
+              <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-mid-gray)] via-[var(--color-main-white)] to-[var(--color-mid-gray)] mb-8">
+                {service.number}
+              </div>
+              <h2 className="text-6xl font-bold text-[var(--color-main-white)] mb-6">
+                {service.title}
+              </h2>
+              <p className="text-2xl text-[var(--color-deep-gray)]">
+                {service.description}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+
+      {activeIndex < services.length - 1 && (
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-[var(--color-deep-gray)] animate-bounce">
+          <span className="text-sm uppercase tracking-wider">Scroll</span>
+          <div className="w-px h-16 bg-gradient-to-b from-[var(--color-deep-gray)] to-transparent" />
+        </div>
+      )}
+
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+        {services.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setActiveIndex(index);
+              activeIndexRef.current = index;
+              // ممكن لاحقاً تربط الزرار بـ ScrollTrigger progress لو حبيت
+            }}
+            className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-150 ${
+              index === activeIndex
+                ? "bg-[var(--color-main-white)] scale-150"
+                : index < activeIndex
+                ? "bg-[var(--color-deep-gray)]"
+                : "bg-[var(--color-primary)]"
+            }`}
+          />
+        ))}
       </div>
 
-      <div className="relative mx-auto max-w-5xl px-6 py-20 md:px-12 lg:px-16 lg:py-28">
-        <div ref={headerRef} className="service-header-animate text-center">
-          <div className="mx-auto mb-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.32em] text-white/70">
-            <span className="h-0.5 w-6 bg-gradient-to-r from-white/0 via-white/60 to-white/0" />
-            Story-first services
-            <span className="h-0.5 w-6 bg-gradient-to-r from-white/0 via-white/60 to-white/0" />
-          </div>
-          <h2 className="service-header-animate text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
-            Every service is a chapter in your space
-          </h2>
-          <p className="service-header-animate mx-auto mt-4 max-w-2xl text-lg text-white/70 md:text-xl">
-            A continuous, animated storyline built with your palette. No stock
-            images—just movement, structure, and clarity.
-          </p>
-        </div>
-
-        <div className="relative mt-16">
-          <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gradient-to-b from-white/0 via-white/20 to-white/0 md:block" />
-          <div className="space-y-12">
-            {services.map((service, index) => {
-              const isLeft = index % 2 === 0;
-              return (
-                <div
-                  key={service.id}
-                  ref={(el) => {
-                    if (el) cardsRef.current[index] = el;
-                  }}
-                  className={`group relative flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/5 px-6 py-8 shadow-[0_25px_100px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-500 hover:border-white/20 md:flex-row ${
-                    isLeft ? "md:pr-12" : "md:flex-row-reverse md:pl-12"
-                  }`}
-                >
-                  <div
-                    className={`service-spine absolute top-0 ${
-                      isLeft ? "right-[-32px]" : "left-[-32px]"
-                    } hidden h-full w-[2px] origin-top scale-y-0 bg-gradient-to-b from-white/0 via-white/40 to-white/0 md:block`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-
-                  <div className="relative flex flex-1 flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`service-badge flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${service.tone} text-white shadow-lg shadow-black/40 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}
-                      >
-                        {service.icon}
-                      </div>
-                      <div>
-                        <div className="text-xs uppercase tracking-[0.28em] text-white/60">
-                          Service {String(service.id).padStart(2, "0")}
-                        </div>
-                        <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">
-                          {service.title}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <p className="text-base text-white/75 md:text-lg">
-                      {service.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {service.highlights.map((item) => (
-                        <div
-                          key={item}
-                          className="service-list-item inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/75 transition-colors duration-300 group-hover:border-white/20"
-                        >
-                          <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-white/80 to-white/40" />
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative flex flex-1 flex-col justify-center gap-3 text-sm text-white/60 md:text-base">
-                    <div className="text-white/80">
-                      Chapter {service.id}: We pair intent with build-ready
-                      detail, keeping your palette and materials consistent
-                      across every touchpoint.
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      <div className="absolute bottom-8 left-8 text-[var(--color-deep-gray)] text-sm">
+        {String(activeIndex + 1).padStart(2, "0")} /{" "}
+        {String(services.length).padStart(2, "0")}
       </div>
     </section>
   );

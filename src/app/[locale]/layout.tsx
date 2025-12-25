@@ -51,7 +51,6 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages} locale={locale}>
             <Header />
             <ScrollProvider>{children}</ScrollProvider>
-            <Footer />
           </NextIntlClientProvider>
         </body>
       </html>

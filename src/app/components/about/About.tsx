@@ -1,6 +1,6 @@
 "use client";
 import { useLocale } from "next-intl";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
 
@@ -12,8 +12,13 @@ export default function About() {
   const locale = useLocale();
   const isRTL = locale === "ar";
 
+  const [visionVisible, setVisionVisible] = useState(false);
+  const [ownerVisible, setOwnerVisible] = useState(false);
+
+  // GSAP: horizontal scroll فقط
   useEffect(() => {
     let ctx: ReturnType<typeof import("gsap").default.context> | undefined;
+
     const loadGSAP = async () => {
       const gsap = (await import("gsap")).default;
       const { ScrollTrigger } = await import("gsap/ScrollTrigger");
@@ -25,6 +30,7 @@ export default function About() {
         const sections = gsap.utils.toArray<HTMLElement>(
           ".scroll-section-horizontaliy"
         );
+
         ScrollTrigger.refresh();
 
         const horizontalScrollLength =
@@ -35,227 +41,27 @@ export default function About() {
           xPercent: isRTL ? 100 : -100 * (sections.length - 1),
         });
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            pin: true,
-            pinSpacing: true,
-            scrub: 1,
-            anticipatePin: 0,
-            refreshPriority: 1,
-            end: () => "+=" + (horizontalScrollLength + pauseDuration * 2),
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // PHASE 1: Pause on Section 2 (Owner)
-        tl.to({}, { duration: pauseDuration });
-
-        // PHASE 2: Scroll to Section 1 (Vision)
-        tl.to(sections, {
-          xPercent: 0,
-          ease: "none",
-          duration: horizontalScrollLength,
-        });
-
-        // PHASE 3: Pause on Section 1 (Vision)
-        tl.to({}, { duration: pauseDuration });
-
-        // ==========================================
-        // SECTION 2 (OWNER) ANIMATIONS
-        // ==========================================
-
-        const ownerImage = ownerSectionRef.current?.querySelector(
-          ".owner-image-container"
-        ) as HTMLElement | null;
-        const ownerBorder = ownerSectionRef.current?.querySelector(
-          ".owner-border"
-        ) as HTMLElement | null;
-        const ownerTitle = ownerSectionRef.current?.querySelector(
-          ".owner-title"
-        ) as HTMLElement | null;
-        const ownerSubtitle = ownerSectionRef.current?.querySelector(
-          ".owner-subtitle"
-        ) as HTMLElement | null;
-        const ownerPara1 = ownerSectionRef.current?.querySelector(
-          ".owner-para-1"
-        ) as HTMLElement | null;
-        const ownerPara2 = ownerSectionRef.current?.querySelector(
-          ".owner-para-2"
-        ) as HTMLElement | null;
-
-        // Set initial states for Section 2
-        if (ownerImage) {
-          gsap.set(ownerImage, {
-            clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
-            scale: 1.3,
-            opacity: 0,
-          });
-        }
-
-        if (ownerBorder) {
-          gsap.set(ownerBorder, {
-            opacity: 0,
-            scale: 0.9,
-          });
-        }
-
-        const ownerTextElements = [
-          ownerTitle,
-          ownerSubtitle,
-          ownerPara1,
-          ownerPara2,
-        ].filter((el): el is HTMLElement => el !== null);
-        if (ownerTextElements.length > 0) {
-          gsap.set(ownerTextElements, {
-            opacity: 0,
-            x: isRTL ? 100 : -100,
-          });
-        }
-
-        // Create timeline for Section 2 entrance
-        const ownerEnterTL = gsap.timeline({ paused: true });
-        // ownerEnterTL.to({}, { duration: 1.5 }); // Delay by 1.5 seconds
-
-        if (ownerImage) {
-          ownerEnterTL.to(ownerImage, {
-            clipPath:
-              "polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%)",
-            scale: 1,
-            opacity: 1,
-            duration: 1.2,
-            ease: "power3.out",
-          });
-        }
-
-        if (ownerBorder) {
-          ownerEnterTL.to(
-            ownerBorder,
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.8,
-              ease: "power2.out",
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top top",
+              pin: true,
+              pinSpacing: true,
+              scrub: 1,
+              anticipatePin: 0,
+              refreshPriority: 1,
+              end: () => "+=" + (horizontalScrollLength + pauseDuration * 2),
+              invalidateOnRefresh: true,
             },
-            "-=0.6"
-          );
-        }
-
-        if (ownerTitle) {
-          ownerEnterTL.to(
-            ownerTitle,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: "power2.out",
-            },
-            "-=0.4"
-          );
-        }
-
-        if (ownerSubtitle) {
-          ownerEnterTL.to(
-            ownerSubtitle,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: "power2.out",
-            },
-            "-=0.6"
-          );
-        }
-
-        if (ownerPara1) {
-          ownerEnterTL.to(
-            ownerPara1,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: "power2.out",
-            },
-            "-=0.6"
-          );
-        }
-
-        if (ownerPara2) {
-          ownerEnterTL.to(
-            ownerPara2,
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: "power2.out",
-            },
-            "-=0.6"
-          );
-        }
-
-        // Create timeline for Section 2 exit
-        const ownerExitTL = gsap.timeline({ paused: true });
-
-        if (ownerTextElements.length > 0) {
-          ownerExitTL.to(ownerTextElements, {
-            opacity: 0,
-            x: isRTL ? -80 : 80,
-            duration: 0.6,
-            ease: "power2.in",
-            stagger: 0.05,
-          });
-        }
-
-        if (ownerBorder) {
-          ownerExitTL.to(
-            ownerBorder,
-            {
-              opacity: 0,
-              scale: 0.9,
-              duration: 0.5,
-              ease: "power2.in",
-            },
-            "-=0.4"
-          );
-        }
-
-        if (ownerImage) {
-          ownerExitTL.to(
-            ownerImage,
-            {
-              clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
-              scale: 1.3,
-              opacity: 0,
-              duration: 1.2,
-              ease: "power3.in",
-            },
-            "-=0.4"
-          );
-        }
-
-        // Trigger Section 2 animations
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: "top top",
-          end: () => "+=" + pauseDuration * 0.1,
-          onEnter: () => ownerEnterTL.play(),
-          onLeaveBack: () => {
-            ownerEnterTL.reverse();
-          },
-        });
-
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: () => "+=" + pauseDuration * 0.9,
-          end: () => "+=" + (pauseDuration + horizontalScrollLength),
-          onEnter: () => ownerExitTL.play(),
-          onLeaveBack: () => {
-            ownerExitTL.reverse();
-          },
-        });
-
-        // Vision section - no animations, text is visible by default
+          })
+          .to({}, { duration: pauseDuration })
+          .to(sections, {
+            xPercent: 0,
+            ease: "none",
+            duration: horizontalScrollLength,
+          })
+          .to({}, { duration: pauseDuration });
       }, containerRef);
     };
 
@@ -269,42 +75,120 @@ export default function About() {
     };
   }, [isRTL]);
 
+  // IntersectionObserver لـ Our Vision
+  useEffect(() => {
+    if (!visionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setVisionVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.4,
+      }
+    );
+
+    observer.observe(visionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // IntersectionObserver لـ Owner
+  useEffect(() => {
+    if (!ownerSectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setOwnerVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.4,
+      }
+    );
+
+    observer.observe(ownerSectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       ref={containerRef}
       className="scroll-section-outer border-b border-deep-gray"
     >
       <div ref={scrollContainerRef} className="scroll-section-inner">
+        {/* OUR VISION */}
         <div
           ref={visionRef}
           className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-e border-deep-gray relative overflow-hidden"
         >
-          {/* Decorative background elements */}
           <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
 
-          <div className="vision-content max-w-4xl mx-auto px-8 text-center relative z-10">
-            <h2 className="vision-title text-5xl md:text-7xl font-bold text-main-white mb-8">
+          <div className="vision-content max-w-4xl mx-auto px-8 py-8 lg:py-0 text-center relative z-10 w-full">
+            <h2
+              className="vision-title text-5xl md:text-8xl font-bold uppercase text-main-white mb-8 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              style={{
+                opacity: visionVisible ? 1 : 0,
+                transform: visionVisible
+                  ? "translateY(0px) scale(1)"
+                  : "translateY(24px) scale(0.98)",
+                filter: visionVisible ? "blur(0px)" : "blur(12px)",
+                transitionDelay: visionVisible ? "200ms" : "0ms",
+              }}
+            >
               Our Vision
             </h2>
-            <p className="vision-para-1 text-xl md:text-2xl text-gray-200 leading-relaxed mb-6">
-              We envision a future where innovation meets excellence, creating
-              solutions that transform industries and empower people.
+
+            <p
+              className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              style={{
+                opacity: visionVisible ? 1 : 0,
+                transform: visionVisible
+                  ? "translateY(0px)"
+                  : "translateY(28px)",
+                filter: visionVisible ? "blur(0px)" : "blur(10px)",
+                transitionDelay: visionVisible ? "350ms" : "0ms",
+              }}
+            >
+              is architecture that endures throughful in function, distinctive in identity, and timeless in its impact
             </p>
-            <p className="vision-para-2 text-lg md:text-xl text-gray-300 leading-relaxed">
+
+            {/* <p
+              className="vision-para-2 text-lg md:text-xl text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              style={{
+                opacity: visionVisible ? 1 : 0,
+                transform: visionVisible
+                  ? "translateY(0px)"
+                  : "translateY(32px)",
+                filter: visionVisible ? "blur(0px)" : "blur(10px)",
+                transitionDelay: visionVisible ? "500ms" : "0ms",
+              }}
+            >
               Through dedication, creativity, and cutting-edge technology, we
-              strive to build a better tomorrow for our clients and communities.
-            </p>
+              build a better tomorrow.
+            </p> */}
           </div>
         </div>
 
+        {/* OWNER SECTION */}
         <div
           ref={ownerSectionRef}
           className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)]"
         >
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-12 px-8 max-w-7xl mx-auto">
-            {/* Modern Clip-Path Image Container */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-12 px-8 py-8 lg:py-0 max-w-7xl mx-auto w-full">
+            {/* Image + border */}
             <div className="relative">
-              <div className="owner-image-container relative w-80 h-96 lg:w-96 lg:h-[500px] overflow-hidden">
+              <div
+                className="owner-image-container relative w-80 h-96 lg:w-96 lg:h-[500px] overflow-hidden transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible
+                    ? "scale(1) translateY(0px)"
+                    : "scale(1.12) translateY(24px)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                  transitionDelay: ownerVisible ? "150ms" : "0ms",
+                }}
+              >
                 <div
                   className="absolute inset-0"
                   style={{
@@ -321,33 +205,80 @@ export default function About() {
                   />
                 </div>
               </div>
-              {/* Decorative border with glow */}
+
               <div
-                className="owner-border absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                className="owner-border absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                 style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible ? "scale(1)" : "scale(0.9)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(8px)",
+                  transitionDelay: ownerVisible ? "250ms" : "0ms",
                   clipPath:
                     "polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%)",
                 }}
               />
             </div>
 
-            {/* Owner Text */}
-            <div className="flex-1 max-w-2xl">
-              <h2 className="owner-title text-4xl md:text-5xl font-bold text-main-white mb-4">
+            {/* Owner Text – نفس تأثير Our Vision لكن بـ ownerVisible */}
+            <div className="flex-1 max-w-4xl">
+              <h2
+                className="owner-title text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible
+                    ? "translateY(0px) scale(1)"
+                    : "translateY(24px) scale(0.98)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(12px)",
+                  transitionDelay: ownerVisible ? "300ms" : "0ms",
+                }}
+              >
                 Meet Our Founder
               </h2>
-              <h3 className="owner-subtitle text-2xl md:text-3xl text-gray-200 mb-6 font-semibold">
+
+              <h3
+                className="owner-subtitle text-2xl md:text-3xl text-gray-200 mb-6 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible
+                    ? "translateY(0px)"
+                    : "translateY(26px)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                  transitionDelay: ownerVisible ? "450ms" : "0ms",
+                }}
+              >
                 Karim Mounir
               </h3>
-              <p className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4">
-                With over 20 years of experience in the industry, John founded
-                our company with a vision to revolutionize the way businesses
-                approach innovation and growth.
+
+              <p
+                className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible
+                    ? "translateY(0px)"
+                    : "translateY(28px)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                  transitionDelay: ownerVisible ? "600ms" : "0ms",
+                }}
+              >
+                Design team leader managing large integrated projects in base
+                building and interior design. Working with clients from concept
+                to completion, delivering effective solutions worldwide.
               </p>
-              <p className="owner-para-2 text-base md:text-lg text-gray-400 leading-relaxed">
-                His leadership and commitment to excellence have guided our team
-                to achieve remarkable milestones and create lasting impact in
-                the communities we serve.
+
+              <p
+                className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                style={{
+                  opacity: ownerVisible ? 1 : 0,
+                  transform: ownerVisible
+                    ? "translateY(0px)"
+                    : "translateY(32px)",
+                  filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                  transitionDelay: ownerVisible ? "750ms" : "0ms",
+                }}
+              >
+                Designing and managing projects that unlock opportunities and
+                improve lives. Serving diverse clients—helping them grow,
+                sustain, and transform through strategic design solutions.
               </p>
             </div>
           </div>

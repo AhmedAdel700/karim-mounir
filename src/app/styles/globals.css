@@ -46,6 +46,20 @@ body {
   flex-shrink: 0;
 }
 
+@media (max-width: 1024px) {
+  .scroll-section-horizontaliy {
+    min-height: 100vh;
+    height: auto;
+    align-items: flex-start;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .scroll-section-inner {
+    min-height: 100vh;
+  }
+}
+
 .scroll-section-horizontaliy h3 {
   color: var(--color-mid-gray);
   text-transform: uppercase;
@@ -194,7 +208,7 @@ section {
 
 /* Services Section - Override global section styles */
 .services-section {
-  height: auto !important;
+  height: 100vh !important;
   min-height: 100vh;
-  overflow: visible !important;
+  overflow: hidden !important;
 }

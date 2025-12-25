@@ -1,7 +1,7 @@
 "use client";
 import { useLocale } from "next-intl";
 import { useRef, useEffect } from "react";
-import ownerImg from "@/app/images/p1.png";
+import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
 
 export default function About() {
@@ -69,16 +69,21 @@ export default function About() {
         const ownerImage = ownerSectionRef.current?.querySelector(
           ".owner-image-container"
         ) as HTMLElement | null;
-        const ownerBorder =
-          ownerSectionRef.current?.querySelector(".owner-border") as HTMLElement | null;
-        const ownerTitle =
-          ownerSectionRef.current?.querySelector(".owner-title") as HTMLElement | null;
-        const ownerSubtitle =
-          ownerSectionRef.current?.querySelector(".owner-subtitle") as HTMLElement | null;
-        const ownerPara1 =
-          ownerSectionRef.current?.querySelector(".owner-para-1") as HTMLElement | null;
-        const ownerPara2 =
-          ownerSectionRef.current?.querySelector(".owner-para-2") as HTMLElement | null;
+        const ownerBorder = ownerSectionRef.current?.querySelector(
+          ".owner-border"
+        ) as HTMLElement | null;
+        const ownerTitle = ownerSectionRef.current?.querySelector(
+          ".owner-title"
+        ) as HTMLElement | null;
+        const ownerSubtitle = ownerSectionRef.current?.querySelector(
+          ".owner-subtitle"
+        ) as HTMLElement | null;
+        const ownerPara1 = ownerSectionRef.current?.querySelector(
+          ".owner-para-1"
+        ) as HTMLElement | null;
+        const ownerPara2 = ownerSectionRef.current?.querySelector(
+          ".owner-para-2"
+        ) as HTMLElement | null;
 
         // Set initial states for Section 2
         if (ownerImage) {
@@ -96,9 +101,12 @@ export default function About() {
           });
         }
 
-        const ownerTextElements = [ownerTitle, ownerSubtitle, ownerPara1, ownerPara2].filter(
-          (el): el is HTMLElement => el !== null
-        );
+        const ownerTextElements = [
+          ownerTitle,
+          ownerSubtitle,
+          ownerPara1,
+          ownerPara2,
+        ].filter((el): el is HTMLElement => el !== null);
         if (ownerTextElements.length > 0) {
           gsap.set(ownerTextElements, {
             opacity: 0,
@@ -108,8 +116,8 @@ export default function About() {
 
         // Create timeline for Section 2 entrance
         const ownerEnterTL = gsap.timeline({ paused: true });
-        ownerEnterTL.to({}, { duration: 1.5 }); // Delay by 1.5 seconds
-        
+        // ownerEnterTL.to({}, { duration: 1.5 }); // Delay by 1.5 seconds
+
         if (ownerImage) {
           ownerEnterTL.to(ownerImage, {
             clipPath:
@@ -120,7 +128,7 @@ export default function About() {
             ease: "power3.out",
           });
         }
-        
+
         if (ownerBorder) {
           ownerEnterTL.to(
             ownerBorder,
@@ -133,7 +141,7 @@ export default function About() {
             "-=0.6"
           );
         }
-        
+
         if (ownerTitle) {
           ownerEnterTL.to(
             ownerTitle,
@@ -146,7 +154,7 @@ export default function About() {
             "-=0.4"
           );
         }
-        
+
         if (ownerSubtitle) {
           ownerEnterTL.to(
             ownerSubtitle,
@@ -159,7 +167,7 @@ export default function About() {
             "-=0.6"
           );
         }
-        
+
         if (ownerPara1) {
           ownerEnterTL.to(
             ownerPara1,
@@ -172,7 +180,7 @@ export default function About() {
             "-=0.6"
           );
         }
-        
+
         if (ownerPara2) {
           ownerEnterTL.to(
             ownerPara2,
@@ -188,7 +196,7 @@ export default function About() {
 
         // Create timeline for Section 2 exit
         const ownerExitTL = gsap.timeline({ paused: true });
-        
+
         if (ownerTextElements.length > 0) {
           ownerExitTL.to(ownerTextElements, {
             opacity: 0,
@@ -198,7 +206,7 @@ export default function About() {
             stagger: 0.05,
           });
         }
-        
+
         if (ownerBorder) {
           ownerExitTL.to(
             ownerBorder,
@@ -211,7 +219,7 @@ export default function About() {
             "-=0.4"
           );
         }
-        
+
         if (ownerImage) {
           ownerExitTL.to(
             ownerImage,
@@ -268,6 +276,28 @@ export default function About() {
     >
       <div ref={scrollContainerRef} className="scroll-section-inner">
         <div
+          ref={visionRef}
+          className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-e border-deep-gray relative overflow-hidden"
+        >
+          {/* Decorative background elements */}
+          <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
+
+          <div className="vision-content max-w-4xl mx-auto px-8 text-center relative z-10">
+            <h2 className="vision-title text-5xl md:text-7xl font-bold text-main-white mb-8">
+              Our Vision
+            </h2>
+            <p className="vision-para-1 text-xl md:text-2xl text-gray-200 leading-relaxed mb-6">
+              We envision a future where innovation meets excellence, creating
+              solutions that transform industries and empower people.
+            </p>
+            <p className="vision-para-2 text-lg md:text-xl text-gray-300 leading-relaxed">
+              Through dedication, creativity, and cutting-edge technology, we
+              strive to build a better tomorrow for our clients and communities.
+            </p>
+          </div>
+        </div>
+
+        <div
           ref={ownerSectionRef}
           className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)]"
         >
@@ -307,7 +337,7 @@ export default function About() {
                 Meet Our Founder
               </h2>
               <h3 className="owner-subtitle text-2xl md:text-3xl text-gray-200 mb-6 font-semibold">
-                John Anderson
+                Karim Mounir
               </h3>
               <p className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4">
                 With over 20 years of experience in the industry, John founded
@@ -320,28 +350,6 @@ export default function About() {
                 the communities we serve.
               </p>
             </div>
-          </div>
-        </div>
-
-        <div
-          ref={visionRef}
-          className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-e border-deep-gray relative overflow-hidden"
-        >
-          {/* Decorative background elements */}
-          <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
-
-          <div className="vision-content max-w-4xl mx-auto px-8 text-center relative z-10">
-            <h2 className="vision-title text-5xl md:text-7xl font-bold text-main-white mb-8">
-              Our Vision
-            </h2>
-            <p className="vision-para-1 text-xl md:text-2xl text-gray-200 leading-relaxed mb-6">
-              We envision a future where innovation meets excellence, creating
-              solutions that transform industries and empower people.
-            </p>
-            <p className="vision-para-2 text-lg md:text-xl text-gray-300 leading-relaxed">
-              Through dedication, creativity, and cutting-edge technology, we
-              strive to build a better tomorrow for our clients and communities.
-            </p>
           </div>
         </div>
       </div>

@@ -10,17 +10,20 @@ gsap.registerPlugin(useGSAP);
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
 
   // Animate H1 chars
   useGSAP(
     () => {
       const split = new SplitType(".hero-title", { types: "chars" });
 
+      // Set initial state immediately to prevent flash
       gsap.set(split.chars, {
         y: 60,
         opacity: 0,
         filter: "blur(8px)",
         rotateX: -45,
+        immediateRender: true,
       });
 
       gsap.to(split.chars, {
@@ -40,14 +43,21 @@ export default function Hero() {
   // Animate paragraph words
   useGSAP(
     () => {
+      if (!paragraphRef.current) return;
+      
       const split = new SplitType(".hero-paragraph", { types: "words" });
 
+      // Set initial state immediately to prevent flash
       gsap.set(split.words, {
         y: 60,
         opacity: 0,
         filter: "blur(8px)",
         rotateX: -45,
+        immediateRender: true,
       });
+
+      // Show paragraph container after words are set up
+      gsap.set(paragraphRef.current, { opacity: 1, immediateRender: true });
 
       gsap.to(split.words, {
         y: 0,
@@ -120,17 +130,21 @@ export default function Hero() {
     [&_.char]:bg-[length:100%_100%]
     [&_.char]:bg-[position:0_0]
     [&_.char]:will-change-transform
+    [&_.char]:opacity-0
   "
       >
         Karim Mounir
       </h1>
 
       <p
+        ref={paragraphRef}
         className="
     hero-paragraph
     relative z-10 text-center pb-3 font-medium
     text-base sm:text-4xl text-mid-gray capitalize
+    [&_.word]:opacity-0
   "
+        style={{ opacity: 0 }}
       >
         Crafting spaces where form meets function
       </p>

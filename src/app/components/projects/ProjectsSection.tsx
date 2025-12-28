@@ -124,9 +124,9 @@ export default function ProjectsSection() {
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
-          duration: 1.15,
+          duration: 1.25,
           ease: "power3.out",
-          stagger: 0.14,
+          stagger: 0.15,
           scrollTrigger: {
             trigger: outroRef.current,
             start: "top center",
@@ -446,7 +446,8 @@ export default function ProjectsSection() {
           </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
             <h2 className="intro-animate text-4xl md:text-4xl font-semibold leading-[1.25] tracking-[-0.05em] md:max-w-3xl uppercase">
-              Every Project Is An Exploration Of Proportion, Light, Material And The Stories They Hold
+              Every Project Is An Exploration Of Proportion, Light, Material And
+              The Stories They Hold
             </h2>
             <div className="flex flex-col gap-4 max-w-sm text-white/70">
               <p className="intro-animate text-lg leading-relaxed">
@@ -577,30 +578,14 @@ export default function ProjectsSection() {
         ref={outroRef}
         className="relative w-full h-screen bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
-        <div className="max-w-5xl mx-auto w-full space-y-8 text-center">
-          <div className="flex justify-center">
-            <span className="outro-animate inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/75 bg-white/5 backdrop-blur-sm">
-              <span className="size-2 rounded-full bg-cyan-400" />
-              Choose your build track
-            </span>
-          </div>
-          <h2 className="outro-animate text-4xl md:text-6xl font-semibold leading-[1.05] tracking-[-0.06em]">
-            Pick a category and we assemble the right squad, playbooks, and
-            sprints
+        <div className="max-w-6xl mx-auto w-full space-y-8 text-center">
+          <h2 className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
+            We <span className="text-mid-gray">Design</span> With Purpose
+            Merging <span className="text-mid-gray">Innovation</span>, Technical{" "}
+            <span className="text-mid-gray">Precistion</span>, And Experssive{" "}
+            <span className="text-mid-gray">Beauty</span> To Create Spaces That{" "}
+            <span className="text-mid-gray">Elevate</span> Everyday Life
           </h2>
-          <p className="outro-animate text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-            From discovery to launch, we orchestrate motion, environment, and
-            product storytelling so every space feels alive, measurable, and
-            repeatable.
-          </p>
-          <div className="outro-animate flex flex-wrap items-center justify-center gap-4">
-            <button className="px-5 py-3 rounded-full bg-white text-black font-semibold tracking-tight hover:bg-white/90 transition-colors">
-              Book a category walkthrough
-            </button>
-            <button className="px-5 py-3 rounded-full border border-white/20 text-white font-medium tracking-tight hover:border-white/40 transition-colors">
-              Download process & pricing
-            </button>
-          </div>
         </div>
       </section>
     </div>

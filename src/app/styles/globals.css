@@ -16,6 +16,10 @@ html[lang="en"] * {
   font-family: var(--font-montserrat), sans-serif !important;
 }
 
+* {
+  cursor: none !important;
+}
+
 body {
   margin: 0;
   color: var(--color-main-white);
@@ -54,7 +58,7 @@ body {
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
-  
+
   .scroll-section-inner {
     min-height: 100vh;
   }
@@ -66,6 +70,62 @@ body {
   font-size: 30px;
 }
 /* End Of About Sectio --- Scroll Horizolial (Css) */
+
+.cursor-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+}
+
+.cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.15s ease;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(2px);
+}
+
+.cursor.hover {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.1s ease;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cursor-dot.hover {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.particle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+}
 
 ::selection {
   background: color-mix(in srgb, var(--color-mid-gray) 40%, transparent);

@@ -282,7 +282,7 @@ const ContactSection: React.FC = () => {
       </div>
 
       {/* Copyright */}
-      <div className="mt-auto text-center text-[var(--color-mid-gray)] text-sm capitalize">
+      <div className="mt-auto pt-8 text-center text-[var(--color-mid-gray)] text-sm capitalize">
         All rights reserved &copy; {new Date().getFullYear()}{" "}
         <Link href={"/"} className="text-orange-400">Be Group</Link>
       </div>

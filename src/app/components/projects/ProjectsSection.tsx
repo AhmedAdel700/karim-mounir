@@ -73,13 +73,12 @@ export default function ProjectsSection() {
 
   useEffect(() => {
     if (!lenis) return;
-
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
     // Setup marquee animation
     setupMarqueeAnimation();
 
-    // Intro/outro text animations
+    // Intro/outro text elements
     const introEls = introRef.current
       ? gsap.utils.toArray<HTMLElement>(
           introRef.current.querySelectorAll(".intro-animate")
@@ -91,6 +90,7 @@ export default function ProjectsSection() {
         )
       : [];
 
+    // Intro animation
     if (introEls.length) {
       gsap.set(introEls, { opacity: 0, y: 60, filter: "blur(8px)" });
       gsap.fromTo(
@@ -114,34 +114,91 @@ export default function ProjectsSection() {
       );
     }
 
+    // Outro animation - NEW cool style
     if (outroEls.length) {
-      gsap.set(outroEls, { opacity: 0, y: 70, filter: "blur(10px)" });
-      gsap.fromTo(
-        outroEls,
-        { y: 70, opacity: 0, filter: "blur(10px)" },
-        {
-          delay: 0.35,
-          y: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 1.25,
-          ease: "power3.out",
-          stagger: 0.15,
-          scrollTrigger: {
+      outroEls.forEach((el) => {
+        const split = new SplitText(el, {
+          type: "chars,words,lines",
+          charsClass: "outro-char",
+        });
+
+        // Wrap each char for 3D pop animation
+        split.chars.forEach((char) => {
+          const el = char as HTMLElement;
+
+          el.style.display = "inline-block";
+          el.innerHTML = `
+    <span style="
+      display: inline-block;
+      transform: perspective(600px) rotateX(90deg);
+      opacity: 0;
+    ">
+      ${el.textContent}
+    </span>
+  `;
+        });
+      });
+
+      if (outroEls.length) {
+        outroEls.forEach((el) => {
+          const split = new SplitText(el, {
+            type: "chars,words,lines",
+            charsClass: "outro-char",
+          });
+
+          split.chars.forEach((char) => {
+            const el = char as HTMLElement;
+
+            el.style.display = "inline-block";
+            el.innerHTML = `
+    <span style="
+      display: inline-block;
+      transform: perspective(600px) rotateX(90deg);
+      opacity: 0;
+    ">
+      ${el.textContent}
+    </span>
+  `;
+          });
+        });
+
+        const outroChars = outroRef.current
+          ? gsap.utils.toArray<HTMLElement>(
+              outroRef.current.querySelectorAll(".outro-char span")
+            )
+          : [];
+
+        if (outroChars.length) {
+          // Create timeline for outro
+          const tl = gsap.timeline({ paused: true });
+
+          tl.to(outroChars, {
+            opacity: 1,
+            rotateX: 0,
+            y: 0,
+            duration: 1.2,
+            ease: "back.out(1.7)",
+            stagger: 0.03,
+          });
+
+          // ScrollTrigger to control timeline
+          ScrollTrigger.create({
             trigger: outroRef.current,
-            start: "top center",
-            end: "bottom center",
-            toggleActions: "play reverse play reverse",
-          },
+            start: "top 80%",
+            end: "bottom 20%",
+            onEnter: () => tl.play(0), // play from start every time we enter
+            onLeaveBack: () => tl.reverse(), // reverse when scrolling back up
+            onEnterBack: () => tl.play(0), // play again if re-entering from bottom
+            onLeave: () => tl.reverse(), // reverse if leaving from top
+          });
         }
-      );
+      }
     }
 
-    // Get all cards
+    // Cards animation (unchanged)
     const cards = cardsRef.current.filter(Boolean);
     const introCard = cards[0];
 
-    // Split text for all titles
     const titles = cards
       .map((card) => card.querySelector(".card-title h2"))
       .filter(Boolean);
@@ -153,25 +210,19 @@ export default function ProjectsSection() {
           charsClass: "char",
           tag: "div",
         });
-
         split.chars.forEach((char) => {
           char.innerHTML = `<span>${char.textContent}</span>`;
         });
       }
     });
 
-    // Animate all card text elements
     cards.forEach((card, index) => {
       if (index === 0) return;
-
       const cardTextEls = gsap.utils.toArray<HTMLElement>(
         card.querySelectorAll(".card-text-animate")
       );
-
       if (!cardTextEls.length) return;
-
       gsap.set(cardTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
-
       gsap.fromTo(
         cardTextEls,
         { y: 60, opacity: 0, filter: "blur(8px)" },
@@ -192,17 +243,6 @@ export default function ProjectsSection() {
       );
     });
 
-    // Animation functions
-    function animateContentIn(titleChars: Element | null) {
-      if (titleChars)
-        gsap.to(titleChars, { x: "0%", duration: 0.75, ease: "power4.out" });
-    }
-
-    function animateContentOut(titleChars: Element | null) {
-      if (titleChars)
-        gsap.to(titleChars, { x: "100%", duration: 0.5, ease: "power4.out" });
-    }
-
     // Intro card animations
     if (introCard) {
       const cardImgWrapper = introCard.querySelector(".card-img");
@@ -220,11 +260,10 @@ export default function ProjectsSection() {
         scrub: 1.2,
         onUpdate: (self) => {
           const progress = self.progress;
-
-          // Image scaling
           const imgScale = 0.5 + progress * 0.5;
           const borderRadius = 400 - progress * 375;
           const imgInnerScale = 1.5 - progress * 0.5;
+
           if (cardImgWrapper)
             gsap.set(cardImgWrapper, {
               scale: imgScale,
@@ -232,43 +271,33 @@ export default function ProjectsSection() {
             });
           if (cardImg) gsap.set(cardImg, { scale: imgInnerScale });
 
-          // Text animation
-          const textStart = 0.15;
-          const textEnd = 0.55;
           let textProgress = gsap.utils.clamp(
             0,
             1,
-            (progress - textStart) / (textEnd - textStart)
+            (progress - 0.15) / (0.55 - 0.15)
           );
-
-          // Force final values at the very end
           if (progress >= 1) textProgress = 1;
-
           gsap.set(introTextEls, {
             opacity: textProgress,
             y: 60 * (1 - textProgress),
             filter: `blur(${8 * (1 - textProgress)}px)`,
           });
 
-          // Marquee fade
           const marquee = introCard.querySelector(".card-marquee .marquee");
           if (marquee) {
             if (imgScale <= 0.75) {
               const fadeProgress = (imgScale - 0.5) / (0.75 - 0.5);
               gsap.set(marquee, { opacity: 1 - fadeProgress });
-            } else if (imgScale > 0.75) {
-              gsap.set(marquee, { opacity: 0 });
-            }
+            } else if (imgScale > 0.75) gsap.set(marquee, { opacity: 0 });
           }
         },
       });
     }
 
     // Pin cards
-    const scrollMultiplier = 2.5; // 2.5x normal scroll
+    const scrollMultiplier = 2.5;
     cards.forEach((card, index) => {
       const isLastCard = index === cards.length - 1;
-
       ScrollTrigger.create({
         trigger: card,
         start: "top top",
@@ -279,7 +308,7 @@ export default function ProjectsSection() {
       });
     });
 
-    // Scale and fade previous cards
+    // Previous card scale/fade & card image scroll animations
     cards.forEach((card, index) => {
       if (index < cards.length - 1) {
         const cardImgWrapper = card.querySelector(".card-wrapper");
@@ -289,19 +318,15 @@ export default function ProjectsSection() {
           end: "top top",
           onUpdate: (self) => {
             const progress = self.progress;
-            if (cardImgWrapper) {
+            if (cardImgWrapper)
               gsap.set(cardImgWrapper, {
                 scale: 1 - progress * 0.25,
                 opacity: 1 - progress,
               });
-            }
           },
         });
       }
-    });
 
-    // Animate card images on scroll
-    cards.forEach((card, index) => {
       if (index > 0) {
         const cardImg = card.querySelector(".card-img img");
         const imgContainer = card.querySelector(".card-img");
@@ -312,41 +337,41 @@ export default function ProjectsSection() {
           onUpdate: (self) => {
             const progress = self.progress;
             const scaleValue = 1.05 - progress * 0.05;
-            if (cardImg) {
-              gsap.set(cardImg, { scale: scaleValue });
-            } else if (imgContainer) {
+            if (cardImg) gsap.set(cardImg, { scale: scaleValue });
+            else if (imgContainer)
               gsap.set(imgContainer, { scale: scaleValue });
-            }
-            if (imgContainer) {
+            if (imgContainer)
               gsap.set(imgContainer, {
                 borderRadius: Math.max(0, 40 - progress * 40) + "px",
               });
-            }
           },
         });
       }
     });
 
-    // Animate content for non-intro cards
+    // Animate card titles
     cards.forEach((card, index) => {
       if (index === 0) return;
-
       const cardTitleChars = card.querySelector(".char span");
-
       ScrollTrigger.create({
         trigger: card,
         start: "top top",
-        onEnter: () => {
-          animateContentIn(cardTitleChars);
-        },
-        onLeaveBack: () => {
-          animateContentOut(cardTitleChars);
-        },
+        onEnter: () =>
+          gsap.to(cardTitleChars, {
+            x: "0%",
+            duration: 0.75,
+            ease: "power4.out",
+          }),
+        onLeaveBack: () =>
+          gsap.to(cardTitleChars, {
+            x: "100%",
+            duration: 0.5,
+            ease: "power4.out",
+          }),
       });
     });
 
     ScrollTrigger.refresh();
-
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };

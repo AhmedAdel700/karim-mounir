@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 
 interface Particle {
@@ -27,16 +26,16 @@ const ModernCursor: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
 
-      // Create particles (throttled)
       const now = Date.now();
-      if (now - lastParticleTime.current > 50) {
+      if (now - lastParticleTime.current > 30) {
+        // faster spawn
         const newParticle: Particle = {
           id: particleIdCounter.current++,
           x: e.clientX,
           y: e.clientY,
           angle: Math.random() * Math.PI * 2,
-          velocity: Math.random() * 2 + 1,
-          life: Math.random() * 60 + 40,
+          velocity: Math.random() * 0.8 + 0.5, // lighter movement
+          life: Math.random() * 40 + 30,
           frame: 0,
         };
         setParticles((prev) => [...prev, newParticle]);
@@ -77,14 +76,13 @@ const ModernCursor: React.FC = () => {
     };
   }, []);
 
-  // Animate cursor
+  // Cursor follow animation
   useEffect(() => {
     let animationFrameId: number;
 
     const animate = () => {
-      // Smooth follow effect
-      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.15;
-      cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.15;
+      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.25; // lighter, faster follow
+      cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.25;
 
       if (cursorRef.current) {
         cursorRef.current.style.left = `${cursorPos.current.x}px`;
@@ -106,7 +104,7 @@ const ModernCursor: React.FC = () => {
     };
   }, []);
 
-  // Animate particles
+  // Particle animation
   useEffect(() => {
     let animationFrameId: number;
 
@@ -141,7 +139,7 @@ const ModernCursor: React.FC = () => {
           const progress = p.frame / p.life;
           const x = p.x + Math.cos(p.angle) * p.velocity * p.frame;
           const y =
-            p.y + Math.sin(p.angle) * p.velocity * p.frame - p.frame * 0.5;
+            p.y + Math.sin(p.angle) * p.velocity * p.frame - p.frame * 0.2; // smaller vertical drift
 
           return (
             <div

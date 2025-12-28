@@ -123,7 +123,7 @@ export default function ScrollServices() {
               <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-mid-gray)] via-[var(--color-main-white)] to-[var(--color-mid-gray)] mb-8">
                 {service.number}
               </div>
-              <h2 className="text-6xl font-bold text-[var(--color-main-white)] mb-6">
+              <h2 className="text-4xl lg:text-6xl font-bold text-[var(--color-main-white)] mb-6">
                 {service.title}
               </h2>
               <p className="text-2xl text-[var(--color-deep-gray)]">

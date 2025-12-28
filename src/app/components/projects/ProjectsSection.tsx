@@ -9,10 +9,10 @@ import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
 
 // Import your images
-import p1 from "@/app/images/p1.png";
+import p1 from "@/app/images/p1.jpg";
 import p2 from "@/app/images/p2.jpg";
 import p3 from "@/app/images/p3.jpg";
-import p4 from "@/app/images/p4.png";
+import p4 from "@/app/images/p4.jpg";
 
 interface ProjectCard {
   id: number;
@@ -25,35 +25,35 @@ interface ProjectCard {
 const projectCards: ProjectCard[] = [
   {
     id: 1,
-    title: "Workplace Futures",
+    title: "commercial",
     description:
-      "Signature offices, experience centers, and HQs built for hybrid teams with tactile, cinematic UI.",
+      "Transforming office spaces, corporate headquarters, and collaborative hubs into immersive environments where design meets productivity and creativity.",
     image: p1,
-    cta: "Explore workplaces",
+    cta: "Discover Workspaces",
   },
   {
     id: 2,
-    title: "Experience Hubs",
+    title: "recreational",
     description:
-      "Retail, hospitality, and destination experiences where motion, light, and space move together.",
+      "Crafting unforgettable leisure and hospitality experiences with dynamic design, lighting, and movement that delight every visitor.",
     image: p2,
-    cta: "View experience hubs",
+    cta: "Explore Experience Hubs",
   },
   {
     id: 3,
-    title: "Product Worlds",
+    title: "residential",
     description:
-      "Launch stages and digital twins that let customers touch the product narrative before it ships.",
+      "Designing homes and living spaces that blend comfort, innovation, and storytelling to create personalized, inspiring environments.",
     image: p3,
-    cta: "Open product worlds",
+    cta: "Step Inside Living Spaces",
   },
   {
     id: 4,
-    title: "Brand Environments",
+    title: "administration",
     description:
-      "Flagship installations and pop-ups that translate brand DNA into spatial stories with measurable lift.",
+      "Creating institutional and brand spaces that communicate identity, streamline operations, and leave a lasting impression.",
     image: p4,
-    cta: "See brand environments",
+    cta: "See Brand Installations",
   },
 ];
 
@@ -210,7 +210,7 @@ export default function ProjectsSection() {
       const introTextEls = introCard.querySelectorAll(".card-text-animate");
 
       gsap.set(cardImgWrapper, { scale: 0.5, borderRadius: "400px" });
-      gsap.set(cardImg, { scale: 1.5 });
+      gsap.set(cardImg, { scale: 1 });
       gsap.set(introTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
 
       ScrollTrigger.create({
@@ -433,37 +433,44 @@ export default function ProjectsSection() {
   };
 
   return (
-    <div
-      ref={sectionRef}
-      className="overflow-x-hidden font-[family-name:var(--font-geist-sans)]"
-    >
+    <div ref={sectionRef} className="overflow-x-hidden">
       {/* Intro Section */}
       <section
         ref={introRef}
         className="relative w-full h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray) 70%,var(--color-primary))] to-[var(--color-primary)] text-white flex items-center px-6"
       >
-        <div className="max-w-6xl mx-auto w-full space-y-8 md:space-y-10">
+        <div className="max-w-6xl mx-auto w-full">
           <div className="intro-animate flex items-center gap-3 text-sm uppercase tracking-[0.35em] text-white/60">
             <span className="h-px w-12 bg-white/40" />
             Project Categories
           </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <h2 className="intro-animate text-4xl md:text-6xl font-semibold leading-[1.05] tracking-[-0.06em] md:max-w-3xl">
-              Four experience categories engineered for digital-first brands.
+            <h2 className="intro-animate text-4xl md:text-4xl font-semibold leading-[1.25] tracking-[-0.05em] md:max-w-3xl uppercase">
+              Every Project Is An Exploration Of Proportion, Light, Material And The Stories They Hold
             </h2>
             <div className="flex flex-col gap-4 max-w-sm text-white/70">
               <p className="intro-animate text-lg leading-relaxed">
-                Choose a category to view its case studies and tailored
-                engagement models. Each track blends architecture, motion, and
-                tactile UI.
+                Four experience categories that blend design, motion, and
+                interactivity to create spaces and products that inspire and
+                engage.
               </p>
-              <div className="intro-animate flex items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />{" "}
-                  Live categories
+
+              <div className="intro-animate grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-white/60">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  COMMERCIAL
                 </span>
-                <span className="text-sm text-white/60">
-                  Optimized for smooth scroll
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  RECREATIONAL
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  RESIDENTAIL
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  ADMINISTRATION
                 </span>
               </div>
             </div>
@@ -507,31 +514,15 @@ export default function ProjectsSection() {
                   <Image
                     src={project.image.src}
                     alt={project.title}
-                    width={400}
-                    height={400}
-                    className="absolute top-0 left-0 w-full h-full object-cover will-change-transform scale-[1.5]"
-                  />
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(26,26,26,0.82) 0%, rgba(26,26,26,0.55) 55%, rgba(26,26,26,0.15) 100%)",
-                    }}
+                    fill
+                    className="absolute top-0 left-0 w-full h-full object-cover will-change-transform"
                   />
                 </div>
               ) : (
                 <div
                   className="card-img absolute inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
                   style={{ backgroundImage: `url(${project.image.src})` }}
-                >
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(26,26,26,0.82) 0%, rgba(26,26,26,0.55) 55%, rgba(26,26,26,0.15) 100%)",
-                    }}
-                  />
-                </div>
+                ></div>
               )}
 
               {/* Content */}
@@ -542,7 +533,7 @@ export default function ProjectsSection() {
                     Category {project.id.toString().padStart(2, "0")}
                   </div>
                   <div className="card-title text-left card-text-animate">
-                    <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl">
+                    <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
                       {project.title}
                     </h2>
                   </div>

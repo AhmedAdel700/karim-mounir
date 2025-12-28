@@ -9,6 +9,7 @@ import Header from "@/app/components/header/Header";
 import Footer from "@/app/components/footer/Footer";
 import { ViewTransitions } from "next-view-transitions";
 import ScrollProvider from "../components/ScrollProvider";
+import ModernCursor from "../components/ModernCursor";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -49,6 +50,7 @@ export default async function RootLayout({
           } antialiased`}
         >
           <NextIntlClientProvider messages={messages} locale={locale}>
+            <ModernCursor />
             <Header />
             <ScrollProvider>{children}</ScrollProvider>
           </NextIntlClientProvider>

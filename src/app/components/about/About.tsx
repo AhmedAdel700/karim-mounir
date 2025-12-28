@@ -241,20 +241,6 @@ export default function About() {
                     Meet Our Founder
                   </h2>
 
-                  <h3
-                    className="owner-subtitle text-2xl md:text-3xl text-gray-200 mb-6 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px)"
-                        : "translateY(26px)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "450ms" : "0ms",
-                    }}
-                  >
-                    Karim Mounir
-                  </h3>
-
                   <p
                     className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
@@ -288,6 +274,20 @@ export default function About() {
                     grow, sustain, and transform through strategic design
                     solutions.
                   </p>
+
+                  <h3
+                    className="owner-subtitle text-end text-2xl md:text-3xl text-gray-200 mb-6 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    style={{
+                      opacity: ownerVisible ? 1 : 0,
+                      transform: ownerVisible
+                        ? "translateY(0px)"
+                        : "translateY(26px)",
+                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                      transitionDelay: ownerVisible ? "450ms" : "0ms",
+                    }}
+                  >
+                    Karim Mounir
+                  </h3>
                 </div>
               </div>
             </div>

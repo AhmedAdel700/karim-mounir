@@ -19,6 +19,7 @@ gsap.registerPlugin(ScrollTrigger);
 interface FormData {
   name: string;
   email: string;
+  phone: string;
   message: string;
 }
 
@@ -26,6 +27,7 @@ const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
+    phone:"",
     message: "",
   });
   const [focused, setFocused] = useState<string>("");
@@ -156,7 +158,7 @@ const ContactSection: React.FC = () => {
           {/* Contact Form */}
           <div ref={formRef}>
             <div className="space-y-6">
-              {["name", "email", "message"].map((field) => {
+              {["name", "email", "phone", "message"].map((field) => {
                 const isTextArea = field === "message";
                 return (
                   <div key={field} className="form-input">
@@ -190,7 +192,7 @@ const ContactSection: React.FC = () => {
                       />
                     ) : (
                       <input
-                        type={field === "email" ? "email" : "text"}
+                        type={field === "email" ? "email" : field === "phone" ? "number" : "text"}
                         id={field}
                         name={field}
                         value={formData[field as keyof FormData]}
@@ -227,7 +229,7 @@ const ContactSection: React.FC = () => {
           </div>
 
           {/* Contact Info & Social */}
-          <div className="space-y-8">
+          <div className="space-y-8 xl:pt-[15px]">
             {/* Contact Info */}
             <div className="space-y-6">
               {[

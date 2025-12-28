@@ -13,6 +13,7 @@ import p1 from "@/app/images/p1.jpg";
 import p2 from "@/app/images/p2.jpg";
 import p3 from "@/app/images/p3.jpg";
 import p4 from "@/app/images/p4.jpg";
+import FlipText from "../FlipText";
 
 interface ProjectCard {
   id: number;
@@ -113,45 +114,6 @@ export default function ProjectsSection() {
         }
       );
     }
-
-    if (outroEls.length) {
-      outroEls.forEach((el) => {
-        const split = new SplitText(el, {
-          type: "chars,words,lines",
-          charsClass: "outro-char",
-        });
-
-        split.chars.forEach((char) => {
-          const el = char as HTMLElement;
-          el.style.display = "inline-block";
-          el.innerHTML = `<span style="display:inline-block; transform:perspective(600px) rotateX(90deg); opacity:0;">${el.textContent}</span>`;
-        });
-
-        const outroChars = gsap.utils.toArray<HTMLElement>(
-          el.querySelectorAll(".outro-char span")
-        );
-
-        const tl = gsap.timeline({ paused: true });
-        tl.to(outroChars, {
-          opacity: 1,
-          rotateX: 0,
-          y: 0,
-          duration: 1,
-          ease: "back.out(1.7)",
-          stagger: 0.015,
-        });
-
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 80%", // start earlier
-          onEnter: () => tl.play(0),
-          onLeaveBack: () => tl.reverse(),
-          onEnterBack: () => tl.play(0),
-          onLeave: () => tl.reverse(),
-        });
-      });
-    }
-
     // Cards animation (unchanged)
     const cards = cardsRef.current.filter(Boolean);
     const introCard = cards[0];
@@ -561,13 +523,13 @@ export default function ProjectsSection() {
         className="relative w-full h-screen bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center">
-          <h2 className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
+          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
             We <span className="text-mid-gray">Design</span> With Purpose
             Merging <span className="text-mid-gray">Innovation</span>, Technical{" "}
             <span className="text-mid-gray">Precistion</span>, And Experssive{" "}
             <span className="text-mid-gray">Beauty</span> To Create Spaces That{" "}
             <span className="text-mid-gray">Elevate</span> Everyday Life
-          </h2>
+          </FlipText>
         </div>
       </section>
     </div>

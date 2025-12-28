@@ -34,7 +34,7 @@ const ModernCursor: React.FC = () => {
           x: e.clientX,
           y: e.clientY,
           angle: Math.random() * Math.PI * 2,
-          velocity: Math.random() * 0.8 + 0.5, // lighter movement
+          velocity: Math.random() * 0.8 + 1, // lighter movement
           life: Math.random() * 40 + 30,
           frame: 0,
         };

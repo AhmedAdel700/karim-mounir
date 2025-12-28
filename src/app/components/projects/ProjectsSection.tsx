@@ -184,7 +184,7 @@ export default function ProjectsSection() {
           // ScrollTrigger to control timeline
           ScrollTrigger.create({
             trigger: outroRef.current,
-            start: "top 80%",
+            start: "top 65%",
             end: "bottom 20%",
             onEnter: () => tl.play(0), // play from start every time we enter
             onLeaveBack: () => tl.reverse(), // reverse when scrolling back up

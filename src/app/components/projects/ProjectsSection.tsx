@@ -114,7 +114,6 @@ export default function ProjectsSection() {
       );
     }
 
-    // Outro animation - NEW cool style
     if (outroEls.length) {
       outroEls.forEach((el) => {
         const split = new SplitText(el, {
@@ -122,77 +121,35 @@ export default function ProjectsSection() {
           charsClass: "outro-char",
         });
 
-        // Wrap each char for 3D pop animation
         split.chars.forEach((char) => {
           const el = char as HTMLElement;
-
           el.style.display = "inline-block";
-          el.innerHTML = `
-    <span style="
-      display: inline-block;
-      transform: perspective(600px) rotateX(90deg);
-      opacity: 0;
-    ">
-      ${el.textContent}
-    </span>
-  `;
+          el.innerHTML = `<span style="display:inline-block; transform:perspective(600px) rotateX(90deg); opacity:0;">${el.textContent}</span>`;
+        });
+
+        const outroChars = gsap.utils.toArray<HTMLElement>(
+          el.querySelectorAll(".outro-char span")
+        );
+
+        const tl = gsap.timeline({ paused: true });
+        tl.to(outroChars, {
+          opacity: 1,
+          rotateX: 0,
+          y: 0,
+          duration: 1,
+          ease: "back.out(1.7)",
+          stagger: 0.015,
+        });
+
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 80%", // start earlier
+          onEnter: () => tl.play(0),
+          onLeaveBack: () => tl.reverse(),
+          onEnterBack: () => tl.play(0),
+          onLeave: () => tl.reverse(),
         });
       });
-
-      if (outroEls.length) {
-        outroEls.forEach((el) => {
-          const split = new SplitText(el, {
-            type: "chars,words,lines",
-            charsClass: "outro-char",
-          });
-
-          split.chars.forEach((char) => {
-            const el = char as HTMLElement;
-
-            el.style.display = "inline-block";
-            el.innerHTML = `
-    <span style="
-      display: inline-block;
-      transform: perspective(600px) rotateX(90deg);
-      opacity: 0;
-    ">
-      ${el.textContent}
-    </span>
-  `;
-          });
-        });
-
-        const outroChars = outroRef.current
-          ? gsap.utils.toArray<HTMLElement>(
-              outroRef.current.querySelectorAll(".outro-char span")
-            )
-          : [];
-
-        if (outroChars.length) {
-          // Create timeline for outro
-          const tl = gsap.timeline({ paused: true });
-
-          tl.to(outroChars, {
-            opacity: 1,
-            rotateX: 0,
-            y: 0,
-            duration: 1.2,
-            ease: "back.out(1.7)",
-            stagger: 0.03,
-          });
-
-          // ScrollTrigger to control timeline
-          ScrollTrigger.create({
-            trigger: outroRef.current,
-            start: "top 65%",
-            end: "bottom 20%",
-            onEnter: () => tl.play(0), // play from start every time we enter
-            onLeaveBack: () => tl.reverse(), // reverse when scrolling back up
-            onEnterBack: () => tl.play(0), // play again if re-entering from bottom
-            onLeave: () => tl.reverse(), // reverse if leaving from top
-          });
-        }
-      }
     }
 
     // Cards animation (unchanged)

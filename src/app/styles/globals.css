@@ -8,13 +8,17 @@
   --color-main-white: #ffffff;
 }
 
-html[lang="ar"] * {
-  font-family: var(--font-arabic), sans-serif !important;
+html[lang="ar"] body {
+  font-family: var(--font-arabic), sans-serif;
 }
 
-html[lang="en"] * {
-  font-family: var(--font-montserrat), sans-serif !important;
+html[lang="en"] body {
+  font-family: var(--font-montserrat), sans-serif;
 }
+
+/* .hero-font {
+  font-family: var(--font-sakana), sans-serif !important;
+} */
 
 * {
   cursor: none !important;

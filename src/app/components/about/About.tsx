@@ -249,7 +249,7 @@ export default function About() {
                         ? "translateY(0px)"
                         : "translateY(28px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "600ms" : "0ms",
+                      transitionDelay: ownerVisible ? "450ms" : "0ms",
                     }}
                   >
                     Design team leader managing large integrated projects in
@@ -259,14 +259,14 @@ export default function About() {
                   </p>
 
                   <p
-                    className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px)"
                         : "translateY(32px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "750ms" : "0ms",
+                      transitionDelay: ownerVisible ? "600ms" : "0ms",
                     }}
                   >
                     Designing and managing projects that unlock opportunities
@@ -276,14 +276,14 @@ export default function About() {
                   </p>
 
                   <h3
-                    className="owner-subtitle text-end text-2xl md:text-3xl text-gray-200 mb-6 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-subtitle text-end text-2xl md:text-3xl text-gray-200 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px)"
                         : "translateY(26px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "450ms" : "0ms",
+                      transitionDelay: ownerVisible ? "900ms" : "0ms",
                     }}
                   >
                     Karim Mounir
@@ -390,20 +390,6 @@ export default function About() {
               Meet Our Founder
             </h2>
 
-            <h3
-              className="owner-subtitle text-2xl md:text-3xl text-gray-200 mb-4 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-              style={{
-                opacity: ownerVisible ? 1 : 0,
-                transform: ownerVisible
-                  ? "translateY(0px)"
-                  : "translateY(26px)",
-                filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "450ms" : "0ms",
-              }}
-            >
-              Karim Mounir
-            </h3>
-
             <p
               className="text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
@@ -412,7 +398,7 @@ export default function About() {
                   ? "translateY(0px)"
                   : "translateY(28px)",
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "600ms" : "0ms",
+                transitionDelay: ownerVisible ? "450ms" : "0ms",
               }}
             >
               Design team leader managing large integrated projects in base
@@ -421,20 +407,34 @@ export default function About() {
             </p>
 
             <p
-              className="text-base text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-base text-gray-300 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
                   ? "translateY(0px)"
                   : "translateY(32px)",
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "750ms" : "0ms",
+                transitionDelay: ownerVisible ? "600ms" : "0ms",
               }}
             >
               Designing and managing projects that unlock opportunities and
               improve lives. Serving diverse clients—helping them grow, sustain,
               and transform through strategic design solutions.
             </p>
+
+            <h3
+              className="owner-subtitle text-2xl md:text-3xl text-gray-200 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              style={{
+                opacity: ownerVisible ? 1 : 0,
+                transform: ownerVisible
+                  ? "translateY(0px)"
+                  : "translateY(26px)",
+                filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                transitionDelay: ownerVisible ? "900ms" : "0ms",
+              }}
+            >
+              Karim Mounir
+            </h3>
           </section>
         </div>
       )}

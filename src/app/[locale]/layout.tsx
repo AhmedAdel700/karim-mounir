@@ -6,10 +6,10 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Header from "@/app/components/header/Header";
-import Footer from "@/app/components/footer/Footer";
 import { ViewTransitions } from "next-view-transitions";
 import ScrollProvider from "../components/ScrollProvider";
 import ModernCursor from "../components/ModernCursor";
+import localFont from "next/font/local";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -21,6 +21,12 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
   subsets: ["arabic"],
   weight: ["300", "400", "500", "700"],
+});
+
+const sakana = localFont({
+  src: "../fonts/Sakana.ttf",
+  variable: "--font-sakana",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +51,7 @@ export default async function RootLayout({
     <ViewTransitions>
       <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
         <body
-          className={`${
+          className={`${sakana.variable} ${
             locale === "ar" ? ibmPlexArabic.variable : montserrat.variable
           } antialiased`}
         >

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef, useEffect } from "react";
 import SplitType from "split-type";
+import ModernTextEffect from "@/app/components/ModernTextEffect";
 
 gsap.registerPlugin(useGSAP);
 
@@ -44,7 +45,7 @@ export default function Hero() {
   useGSAP(
     () => {
       if (!paragraphRef.current) return;
-      
+
       const split = new SplitType(".hero-paragraph", { types: "words" });
 
       // Set initial state immediately to prevent flash
@@ -64,10 +65,16 @@ export default function Hero() {
         opacity: 1,
         filter: "blur(0px)",
         rotateX: 0,
-        duration: 0.8,
+        duration: 1.5,
         ease: "power3.out",
         stagger: { each: 0.02, from: "center" },
-        delay: 3.6,
+        delay: 5,
+        scrollTrigger: {
+          trigger: ".hero-paragraph",
+          start: "top 80%",
+          end: "top 20%",
+          toggleActions: "play reverse play reverse",
+        },
       });
     },
     { scope: container }
@@ -101,7 +108,7 @@ export default function Hero() {
           ref={bgRef}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out will-change-transform"
           style={{ transform: "scale(1.02)" }} // <-- initial zoom
-          src="/hero3.mp4"
+          src="/hero1.mp4"
           autoPlay
           muted
           playsInline
@@ -109,18 +116,16 @@ export default function Hero() {
           aria-hidden
         />
       </div>
-
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* <div className="absolute inset-0 bg-black/10" /> */}
 
-      {/* Title */}
-      <h1
-        className="
-    hero-title
-    relative z-10 text-center font-bold
-    text-5xl sm:text-7xl md:text-9xl
-    tracking-tight
-    bg-clip-text text-transparent
+      <ModernTextEffect
+        text={"Karim Mounir"}
+        animationType={"particle"}
+        delay={2}
+        duration={4}
+        fontStyle="uppercase"
+        className="text-main-primary inline-block text-5xl sm:text-7xl md:text-9xl tracking-tight relative z-10 text-center font-bold bg-clip-text text-transparent
     [&_.char]:bg-gradient-to-r
     [&_.char]:from-deep-gray
     [&_.char]:via-mid-gray
@@ -130,12 +135,8 @@ export default function Hero() {
     [&_.char]:bg-[length:100%_100%]
     [&_.char]:bg-[position:0_0]
     [&_.char]:will-change-transform
-    [&_.char]:opacity-0
-  "
-      >
-        Karim Mounir
-      </h1>
-
+    [&_.char]:opacity-0 hero-font"
+      />
       <p
         ref={paragraphRef}
         className="

@@ -14,6 +14,7 @@ interface Particle {
 const ModernCursor: React.FC = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const cursorDotRef = useRef<HTMLDivElement>(null);
+
   const [isHovering, setIsHovering] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
 
@@ -22,45 +23,44 @@ const ModernCursor: React.FC = () => {
   const lastParticleTime = useRef(0);
   const particleIdCounter = useRef(0);
 
+  /* =========================
+     Mouse listeners
+  ========================= */
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
 
       const now = Date.now();
       if (now - lastParticleTime.current > 30) {
-        // faster spawn
         const newParticle: Particle = {
           id: particleIdCounter.current++,
           x: e.clientX,
           y: e.clientY,
           angle: Math.random() * Math.PI * 2,
-          velocity: Math.random() * 0.8 + 1, // lighter movement
+          velocity: Math.random() * 0.8 + 1,
           life: Math.random() * 40 + 30,
           frame: 0,
         };
+
         setParticles((prev) => [...prev, newParticle]);
         lastParticleTime.current = now;
       }
     };
 
     const handleMouseEnter = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "BUTTON" ||
-        target.tagName === "A" ||
-        target.classList.contains("hoverable")
-      ) {
+      if (!(e.target instanceof HTMLElement)) return;
+
+      const hoverEl = e.target.closest("button, a, .hoverable");
+      if (hoverEl) {
         setIsHovering(true);
       }
     };
 
     const handleMouseLeave = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "BUTTON" ||
-        target.tagName === "A" ||
-        target.classList.contains("hoverable")
-      ) {
+      if (!(e.target instanceof HTMLElement)) return;
+
+      const hoverEl = e.target.closest("button, a, .hoverable");
+      if (hoverEl) {
         setIsHovering(false);
       }
     };
@@ -76,12 +76,14 @@ const ModernCursor: React.FC = () => {
     };
   }, []);
 
-  // Cursor follow animation
+  /* =========================
+     Cursor follow animation
+  ========================= */
   useEffect(() => {
     let animationFrameId: number;
 
     const animate = () => {
-      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.25; // lighter, faster follow
+      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.25;
       cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.25;
 
       if (cursorRef.current) {
@@ -99,12 +101,12 @@ const ModernCursor: React.FC = () => {
 
     animate();
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  // Particle animation
+  /* =========================
+     Particle animation
+  ========================= */
   useEffect(() => {
     let animationFrameId: number;
 
@@ -114,47 +116,45 @@ const ModernCursor: React.FC = () => {
           .map((p) => ({ ...p, frame: p.frame + 1 }))
           .filter((p) => p.frame < p.life)
       );
+
       animationFrameId = requestAnimationFrame(animateParticles);
     };
 
     animateParticles();
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
+  /* =========================
+     Render
+  ========================= */
   return (
-    <>
-      <div className="cursor-container">
-        <div
-          ref={cursorRef}
-          className={`cursor ${isHovering ? "hover" : ""}`}
-        />
-        <div
-          ref={cursorDotRef}
-          className={`cursor-dot ${isHovering ? "hover" : ""}`}
-        />
-        {particles.map((p) => {
-          const progress = p.frame / p.life;
-          const x = p.x + Math.cos(p.angle) * p.velocity * p.frame;
-          const y =
-            p.y + Math.sin(p.angle) * p.velocity * p.frame - p.frame * 0.2; // smaller vertical drift
+    <div className="cursor-container">
+      <div ref={cursorRef} className={`cursor ${isHovering ? "hover" : ""}`} />
+      <div
+        ref={cursorDotRef}
+        className={`cursor-dot ${isHovering ? "hover" : ""}`}
+      />
 
-          return (
-            <div
-              key={p.id}
-              className="particle"
-              style={{
-                left: `${x}px`,
-                top: `${y}px`,
-                opacity: 1 - progress,
-              }}
-            />
-          );
-        })}
-      </div>
-    </>
+      {particles.map((p) => {
+        const progress = p.frame / p.life;
+        const x = p.x + Math.cos(p.angle) * p.velocity * p.frame;
+        const y =
+          p.y + Math.sin(p.angle) * p.velocity * p.frame - p.frame * 0.2;
+
+        return (
+          <div
+            key={p.id}
+            className="particle"
+            style={{
+              left: `${x}px`,
+              top: `${y}px`,
+              opacity: 1 - progress,
+            }}
+          />
+        );
+      })}
+    </div>
   );
 };
 

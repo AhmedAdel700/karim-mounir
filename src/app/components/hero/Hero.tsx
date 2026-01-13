@@ -142,12 +142,12 @@ export default function Hero() {
         className="
     hero-paragraph
     relative z-10 text-center pb-3 font-medium
-    text-base sm:text-4xl text-mid-gray capitalize
+    text-base sm:text-4xl lg:text-5xl text-mid-gray capitalize
     [&_.word]:opacity-0
   "
         style={{ opacity: 0 }}
       >
-        Crafting spaces where form meets function
+        “Design Beyond Form”
       </p>
     </main>
   );

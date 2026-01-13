@@ -85,11 +85,6 @@ export default function ProjectsSection() {
           introRef.current.querySelectorAll(".intro-animate")
         )
       : [];
-    const outroEls = outroRef.current
-      ? gsap.utils.toArray<HTMLElement>(
-          outroRef.current.querySelectorAll(".outro-animate")
-        )
-      : [];
 
     // Intro animation
     if (introEls.length) {
@@ -98,11 +93,11 @@ export default function ProjectsSection() {
         introEls,
         { y: 60, opacity: 0, filter: "blur(8px)" },
         {
-          delay: 0.35,
+          delay: 0.5,
           y: 0,
           opacity: 1,
           filter: "blur(0px)",
-          duration: 1.1,
+          duration: 1.5,
           ease: "power3.out",
           stagger: 0.12,
           scrollTrigger: {
@@ -462,6 +457,9 @@ export default function ProjectsSection() {
                     fill
                     className="absolute top-0 left-0 w-full h-full object-cover will-change-transform"
                   />
+
+                  {/* DARK OVERLAY */}
+                  <div className="absolute inset-0 bg-black/45" />
                 </div>
               ) : (
                 <div
@@ -471,19 +469,19 @@ export default function ProjectsSection() {
               )}
 
               {/* Content */}
-              <div className="card-content absolute inset-0 w-full h-full flex items-end justify-start z-10 px-6 md:px-12 pb-12">
-                <div className="card-copy max-w-4xl space-y-4 md:space-y-6">
-                  <div className="card-text-animate flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/70">
-                    <span className="h-px w-10 bg-white/40" />
+              <div className="card-content absolute inset-0 w-full h-full flex items-center justify-center z-10 px-6 md:px-12">
+                <div className="card-copy max-w-4xl space-y-4 md:space-y-6 text-center flex flex-col items-center">
+                  <div className="card-text-animate flex items-center justify-center gap-3 text-lg uppercase tracking-[0.28em] text-white">
+                    <span className="h-px w-10 bg-white" />
                     Category {project.id.toString().padStart(2, "0")}
                   </div>
-                  <div className="card-title text-left card-text-animate">
+                  <div className="card-title text-center card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
                       {project.title}
                     </h2>
                   </div>
-                  <div className="card-description max-w-2xl card-text-animate">
-                    <p className="text-lg md:text-xl leading-relaxed text-white/85">
+                  <div className="card-description max-w-2xl card-text-animate mx-auto">
+                    <p className="text-lg md:text-xl leading-relaxed text-white/85 mb-5">
                       {project.description}
                     </p>
                   </div>

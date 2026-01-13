@@ -324,7 +324,7 @@ export default function AboutPage() {
       </section>
 
       {/* Section 3: Role and Vision */}
-      <section className="min-h-screen flex items-center px-6 py-20">
+      <section className="min-h-fit md:min-h-screen flex items-center px-6 py-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <TextReveal>
             <div className="relative">

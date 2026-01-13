@@ -1,18 +1,9 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import {
-  Mail,
-  MapPin,
-  Phone,
-  Facebook,
-  Linkedin,
-  X,
-  Send,
-} from "lucide-react";
+import { Mail, MapPin, Phone, Facebook, Linkedin, X, Send } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Link } from "@/navigations";
 import { useLocale } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,9 +12,8 @@ import type { z } from "zod";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ContactSection: React.FC = () => {
+const ContactPage: React.FC = () => {
   const locale = useLocale();
-
   const schema = createFormSchema(locale);
   type FormValues = z.infer<typeof schema>;
 
@@ -50,57 +40,80 @@ const ContactSection: React.FC = () => {
 
     const headerEls = section.querySelectorAll("h2, p");
     const formInputs = [...(form?.querySelectorAll(".form-input") || [])];
-    if (button) formInputs.push(button); // include submit button in animation
-    const contactItems = section.querySelectorAll("div.flex.items-start.gap-4");
+    if (button) formInputs.push(button);
+    const contactItems = section.querySelectorAll(".contact-item");
     const socialIcons = social?.querySelectorAll(".social-icon") || [];
 
-    // Animate headers, inputs + button, contact items
-    gsap.set([...headerEls, ...formInputs, ...contactItems], {
+    // Initial state
+    gsap.set(headerEls, {
       opacity: 0,
-      y: 30,
-      scale: 0.9,
-      filter: "blur(8px)",
+      y: 20,
+      scale: 0.95,
+      filter: "blur(4px)",
+    });
+    gsap.set(formInputs, {
+      opacity: 0,
+      y: 20,
+      scale: 0.95,
+      filter: "blur(4px)",
+    });
+    gsap.set(contactItems, { opacity: 0, y: 20, scale: 0.95 });
+    gsap.set(socialIcons, { opacity: 0, y: 20, scale: 0.9 });
+
+    // Animate all together
+    const scrollTriggerSettings = {
+      trigger: section,
+      start: "top 85%",
+      toggleActions: "play none none none",
+    };
+
+    gsap.to(headerEls, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      duration: 0.6,
+      delay: 1,
+      ease: "power3.out",
+      stagger: 0.06,
+      scrollTrigger: scrollTriggerSettings,
     });
 
-    gsap.set(socialIcons, { opacity: 0, scale: 0, y: 30 });
+    gsap.to(formInputs, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      duration: 0.6,
+      delay: 1,
+      ease: "power3.out",
+      stagger: 0.08,
+      scrollTrigger: scrollTriggerSettings,
+    });
 
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
-          toggleActions: "play reverse play reverse",
-        },
-      })
-      .to([...headerEls, ...formInputs, ...contactItems], {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: 0.9,
-        ease: "power2.out",
-        stagger: 0.08,
-      });
+    gsap.to(contactItems, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      delay: 1,
+      ease: "power3.out",
+      stagger: 0.1,
+      scrollTrigger: scrollTriggerSettings,
+    });
 
-    // Social icons animation
-    gsap.fromTo(
-      socialIcons,
-      { opacity: 0, scale: 0, y: 30 },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "elastic.out(1, 0.6)",
-        scrollTrigger: {
-          trigger: social,
-          start: "top 80%",
-          end: "top 20%",
-          toggleActions: "play reverse play reverse",
-        },
-      }
-    );
+    gsap.to(socialIcons, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      delay: 1,
+      ease: "power3.out",
+      stagger: 0.08,
+      scrollTrigger: scrollTriggerSettings,
+    });
+
+    ScrollTrigger.refresh();
   }, []);
 
   const onSubmit = (data: FormValues) => {
@@ -109,33 +122,31 @@ const ContactSection: React.FC = () => {
     if (submitButtonRef.current) {
       const button = submitButtonRef.current;
 
-      // click animation
+      // Snappy click animation
       button.animate(
         [
           { transform: "scale(1)" },
-          { transform: "scale(0.95)" },
+          { transform: "scale(0.9)" },
           { transform: "scale(1)" },
         ],
-        { duration: 200, easing: "ease-in-out" }
+        { duration: 150, easing: "ease-in-out" }
       );
 
-      // temporary feedback
       const originalText = button.innerHTML;
       button.innerHTML = "Sent!";
       setTimeout(() => {
         button.innerHTML = originalText;
-      }, 1500);
+      }, 1200);
     }
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onError = (errors: any) => {
+  const onError = (errors: any) =>
     console.log("Form validation errors:", errors);
-  };
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] flex flex-col items-center justify-center px-4 py-10"
+      className="min-h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] flex flex-col items-center justify-start md:justify-center px-4 pt-22 pb-6 lg:pb-0 lg:py-10"
       style={
         {
           "--color-primary": "#1a1a1a",
@@ -228,7 +239,10 @@ const ContactSection: React.FC = () => {
                   info: "25 - Asmaa Fahmi - Cairo",
                 },
               ].map(({ Icon, title, info }) => (
-                <div key={title} className="flex items-start gap-4 group">
+                <div
+                  key={title}
+                  className="flex items-start gap-4 group contact-item"
+                >
                   <div className="w-12 h-12 bg-[color-mix(in_srgb,var(--color-main-white)_10%,transparent)] rounded-lg flex items-center justify-center group-hover:bg-[color-mix(in_srgb,var(--color-main-white)_20%,transparent)] transition-all duration-300">
                     <Icon className="w-5 h-5 text-[var(--color-mid-gray)]" />
                   </div>
@@ -269,16 +283,8 @@ const ContactSection: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Copyright */}
-      <div className="my-4"></div>
-      <div className="mt-auto pt-10 text-center text-[var(--color-mid-gray)] text-sm capitalize w-full border-t border-white/20">
-        All rights reserved &copy; {new Date().getFullYear()}{" "}
-        <Link href={"/"} className="text-orange-400">
-          Be Group
-        </Link>
-      </div>
     </div>
   );
 };
 
-export default ContactSection;
+export default ContactPage;

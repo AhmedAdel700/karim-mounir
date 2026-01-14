@@ -113,7 +113,7 @@ export default function ServicesPage() {
           const serviceTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: service,
-              start: "top 40%",
+              start: "top 50%",
               end: "top 20%",
               toggleActions: "play none none reverse",
             },
@@ -290,9 +290,7 @@ export default function ServicesPage() {
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
-                className={`relative flex ${
-                  isLeft ? "justify-start" : "justify-end"
-                }`}
+                className={`relative flex justify-center`}
                 style={{ perspective: "1000px" }}
               >
                 <div className="max-w-3xl space-y-8 text-start">
@@ -300,7 +298,7 @@ export default function ServicesPage() {
                     <h3 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight leading-tight">
                       {service.title}
                     </h3>
-                    <p className="service-subtitle text-xs tracking-[0.25em] uppercase text-gray-500 font-light">
+                    <p className="service-subtitle text-base tracking-[0.25em] uppercase text-gray-500 font-light">
                       {service.subtitle}
                     </p>
                   </div>

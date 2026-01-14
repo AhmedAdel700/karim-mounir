@@ -31,7 +31,6 @@ export default function About() {
   const [visionVisible, setVisionVisible] = useState(false);
   const [ownerVisible, setOwnerVisible] = useState(false);
 
-  // GSAP: horizontal scroll فقط
   useEffect(() => {
     if (!isDesktop) return;
 
@@ -93,36 +92,28 @@ export default function About() {
     };
   }, [isRTL, isDesktop]);
 
-  // IntersectionObserver لـ Our Vision
   useEffect(() => {
     if (!visionRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-        setVisionVisible(entry.isIntersecting);
+        setVisionVisible(entries[0].isIntersecting);
       },
-      {
-        threshold: 0.4,
-      }
+      { threshold: 0.4 }
     );
 
     observer.observe(visionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // IntersectionObserver لـ Owner
   useEffect(() => {
     if (!ownerSectionRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-        setOwnerVisible(entry.isIntersecting);
+        setOwnerVisible(entries[0].isIntersecting);
       },
-      {
-        threshold: 0.4,
-      }
+      { threshold: 0.4 }
     );
 
     observer.observe(ownerSectionRef.current);
@@ -182,17 +173,16 @@ export default function About() {
               className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)]"
             >
               <div className="flex flex-col lg:flex-row items-center justify-center gap-12 px-8 py-8 lg:py-0 max-w-7xl mx-auto w-full">
-                {/* Image + border */}
                 <div className="relative">
                   <div
-                    className="owner-image-container relative w-80 h-96 lg:w-96 lg:h-[500px] overflow-hidden transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-image-container relative w-80 h-96 lg:w-96 lg:h-[500px] overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "scale(1) translateY(0px)"
                         : "scale(1.12) translateY(24px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "150ms" : "0ms",
+                      transitionDelay: ownerVisible ? "400ms" : "0ms",
                     }}
                   >
                     <div
@@ -213,80 +203,92 @@ export default function About() {
                   </div>
 
                   <div
-                    className="owner-border absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-border absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible ? "scale(1)" : "scale(0.9)",
                       filter: ownerVisible ? "blur(0px)" : "blur(8px)",
-                      transitionDelay: ownerVisible ? "250ms" : "0ms",
+                      transitionDelay: ownerVisible ? "350ms" : "0ms",
                       clipPath:
                         "polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%)",
                     }}
                   />
                 </div>
 
-                {/* Owner Text */}
                 <div className="flex-1 max-w-4xl">
                   <h2
-                    className="owner-title text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-title text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px) scale(1)"
                         : "translateY(24px) scale(0.98)",
                       filter: ownerVisible ? "blur(0px)" : "blur(12px)",
-                      transitionDelay: ownerVisible ? "300ms" : "0ms",
+                      transitionDelay: ownerVisible ? "1000ms" : "0ms",
                     }}
                   >
                     Meet Our Founder
                   </h2>
 
                   <p
-                    className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px)"
                         : "translateY(28px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "450ms" : "0ms",
+                      transitionDelay: ownerVisible ? "1500ms" : "0ms",
                     }}
                   >
-                    Design team leader managing large integrated projects in
-                    base building and interior design. Working with clients from
-                    concept to completion, delivering effective solutions
-                    worldwide.
+                    Karim Mounir leads an integrated design practice where
+                    architecture and interiors are conceived as one unified
+                    system, guided by clarity of purpose and restraint.
                   </p>
 
                   <p
-                    className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px)"
                         : "translateY(32px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "600ms" : "0ms",
+                      transitionDelay: ownerVisible ? "2000ms" : "0ms",
                     }}
                   >
-                    Designing and managing projects that unlock opportunities
-                    and improve lives. Serving diverse clients—helping them
-                    grow, sustain, and transform through strategic design
-                    solutions.
+                    His work approaches architecture as a spatial narrative
+                    shaped by light, proportion, material, and human experience,
+                    creating environments that are intelligent, enduring, and
+                    meaningful.
                   </p>
 
                   <h3
-                    className="owner-subtitle text-end text-2xl md:text-3xl text-gray-200 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="owner-subtitle text-end text-2xl md:!text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible
                         ? "translateY(0px)"
                         : "translateY(26px)",
                       filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "900ms" : "0ms",
+                      transitionDelay: ownerVisible ? "2500ms" : "0ms",
                     }}
                   >
                     Karim Mounir
+                  </h3>
+
+                  <h3
+                    className="owner-subtitle text-end !text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    style={{
+                      opacity: ownerVisible ? 1 : 0,
+                      transform: ownerVisible
+                        ? "translateY(0px)"
+                        : "translateY(26px)",
+                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                      transitionDelay: ownerVisible ? "2500ms" : "0ms",
+                    }}
+                  >
+                    Design Leader & Principal Architect
                   </h3>
                 </div>
               </div>
@@ -295,7 +297,6 @@ export default function About() {
         </div>
       ) : (
         <div className="flex flex-col gap-10 lg:gap-24 bg-[var(--color-dark-gray)] min-h-fit">
-          {/* OUR VISION – MOBILE */}
           <section
             ref={visionRef}
             className="px-6 py-6 lg:py-24 text-center max-h-fit"
@@ -329,21 +330,20 @@ export default function About() {
             </p>
           </section>
 
-          {/* OWNER – MOBILE */}
           <section
             ref={ownerSectionRef}
             className="px-6 pb-6 lg:pb-24 flex flex-col items-center text-center min-h-fit"
           >
             <div className="relative mb-8">
               <div
-                className="relative w-72 h-96 overflow-hidden transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                className="relative w-72 h-96 overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                 style={{
                   opacity: ownerVisible ? 1 : 0,
                   transform: ownerVisible
                     ? "scale(1) translateY(0px)"
                     : "scale(1.12) translateY(24px)",
                   filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                  transitionDelay: ownerVisible ? "150ms" : "0ms",
+                  transitionDelay: ownerVisible ? "350ms" : "0ms",
                 }}
               >
                 <div
@@ -364,12 +364,12 @@ export default function About() {
               </div>
 
               <div
-                className="absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                className="absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                 style={{
                   opacity: ownerVisible ? 1 : 0,
                   transform: ownerVisible ? "scale(1)" : "scale(0.9)",
                   filter: ownerVisible ? "blur(0px)" : "blur(8px)",
-                  transitionDelay: ownerVisible ? "250ms" : "0ms",
+                  transitionDelay: ownerVisible ? "800ms" : "0ms",
                   clipPath:
                     "polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%)",
                 }}
@@ -377,63 +377,77 @@ export default function About() {
             </div>
 
             <h2
-              className="text-3xl font-bold text-main-white mb-2 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-3xl font-bold text-main-white mb-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
                   ? "translateY(0px) scale(1)"
                   : "translateY(24px) scale(0.98)",
                 filter: ownerVisible ? "blur(0px)" : "blur(12px)",
-                transitionDelay: ownerVisible ? "300ms" : "0ms",
+                transitionDelay: ownerVisible ? "1600ms" : "0ms",
               }}
             >
               Meet Our Founder
             </h2>
 
             <p
-              className="text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
                   ? "translateY(0px)"
                   : "translateY(28px)",
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "450ms" : "0ms",
+                transitionDelay: ownerVisible ? "2100ms" : "0ms",
               }}
             >
-              Design team leader managing large integrated projects in base
-              building and interior design. Working with clients from concept to
-              completion, delivering effective solutions worldwide.
+              Karim Mounir leads an integrated design practice where
+              architecture and interiors are conceived as one unified system,
+              guided by clarity of purpose and restraint.
             </p>
 
             <p
-              className="text-base text-gray-300 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-base text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
                   ? "translateY(0px)"
                   : "translateY(32px)",
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "600ms" : "0ms",
+                transitionDelay: ownerVisible ? "2600ms" : "0ms",
               }}
             >
-              Designing and managing projects that unlock opportunities and
-              improve lives. Serving diverse clients—helping them grow, sustain,
-              and transform through strategic design solutions.
+              His work approaches architecture as a spatial narrative shaped by
+              light, proportion, material, and human experience, creating
+              environments that are intelligent, enduring, and meaningful.
             </p>
 
             <h3
-              className="owner-subtitle text-2xl md:text-3xl text-gray-200 font-semibold transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="owner-subtitle text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
                   ? "translateY(0px)"
                   : "translateY(26px)",
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "900ms" : "0ms",
+                transitionDelay: ownerVisible ? "3100ms" : "0ms",
               }}
             >
               Karim Mounir
+            </h3>
+
+            <h3
+              className="text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              style={{
+                opacity: ownerVisible ? 1 : 0,
+                transform: ownerVisible
+                  ? "translateY(0px)"
+                  : "translateY(26px)",
+                filter: ownerVisible ? "blur(0px)" : "blur(10px)",
+                transitionDelay: ownerVisible ? "3100ms" : "0ms",
+              }}
+            >
+              Design Leader & Principal Architect
             </h3>
           </section>
         </div>

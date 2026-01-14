@@ -6,28 +6,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const services = [
   {
-    number: "01",
     title: "Interior Design",
     description:
       "Creative interior solutions that combine aesthetics and functionality",
   },
   {
-    number: "02",
     title: "Architectural Design",
     description: "Innovative architectural concepts tailored to your vision",
   },
   {
-    number: "03",
     title: "3D Visualization",
     description: "Realistic 3D renders to visualize spaces before execution",
   },
   {
-    number: "04",
     title: "Fit-Out & Execution",
     description: "High-quality interior fit-out with precise project execution",
   },
   {
-    number: "05",
     title: "Space Planning",
     description: "Optimized layouts designed for comfort, flow, and efficiency",
   },
@@ -53,13 +48,13 @@ export default function ScrollServices() {
     const st = ScrollTrigger.create({
       trigger: container,
       start: "top top",
-      // Shorter scroll distance - 300px per service instead of full viewport
-      end: () => "+=" + 300 * (total - 1),
+      // Shorter scroll distance - 400px per service instead of full viewport
+      end: () => "+=" + 400 * (total - 1),
       pin: true,
       scrub: 0, // Much more immediate response
       snap: {
         snapTo: 1 / (total - 1),
-        duration: 0.2,
+        duration: 1,
         ease: "power4.inOut",
         delay: 0,
       },
@@ -120,9 +115,6 @@ export default function ScrollServices() {
             }}
           >
             <div className="text-center px-8 max-w-4xl">
-              <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-mid-gray)] via-[var(--color-main-white)] to-[var(--color-mid-gray)] mb-8">
-                {service.number}
-              </div>
               <h2 className="text-4xl lg:text-6xl font-bold text-[var(--color-main-white)] mb-6">
                 {service.title}
               </h2>
@@ -161,10 +153,10 @@ export default function ScrollServices() {
         ))}
       </div>
 
-      <div className="absolute bottom-8 left-8 text-[var(--color-deep-gray)] text-sm">
+      {/* <div className="absolute bottom-8 left-8 text-[var(--color-deep-gray)] text-sm">
         {String(activeIndex + 1).padStart(2, "0")} /{" "}
         {String(services.length).padStart(2, "0")}
-      </div>
+      </div> */}
     </section>
   );
 }

@@ -85,11 +85,6 @@ export default function ProjectsSection() {
           introRef.current.querySelectorAll(".intro-animate")
         )
       : [];
-    const outroEls = outroRef.current
-      ? gsap.utils.toArray<HTMLElement>(
-          outroRef.current.querySelectorAll(".outro-animate")
-        )
-      : [];
 
     // Intro animation
     if (introEls.length) {

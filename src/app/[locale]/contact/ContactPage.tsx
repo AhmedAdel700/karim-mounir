@@ -146,7 +146,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] flex flex-col items-center justify-start md:justify-center px-4 pt-22 pb-6 lg:pb-0 lg:py-10"
+      className="min-h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] flex flex-col items-center justify-start md:justify-center px-4 lg:pb-0 lg:pt-32 lg:pb-10"
       style={
         {
           "--color-primary": "#1a1a1a",

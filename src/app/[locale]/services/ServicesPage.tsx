@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Building2, Hammer, LayoutGrid, Palette } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 interface Service {
   title: string;
   subtitle: string;
   description: string;
+  icon?: React.ReactNode;
 }
 
 export default function ServicesPage() {
@@ -23,24 +25,28 @@ export default function ServicesPage() {
     {
       title: "Architecture",
       subtitle: "Foundation of Vision",
+      icon: <Building2 className="w-10 h-10" />,
       description:
         "We design architecture as a spatial framework that balances identity, performance, and long-term value. Our approach integrates concept, structure, and context to create buildings that are clear in intent, responsive to their environment, and resilient over time. Architecture is developed with a strong emphasis on proportion, material honesty, and functional clarity—shaping spaces that serve both users and stakeholders with equal precision.",
     },
     {
       title: "Interior Design",
       subtitle: "Crafting Experience",
+      icon: <Palette className="w-10 h-10" />,
       description:
         "Interior design is conceived as an extension of architecture, not a separate layer. We craft interior environments that reinforce the architectural concept while enhancing human experience through light, material, and spatial rhythm. Each interior is designed to support function, atmosphere, and identity—creating spaces that are expressive, intuitive, and aligned with the overall design narrative.",
     },
     {
       title: "Space Planning",
       subtitle: "Strategic Layout",
+      icon: <LayoutGrid className="w-10 h-10" />,
       description:
         "Our space planning process focuses on efficiency, flexibility, and clarity. We translate operational needs into intelligent layouts that optimize flow, usability, and long-term adaptability. By understanding how spaces are used and experienced, we create planning strategies that support performance while maintaining architectural integrity and spatial quality.",
     },
     {
       title: "Fit-Out & Execution",
       subtitle: "Precision Delivered",
+      icon: <Hammer className="w-10 h-10" />,
       description:
         "Fit-out and execution are approached with the same design rigor as concept development. We oversee implementation to ensure design intent is preserved through detailing, materials, and construction quality. This integrated approach allows us to deliver projects that are not only visually coherent, but also technically sound, efficiently executed, and aligned with the original vision.",
     },
@@ -281,37 +287,58 @@ export default function ServicesPage() {
 
       {/* Services Section */}
       <section className="relative py-20 px-6 z-10 min-h-fit">
-        <div className="max-w-7xl mx-auto space-y-[300px]">
+        <div className="max-w-7xl mx-auto space-y-[100px] md:space-y-[300px]">
           {services.map((service, index) => {
             const isLeft = index % 2 === 0;
+
             return (
               <div
                 key={index}
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
-                className={`relative flex justify-center`}
+                className={`relative flex ${
+                  isLeft ? "justify-start" : "justify-end"
+                }`}
                 style={{ perspective: "1000px" }}
               >
-                <div className="max-w-3xl space-y-8 text-start">
-                  <div className="space-y-4">
-                    <h3 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight leading-tight">
-                      {service.title}
-                    </h3>
-                    <p className="service-subtitle text-base tracking-[0.25em] uppercase text-gray-500 font-light">
-                      {service.subtitle}
+                <div
+                  className={`max-w-5xl w-full flex items-start justify-between gap-16 ${
+                    isLeft ? "flex-row" : "flex-row-reverse"
+                  }`}
+                >
+                  {/* Service Content */}
+                  <div className="max-w-3xl space-y-8 text-start">
+                    <div className="space-y-4">
+                      <h3 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight leading-tight">
+                        {service.title}
+                      </h3>
+                      <p className="service-subtitle text-base tracking-[0.25em] uppercase text-gray-500 font-light">
+                        {service.subtitle}
+                      </p>
+                    </div>
+
+                    <div
+                      className={`service-line h-px w-20 bg-gradient-to-r ${
+                        isLeft
+                          ? "from-white/40 via-white/20 to-transparent"
+                          : "from-transparent via-white/20 to-white/40"
+                      }`}
+                    ></div>
+
+                    <p className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light max-w-2xl">
+                      {service.description}
                     </p>
                   </div>
-                  <div
-                    className={`service-line h-px w-20 bg-gradient-to-r ${
-                      isLeft
-                        ? "from-white/40 via-white/20 to-transparent"
-                        : "from-transparent via-white/20 to-white/40"
-                    }`}
-                  ></div>
-                  <p className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light">
-                    {service.description}
-                  </p>
+
+                  {/* Service Icon */}
+                  {service.icon && (
+                    <div className="hidden md:flex shrink-0 items-center pt-2">
+                      <div className="text-white/15 scale-[10] origin-top">
+                        {service.icon}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             );

@@ -79,7 +79,7 @@ export default function FlipText({
       end: endTrigger,
       onEnter: () => tl.play(),
       onEnterBack: () => tl.play(),
-      onLeave: () => tl.reverse(),
+      // onLeave: () => tl.reverse(),
       onLeaveBack: () => tl.reverse(),
     });
 

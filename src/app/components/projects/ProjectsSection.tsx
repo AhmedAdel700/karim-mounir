@@ -14,6 +14,8 @@ import p2 from "@/app/images/p2.jpg";
 import p3 from "@/app/images/p3.jpg";
 import p4 from "@/app/images/p4.jpg";
 import FlipText from "../FlipText";
+import { FadeInWords, TextReveal } from "@/app/[locale]/about/AboutPage";
+import { Link } from "@/navigations";
 
 interface ProjectCard {
   id: number;
@@ -374,7 +376,7 @@ export default function ProjectsSection() {
   return (
     <div ref={sectionRef} className="overflow-x-hidden">
       {/* Intro Section */}
-      <section
+      {/* <section
         ref={introRef}
         className="relative w-full h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray) 70%,var(--color-primary))] to-[var(--color-primary)] text-white flex items-center px-6"
       >
@@ -416,7 +418,7 @@ export default function ProjectsSection() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Cards Section */}
       <section className="projects-cards relative flex flex-col bg-[var(--color-primary)] text-white gap-[25vh]">
@@ -518,9 +520,9 @@ export default function ProjectsSection() {
       {/* Outro Section */}
       <section
         ref={outroRef}
-        className="relative w-full h-screen bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
+        className="relative flex flex-col gap-10 justify-center items-center w-full min-h-fit bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
-        <div className="max-w-6xl mx-auto w-full space-y-8 text-center">
+        <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
           <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
             We <span className="text-mid-gray">Design</span> With Purpose
             Merging <span className="text-mid-gray">Innovation</span>, Technical{" "}
@@ -528,6 +530,77 @@ export default function ProjectsSection() {
             <span className="text-mid-gray">Beauty</span> To Create Spaces That{" "}
             <span className="text-mid-gray">Elevate</span> Everyday Life
           </FlipText>
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10 mb-[250px]">
+          <TextReveal>
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-1000 opacity-75 group-hover:opacity-100"></div>
+
+              <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-800/80 to-neutral-900/90 backdrop-blur-xl border border-neutral-700/50 rounded-3xl p-12 md:p-20 shadow-2xl">
+                <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-neutral-600/50 rounded-tl-3xl"></div>
+                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-neutral-600/50 rounded-br-3xl"></div>
+
+                <div className="absolute top-8 left-8 text-neutral-700/30 text-8xl font-serif leading-none">
+                  &quot;
+                </div>
+                <div className="absolute bottom-8 right-8 text-neutral-700/30 text-8xl font-serif leading-none transform rotate-180">
+                  &quot;
+                </div>
+
+                <div className="relative z-10 text-center space-y-8">
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-neutral-500 to-transparent"></div>
+                    <svg
+                      className="w-8 h-8 text-neutral-500"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-neutral-500 to-transparent"></div>
+                  </div>
+
+                  <blockquote className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-neutral-100">
+                    <FadeInWords
+                      text="Discover how we transform vision into reality"
+                    />
+                  </blockquote>
+
+                  <div className="pt-4">
+                    <Link
+                      href="/projects"
+                      className="group/btn relative inline-flex items-center gap-3 text-xl font-light tracking-wide px-10 py-5 border border-white overflow-hidden transition-all duration-300 hover:scale-105"
+                    >
+                      <span className="relative z-10 group-hover/btn:text-black transition-colors duration-300">
+                        View Projects
+                      </span>
+                      <svg
+                        className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 bg-white transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TextReveal>
         </div>
       </section>
     </div>

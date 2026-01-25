@@ -3,11 +3,12 @@ import { useLocale } from "next-intl";
 import { useRef, useEffect, useState } from "react";
 import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
+import TextEffect from "../TextEffect";
 
 export default function About() {
   function useIsDesktop() {
     const [isDesktop, setIsDesktop] = useState(
-      typeof window !== "undefined" ? window.innerWidth >= 1024 : false
+      typeof window !== "undefined" ? window.innerWidth >= 1024 : false,
     );
 
     useEffect(() => {
@@ -45,7 +46,7 @@ export default function About() {
 
       ctx = gsap.context(() => {
         const sections = gsap.utils.toArray<HTMLElement>(
-          ".scroll-section-horizontaliy"
+          ".scroll-section-horizontaliy",
         );
 
         ScrollTrigger.refresh();
@@ -99,7 +100,7 @@ export default function About() {
       (entries) => {
         setVisionVisible(entries[0].isIntersecting);
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
 
     observer.observe(visionRef.current);
@@ -113,7 +114,7 @@ export default function About() {
       (entries) => {
         setOwnerVisible(entries[0].isIntersecting);
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
 
     observer.observe(ownerSectionRef.current);
@@ -216,80 +217,43 @@ export default function About() {
                 </div>
 
                 <div className="flex-1 max-w-4xl">
-                  <h2
-                    className="owner-title text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px) scale(1)"
-                        : "translateY(24px) scale(0.98)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(12px)",
-                      transitionDelay: ownerVisible ? "1000ms" : "0ms",
-                    }}
-                  >
-                    Meet Our Founder
-                  </h2>
+                  <TextEffect
+                    text={"Meet Our Founder"}
+                    animationType="magneticPull"
+                    className="text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  />
 
-                  <p
-                    className="owner-para-1 text-lg md:text-xl text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px)"
-                        : "translateY(28px)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "1500ms" : "0ms",
-                    }}
-                  >
-                    Karim Mounir leads an integrated design practice where
-                    architecture and interiors are conceived as one unified
-                    system, guided by clarity of purpose and restraint.
-                  </p>
+                  <TextEffect
+                    text={
+                      "Karim Mounir leads an integrated design practice where architecture and interiors are conceived as one unified system, guided by clarity of purpose and restraint."
+                    }
+                    animationType="morphIn"
+                    delay={1}
+                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  />
 
-                  <p
-                    className="owner-para-2 text-base md:text-lg text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px)"
-                        : "translateY(32px)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "2000ms" : "0ms",
-                    }}
-                  >
-                    His work approaches architecture as a spatial narrative
-                    shaped by light, proportion, material, and human experience,
-                    creating environments that are intelligent, enduring, and
-                    meaningful.
-                  </p>
+                  <TextEffect
+                    text={
+                      "His work approaches architecture as a spatial narrative shaped by light, proportion, material, and human experience, creating environments that are intelligent, enduring, and meaningful."
+                    }
+                    animationType="morphIn"
+                    delay={1}
+                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  />
 
-                  <h3
-                    className="owner-subtitle text-end text-2xl md:!text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px)"
-                        : "translateY(26px)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "2500ms" : "0ms",
-                    }}
-                  >
-                    Karim Mounir
-                  </h3>
+                  <TextEffect
+                    text={"Karim Mounir"}
+                    delay={9}
+                    animationType="magneticPull"
+                    className="text-end text-2xl md:!text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  />
 
-                  <h3
-                    className="owner-subtitle text-end !text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                    style={{
-                      opacity: ownerVisible ? 1 : 0,
-                      transform: ownerVisible
-                        ? "translateY(0px)"
-                        : "translateY(26px)",
-                      filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                      transitionDelay: ownerVisible ? "2500ms" : "0ms",
-                    }}
-                  >
-                    Design Leader & Principal Architect
-                  </h3>
+                  <TextEffect
+                    text={"Design Leader & Principal Architect"}
+                    animationType="magneticPull"
+                    delay={9}
+                    className="text-end text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  />
                 </div>
               </div>
             </div>

@@ -9,7 +9,7 @@ interface TextRevealProps {
   delay?: number;
 }
 
-function TextReveal({ children, delay = 0 }: TextRevealProps) {
+export function TextReveal({ children, delay = 0 }: TextRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -53,7 +53,7 @@ interface FadeInWordsProps {
   delay?: number;
 }
 
-function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
+export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const words = text.split(" ");

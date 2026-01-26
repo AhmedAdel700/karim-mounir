@@ -1,5 +1,5 @@
 import ProjectsSection from "./ProjectsSection";
 
-export default function ProjectsPage() {
+export default function page() {
   return <ProjectsSection />;
 }

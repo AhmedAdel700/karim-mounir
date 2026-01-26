@@ -2,11 +2,11 @@
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef, useEffect } from "react";
-import SplitType from "split-type";
+import { useRef } from "react";
 import ModernTextEffect from "@/app/components/ModernTextEffect";
+import { SplitText } from "gsap/all";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, SplitText);
 
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
@@ -16,7 +16,10 @@ export default function Hero() {
   // Animate H1 chars
   useGSAP(
     () => {
-      const split = new SplitType(".hero-title", { types: "chars" });
+      const split = new SplitText(".hero-title", {
+        type: "chars",
+        smartWrap: true,
+      });
 
       // Set initial state immediately to prevent flash
       gsap.set(split.chars, {
@@ -25,6 +28,9 @@ export default function Hero() {
         filter: "blur(8px)",
         rotateX: -45,
         immediateRender: true,
+        onComplete: () => {
+          split.revert();
+        },
       });
 
       gsap.to(split.chars, {
@@ -36,9 +42,12 @@ export default function Hero() {
         ease: "power3.out",
         stagger: { each: 0.04, from: "center" },
         delay: 2.6,
+        onComplete: () => {
+          split.revert();
+        },
       });
     },
-    { scope: container }
+    { scope: container },
   );
 
   // Animate paragraph words
@@ -46,7 +55,7 @@ export default function Hero() {
     () => {
       if (!paragraphRef.current) return;
 
-      const split = new SplitType(".hero-paragraph", { types: "words" });
+      const split = new SplitText(".hero-paragraph", { type: "words" });
 
       // Set initial state immediately to prevent flash
       gsap.set(split.words, {
@@ -77,25 +86,25 @@ export default function Hero() {
         },
       });
     },
-    { scope: container }
+    { scope: container },
   );
 
-  // Mouse parallax effect on background
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!bgRef.current) return;
+  // // Mouse parallax effect on background
+  // useEffect(() => {
+  //   const handleMouseMove = (e: MouseEvent) => {
+  //     if (!bgRef.current) return;
 
-      // Normalize mouse position
-      const x = (e.clientX / window.innerWidth - 0.5) * 10; // max 10px shift
-      const y = (e.clientY / window.innerHeight - 0.5) * 10;
+  //     // Normalize mouse position
+  //     const x = (e.clientX / window.innerWidth - 0.5) * 10; // max 10px shift
+  //     const y = (e.clientY / window.innerHeight - 0.5) * 10;
 
-      // Apply transform
-      bgRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.02)`;
-    };
+  //     // Apply transform
+  //     bgRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.02)`;
+  //   };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  //   window.addEventListener("mousemove", handleMouseMove);
+  //   return () => window.removeEventListener("mousemove", handleMouseMove);
+  // }, []);
 
   return (
     <main

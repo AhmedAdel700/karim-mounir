@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, ReactNode } from "react";
 import idea from "@/app/images/idea2.jpg";
 import Image from "next/image";
+import TextEffect from "@/app/components/TextEffect";
 
 interface TextRevealProps {
   children: ReactNode;
@@ -22,7 +23,7 @@ export function TextReveal({ children, delay = 0 }: TextRevealProps) {
           setIsVisible(false);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (ref.current) {
@@ -67,7 +68,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
           setIsVisible(false);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (ref.current) {
@@ -107,7 +108,11 @@ export default function AboutPage() {
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap");
 
         body {
-          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          font-family:
+            "Inter",
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
             sans-serif;
         }
 
@@ -145,144 +150,21 @@ export default function AboutPage() {
 
       {/* Section 1: Introduction */}
       <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden">
-        {/* Animated background shapes */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Floating geometric shapes */}
-          <div className="absolute top-20 left-10 w-64 h-64 opacity-10 animate-float">
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              <circle
-                cx="100"
-                cy="100"
-                r="80"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-blue-400"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="60"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-blue-400"
-              />
-              <path
-                d="M100,40 L100,160 M40,100 L160,100"
-                stroke="currentColor"
-                strokeWidth="0.5"
-                className="text-blue-400"
-              />
-            </svg>
-          </div>
-
-          <div
-            className="absolute top-40 right-20 w-48 h-48 opacity-10"
-            style={{
-              animation: "float 25s ease-in-out infinite",
-              animationDelay: "5s",
-            }}
-          >
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              <rect
-                x="30"
-                y="30"
-                width="140"
-                height="140"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-purple-400"
-                rx="5"
-              />
-              <rect
-                x="60"
-                y="60"
-                width="80"
-                height="80"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-purple-400"
-                rx="3"
-              />
-            </svg>
-          </div>
-
-          <div
-            className="absolute bottom-32 left-1/4 w-56 h-56 opacity-10"
-            style={{
-              animation: "float 18s ease-in-out infinite",
-              animationDelay: "2s",
-            }}
-          >
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              <path
-                d="M100,20 L180,180 L20,180 Z"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-pink-400"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="30"
-                stroke="currentColor"
-                strokeWidth="1"
-                fill="none"
-                className="text-pink-400"
-              />
-            </svg>
-          </div>
-
-          {/* Animated gradient orbs */}
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div
-            className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse-slow"
-            style={{ animationDelay: "2s" }}
-          ></div>
-
-          {/* Grid overlay */}
-          <div className="absolute inset-0 opacity-[0.02]">
-            <svg className="w-full h-full" viewBox="0 0 1000 1000">
-              <defs>
-                <pattern
-                  id="grid-intro"
-                  width="40"
-                  height="40"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 40 0 L 0 0 0 40"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.5"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-intro)" />
-            </svg>
-          </div>
-        </div>
 
         <div className="max-w-4xl text-center relative z-10">
-          <TextReveal delay={500}>
-            <h1 className="text-6xl md:text-8xl font-medium tracking-tight mb-6">
-              About Karim Mounir
-            </h1>
-          </TextReveal>
-          <TextReveal delay={700}>
-            <p className="text-xl md:text-2xl text-neutral-400 font-light tracking-wide">
-              Designing Spaces with Purpose and Vision
-            </p>
-          </TextReveal>
+          <TextEffect
+            text="About Karim Mounir"
+            className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
+          />
+          <TextEffect
+            text="Designing Spaces with Purpose and Vision"
+            className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide"
+          />
         </div>
       </section>
 
       {/* Section 2: Philosophy Statement */}
-      <section className="min-h-screen flex items-center px-6 py-20 relative">
+      <section className="min-h-[50vh] flex items-center px-6 py-20 relative">
         <div className="absolute inset-0 opacity-5">
           <svg className="w-full h-full" viewBox="0 0 800 600">
             <path
@@ -315,11 +197,9 @@ export default function AboutPage() {
         </div>
 
         <div className="max-w-4xl mx-auto relative z-10">
-          <TextReveal>
-            <p className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200">
-              <FadeInWords text="Karim Mounir approaches architecture as a narrative of light, proportion, and human experience. Each project is a seamless blend of concept and execution, guided by clarity and purpose." />
-            </p>
-          </TextReveal>
+          <p className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
+            <FadeInWords text="Karim Mounir approaches architecture as a narrative of light, proportion, and human experience. Each project is a seamless blend of concept and execution, guided by clarity and purpose." />
+          </p>
         </div>
       </section>
 
@@ -413,7 +293,143 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Section 4: Core Values */}
+      {/* Section 4: The Company */}
+      <section className="min-h-screen flex items-center px-6 py-20 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div
+            className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse-slow"
+            style={{ animationDelay: "2s" }}
+          ></div>
+
+          {/* Subtle grid */}
+          <div className="absolute inset-0 opacity-[0.02]">
+            <svg className="w-full h-full" viewBox="0 0 1000 1000">
+              <defs>
+                <pattern
+                  id="grid-company"
+                  width="40"
+                  height="40"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M 40 0 L 0 0 0 40"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="0.5"
+                  />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid-company)" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <TextReveal>
+            <div className="text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-16 h-px bg-neutral-600"></div>
+                <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
+                  About Us
+                </span>
+                <div className="w-16 h-px bg-neutral-600"></div>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-extralight tracking-tight text-neutral-100 mb-6">
+                The Studio
+              </h2>
+            </div>
+          </TextReveal>
+
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <TextReveal delay={200}>
+              <div className="space-y-6">
+                <p className="text-2xl md:text-3xl font-light leading-relaxed text-neutral-200">
+                  Founded on principles of precision and innovation, our studio
+                  bridges architecture and interior design with seamless
+                  expertise.
+                </p>
+
+                <p className="text-lg font-light leading-relaxed text-neutral-400">
+                  We are a multidisciplinary team of architects, designers, and
+                  craftspeople dedicated to creating environments that transcend
+                  trends. Each project is approached with meticulous attention
+                  to detail and a commitment to excellence.
+                </p>
+
+                <p className="text-lg font-light leading-relaxed text-neutral-400">
+                  From concept development to final execution, we maintain
+                  complete creative control, ensuring every element aligns with
+                  our vision of timeless, purposeful design.
+                </p>
+              </div>
+            </TextReveal>
+
+            <TextReveal delay={400}>
+              <div className="space-y-8">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                  <div className="relative bg-gradient-to-br from-neutral-900/80 to-neutral-800/60 backdrop-blur-sm border border-neutral-700/40 rounded-2xl p-8">
+                    <div className="space-y-6">
+                      <div className="border-b border-neutral-700/50 pb-4">
+                        <h3 className="text-xl font-light text-neutral-300 mb-2">
+                          Our Expertise
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-400/60 mt-2 flex-shrink-0"></div>
+                          <p className="text-neutral-300 font-light">
+                            Residential Architecture & Interiors
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-purple-400/60 mt-2 flex-shrink-0"></div>
+                          <p className="text-neutral-300 font-light">
+                            Commercial & Hospitality Design
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-pink-400/60 mt-2 flex-shrink-0"></div>
+                          <p className="text-neutral-300 font-light">
+                            Bespoke Furniture & Fixtures
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-400/60 mt-2 flex-shrink-0"></div>
+                          <p className="text-neutral-300 font-light">
+                            Landscape Integration
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="bg-neutral-900/60 backdrop-blur-sm border border-neutral-700/40 rounded-xl p-6 text-center">
+                    <p className="text-4xl font-light text-white mb-2">2010</p>
+                    <p className="text-sm text-neutral-500 font-light tracking-wide">
+                      Established
+                    </p>
+                  </div>
+                  <div className="bg-neutral-900/60 backdrop-blur-sm border border-neutral-700/40 rounded-xl p-6 text-center">
+                    <p className="text-4xl font-light text-white mb-2">12+</p>
+                    <p className="text-sm text-neutral-500 font-light tracking-wide">
+                      Team Members
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </TextReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5: Core Values */}
       <section className="min-h-screen flex items-center px-6 py-20">
         <div className="max-w-6xl mx-auto">
           <TextReveal>
@@ -569,9 +585,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Section 5: Quote Highlight */}
+      {/* Section 6: Quote Highlight */}
       <section className="min-h-screen flex items-center justify-center px-6 py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-950 via-neutral-900 to-black">
+        <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-30">
             <div
               className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"

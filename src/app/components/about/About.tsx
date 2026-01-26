@@ -7,9 +7,7 @@ import TextEffect from "../TextEffect";
 
 export default function About() {
   function useIsDesktop() {
-    const [isDesktop, setIsDesktop] = useState(
-      typeof window !== "undefined" ? window.innerWidth >= 1024 : false,
-    );
+    const [isDesktop, setIsDesktop] = useState(false);
 
     useEffect(() => {
       const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -105,7 +103,7 @@ export default function About() {
 
     observer.observe(visionRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
     if (!ownerSectionRef.current) return;
@@ -119,7 +117,7 @@ export default function About() {
 
     observer.observe(ownerSectionRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [isDesktop]);
 
   return (
     <>

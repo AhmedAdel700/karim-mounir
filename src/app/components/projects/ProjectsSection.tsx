@@ -1,4 +1,5 @@
 "use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useRef } from "react";
@@ -83,7 +84,7 @@ export default function ProjectsSection() {
     // Intro/outro text elements
     const introEls = introRef.current
       ? gsap.utils.toArray<HTMLElement>(
-          introRef.current.querySelectorAll(".intro-animate")
+          introRef.current.querySelectorAll(".intro-animate"),
         )
       : [];
 
@@ -107,7 +108,7 @@ export default function ProjectsSection() {
             end: "bottom center",
             toggleActions: "play reverse play reverse",
           },
-        }
+        },
       );
     }
     // Cards animation (unchanged)
@@ -134,7 +135,7 @@ export default function ProjectsSection() {
     cards.forEach((card, index) => {
       if (index === 0) return;
       const cardTextEls = gsap.utils.toArray<HTMLElement>(
-        card.querySelectorAll(".card-text-animate")
+        card.querySelectorAll(".card-text-animate"),
       );
       if (!cardTextEls.length) return;
       gsap.set(cardTextEls, { opacity: 0, y: 60, filter: "blur(8px)" });
@@ -154,7 +155,7 @@ export default function ProjectsSection() {
             start: "top center",
             toggleActions: "play reverse play reverse",
           },
-        }
+        },
       );
     });
 
@@ -189,7 +190,7 @@ export default function ProjectsSection() {
           let textProgress = gsap.utils.clamp(
             0,
             1,
-            (progress - 0.15) / (0.55 - 0.15)
+            (progress - 0.15) / (0.55 - 0.15),
           );
           if (progress >= 1) textProgress = 1;
           gsap.set(introTextEls, {
@@ -320,7 +321,7 @@ export default function ProjectsSection() {
     gsap.set(items, {
       xPercent: (i: number, el: any) => {
         const w = (widths[i] = parseFloat(
-          gsap.getProperty(el, "width", "px") as string
+          gsap.getProperty(el, "width", "px") as string,
         ));
         xPercents[i] =
           (parseFloat(gsap.getProperty(el, "x", "px") as string) / w) * 100 +
@@ -352,7 +353,7 @@ export default function ProjectsSection() {
           xPercent: ((curX - distanceToLoop) / widths[i]) * 100,
           duration: distanceToLoop / pixelsPerSecond,
         },
-        0
+        0,
       ).fromTo(
         item,
         {
@@ -364,7 +365,7 @@ export default function ProjectsSection() {
             (curX - distanceToLoop + totalWidth - curX) / pixelsPerSecond,
           immediateRender: false,
         },
-        distanceToLoop / pixelsPerSecond
+        distanceToLoop / pixelsPerSecond,
       );
     }
 
@@ -567,9 +568,7 @@ export default function ProjectsSection() {
                   </div>
 
                   <blockquote className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-neutral-100">
-                    <FadeInWords
-                      text="Discover how we transform vision into reality"
-                    />
+                    <FadeInWords text="Discover how we transform vision into reality" />
                   </blockquote>
 
                   <div className="pt-4">

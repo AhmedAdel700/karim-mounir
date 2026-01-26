@@ -29,6 +29,12 @@ const sakana = localFont({
   display: "swap",
 });
 
+const panama = localFont({
+  src: "../fonts/Panama-Light.otf",
+  variable: "--font-panama",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Karim Mounir",
   description: "Karim Mounir For Interior Design",
@@ -51,7 +57,7 @@ export default async function RootLayout({
     <ViewTransitions>
       <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
         <body
-          className={`${sakana.variable} ${
+          className={`${sakana.variable} ${panama.variable} ${
             locale === "ar" ? ibmPlexArabic.variable : montserrat.variable
           } antialiased`}
         >

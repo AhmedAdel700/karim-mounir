@@ -126,13 +126,13 @@ export default function About() {
       {isDesktop ? (
         <div
           ref={containerRef}
-          className="scroll-section-outer border-b border-deep-gray"
+          className="scroll-section-outer"
         >
           <div ref={scrollContainerRef} className="scroll-section-inner">
             {/* OUR VISION */}
             <div
               ref={visionRef}
-              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-e border-deep-gray relative overflow-hidden"
+              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] relative overflow-hidden"
             >
               <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
 
@@ -152,14 +152,14 @@ export default function About() {
                 </h2>
 
                 <p
-                  className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                  className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 transition-all duration-[1000ms] ease-[cubic-bezier(0.6,0.01,0.1,0.99)]"
                   style={{
                     opacity: visionVisible ? 1 : 0,
                     transform: visionVisible
-                      ? "translateY(0px)"
-                      : "translateY(28px)",
-                    filter: visionVisible ? "blur(0px)" : "blur(10px)",
-                    transitionDelay: visionVisible ? "350ms" : "0ms",
+                      ? "translateY(0px) translateX(0px) scale(1) skewY(0deg)"
+                      : "translateY(30px) translateX(-10px) scale(0.97) skewY(-2deg)",
+                    filter: visionVisible ? "blur(0px)" : "blur(12px)",
+                    transitionDelay: visionVisible ? "800ms" : "0ms",
                   }}
                 >
                   is architecture that endures throughful in function,

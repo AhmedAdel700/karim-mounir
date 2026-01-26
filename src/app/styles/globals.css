@@ -19,6 +19,10 @@ html[lang="en"] body {
 /* .hero-font {
   font-family: var(--font-sakana), sans-serif !important;
 } */
+.hero-font {
+  font-family: var(--font-panama), sans-serif !important;
+  font-weight: 600;
+}
 
 * {
   cursor: none !important;

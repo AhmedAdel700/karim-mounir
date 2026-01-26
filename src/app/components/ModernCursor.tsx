@@ -104,26 +104,26 @@ const ModernCursor: React.FC = () => {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  /* =========================
-     Particle animation
-  ========================= */
-  useEffect(() => {
-    let animationFrameId: number;
+  // /* =========================
+  //    Particle animation
+  // ========================= */
+  // useEffect(() => {
+  //   let animationFrameId: number;
 
-    const animateParticles = () => {
-      setParticles((prev) =>
-        prev
-          .map((p) => ({ ...p, frame: p.frame + 1 }))
-          .filter((p) => p.frame < p.life)
-      );
+  //   const animateParticles = () => {
+  //     setParticles((prev) =>
+  //       prev
+  //         .map((p) => ({ ...p, frame: p.frame + 1 }))
+  //         .filter((p) => p.frame < p.life)
+  //     );
 
-      animationFrameId = requestAnimationFrame(animateParticles);
-    };
+  //     animationFrameId = requestAnimationFrame(animateParticles);
+  //   };
 
-    animateParticles();
+  //   animateParticles();
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  //   return () => cancelAnimationFrame(animationFrameId);
+  // }, []);
 
   /* =========================
      Render
@@ -136,7 +136,7 @@ const ModernCursor: React.FC = () => {
         className={`cursor-dot ${isHovering ? "hover" : ""}`}
       />
 
-      {particles.map((p) => {
+      {/* {particles.map((p) => {
         const progress = p.frame / p.life;
         const x = p.x + Math.cos(p.angle) * p.velocity * p.frame;
         const y =
@@ -153,7 +153,7 @@ const ModernCursor: React.FC = () => {
             }}
           />
         );
-      })}
+      })} */}
     </div>
   );
 };

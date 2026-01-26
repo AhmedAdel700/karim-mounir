@@ -125,7 +125,7 @@ export default function Hero() {
         delay={2}
         duration={4}
         fontStyle="uppercase"
-        className="text-main-primary inline-block text-5xl sm:text-7xl md:text-9xl tracking-tight relative z-10 text-center font-bold bg-clip-text text-transparent
+        className="text-main-primary inline-block text-5xl sm:text-7xl md:text-9xl tracking-tight relative z-10 text-center font-medium bg-clip-text text-transparent
     [&_.char]:bg-gradient-to-r
     [&_.char]:from-deep-gray
     [&_.char]:via-mid-gray

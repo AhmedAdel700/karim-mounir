@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger, DrawSVGPlugin } from "gsap/all";
+
+gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
 const services = [
   {
@@ -28,135 +31,147 @@ const services = [
   },
 ];
 
-export default function ScrollServices() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef<HTMLElement | null>(null);
-  const activeIndexRef = useRef(0);
+// Split text into chars
+const SplitText = ({ text }: { text: string }) => (
+  <>
+    {text.split("").map((char, i) => (
+      <span key={i} className="char inline-block will-change-transform">
+        {char === " " ? "\u00A0" : char}
+      </span>
+    ))}
+  </>
+);
 
-  useEffect(() => {
-    activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
+const Services = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const itemsRef = useRef<HTMLDivElement[]>([]);
+  const svgRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  useGSAP(
+    () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: `+=${services.length * 100}%`,
+          pin: true,
+          scrub: 12,
+        },
+      });
 
-    gsap.registerPlugin(ScrollTrigger);
+      // Animate text
+      itemsRef.current.forEach((item, i) => {
+        const chars = item.querySelectorAll(".char");
+        tl.fromTo(
+          chars,
+          {
+            opacity: 0,
+            scale: () => gsap.utils.random(0.1, 3),
+            x: () => gsap.utils.random(-200, 200),
+            y: () => gsap.utils.random(-200, 200),
+            rotation: () => gsap.utils.random(-720, 720),
+            filter: "blur(25px) hue-rotate(180deg)",
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: 0,
+            rotation: 0,
+            filter: "blur(0px) hue-rotate(0deg)",
+            duration: 1.2,
+            stagger: { each: 0.015, from: "start", ease: "power1.inOut" },
+            ease: "expo.out",
+          },
+        );
 
-    const total = services.length;
-
-    const st = ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      // Shorter scroll distance - 400px per service instead of full viewport
-      end: () => "+=" + 400 * (total - 1),
-      pin: true,
-      scrub: 0, // Much more immediate response
-      snap: {
-        snapTo: 1 / (total - 1),
-        duration: 1,
-        ease: "power4.inOut",
-        delay: 0,
-      },
-      onUpdate: (self) => {
-        const idx = Math.round(self.progress * (total - 1));
-        if (idx !== activeIndexRef.current) {
-          activeIndexRef.current = idx;
-          setActiveIndex(idx);
+        if (i !== itemsRef.current.length - 1) {
+          tl.to(chars, {
+            opacity: 0,
+            y: -80,
+            duration: 0.7,
+            stagger: { each: 0.01, from: "random" },
+            ease: "power3.in",
+          });
         }
-      },
-    });
+      });
 
-    ScrollTrigger.refresh();
+      // Animate SVG
+      if (svgRef.current) {
+        const shapes = svgRef.current.querySelectorAll("path, circle, polygon");
+        gsap.set(shapes, { drawSVG: "0%" });
 
-    return () => {
-      st.kill();
-    };
-  }, []);
+        gsap.to(shapes, {
+          drawSVG: "100%",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: `+=${services.length * 100}%`,
+            scrub: 1,
+          },
+          ease: "none",
+        });
+      }
+    },
+    { scope: sectionRef },
+  );
 
   return (
     <section
-      ref={containerRef}
-      className="services-section relative w-screen h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] border-b border-deep-gray"
+      ref={sectionRef}
+      className="bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] text-[#f5f5f5] h-screen relative overflow-hidden"
     >
-      {services.map((service, index) => {
-        const isActive = index === activeIndex;
-        const isPrev = index < activeIndex;
-        const isNext = index > activeIndex;
-
-        let opacity = 0;
-        let blur = 20;
-        let translateY = 0;
-
-        if (isActive) {
-          opacity = 1;
-          blur = 0;
-          translateY = 0;
-        } else if (isPrev) {
-          opacity = 0;
-          blur = 20;
-          translateY = -50;
-        } else if (isNext) {
-          opacity = 0;
-          blur = 20;
-          translateY = 50;
-        }
-
-        return (
+      <div className="absolute inset-0 flex items-center justify-center">
+        {services.map((service, index) => (
           <div
             key={index}
-            className="absolute inset-0 flex items-center justify-center"
-            style={{
-              opacity,
-              filter: `blur(${blur}px)`,
-              transform: `translateY(${translateY}px)`,
-              transition: "all 0.8s cubic-bezier(0.4,0,0.2,1)",
-              pointerEvents: isActive ? "auto" : "none",
+            ref={(el) => {
+              if (el) itemsRef.current[index] = el;
             }}
+            className="absolute text-center px-6"
           >
-            <div className="text-center px-8 max-w-4xl">
-              <h2 className="text-4xl lg:text-6xl font-bold text-[var(--color-main-white)] mb-6">
-                {service.title}
-              </h2>
-              <p className="text-2xl text-[var(--color-deep-gray)]">
-                {service.description}
-              </p>
-            </div>
+            <h2 className="text-5xl md:text-8xl font-bold tracking-wide mb-2">
+              <SplitText text={service.title} />
+            </h2>
+            <p className="mx-auto text-3xl leading-relaxed opacity-70">
+              <SplitText text={service.description} />
+            </p>
           </div>
-        );
-      })}
-
-      {activeIndex < services.length - 1 && (
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-[var(--color-deep-gray)] animate-bounce">
-          <span className="text-sm uppercase tracking-wider">Scroll</span>
-          <div className="w-px h-16 bg-gradient-to-b from-[var(--color-deep-gray)] to-transparent" />
-        </div>
-      )}
-
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4">
-        {services.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              setActiveIndex(index);
-              activeIndexRef.current = index;
-              // ممكن لاحقاً تربط الزرار بـ ScrollTrigger progress لو حبيت
-            }}
-            className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-150 ${
-              index === activeIndex
-                ? "bg-[var(--color-main-white)] scale-150"
-                : index < activeIndex
-                ? "bg-[var(--color-deep-gray)]"
-                : "bg-[var(--color-primary)]"
-            }`}
-          />
         ))}
       </div>
 
-      {/* <div className="absolute bottom-8 left-8 text-[var(--color-deep-gray)] text-sm">
-        {String(activeIndex + 1).padStart(2, "0")} /{" "}
-        {String(services.length).padStart(2, "0")}
-      </div> */}
+      <div className="absolute inset-0 opacity-5">
+        <svg ref={svgRef} className="w-full h-full" viewBox="0 0 800 600">
+          <path
+            d="M100,300 Q200,150 300,250 T500,300 T700,200"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+          />
+          <circle
+            cx="150"
+            cy="350"
+            r="60"
+            stroke="currentColor"
+            strokeWidth="1"
+            fill="none"
+          />
+          <polygon
+            points="350,200 450,220 430,320 330,300"
+            stroke="currentColor"
+            strokeWidth="1"
+            fill="none"
+          />
+          <path
+            d="M550,250 L650,250 L650,400 L600,450 L550,400 Z"
+            stroke="currentColor"
+            strokeWidth="1"
+            fill="none"
+          />
+        </svg>
+      </div>
     </section>
   );
-}
+};
+
+export default Services;

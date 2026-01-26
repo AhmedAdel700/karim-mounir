@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useEffect, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
 import gsap from "gsap";
@@ -304,6 +302,7 @@ export default function ProjectsSection() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const horizontalLoop = (items: any[], config: any) => {
     items = gsap.utils.toArray(items);
     config = config || {};
@@ -319,6 +318,7 @@ export default function ProjectsSection() {
     const pixelsPerSecond = (config.speed || 1) * 100;
 
     gsap.set(items, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       xPercent: (i: number, el: any) => {
         const w = (widths[i] = parseFloat(
           gsap.getProperty(el, "width", "px") as string,

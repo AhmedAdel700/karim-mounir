@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
@@ -8,7 +8,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
 
-// Import your images
 import p1 from "@/app/images/p1.jpg";
 import p2 from "@/app/images/p2.jpg";
 import p3 from "@/app/images/p3.jpg";

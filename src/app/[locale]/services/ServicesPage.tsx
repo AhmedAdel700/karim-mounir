@@ -296,16 +296,19 @@ export default function ServicesPage() {
         <div className="max-w-8xl text-center relative z-10">
           <TextEffect
             text="Our Services"
+            delay={1.2}
             className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
           />
 
           <TextEffect
             text="Our services are conceived as part of a unified design approach—where architecture, interiors, and execution are seamlessly integrated."
+            delay={1.2}
             className="text-lg md:text-xl text-neutral-400 font-light tracking-wide mb-1"
           />
 
           <TextEffect
             text="Each service responds to context, purpose, and experience, ensuring that every project is coherent, intentional, and enduring."
+            delay={1.2}
             className="text-xl md:text-lg text-neutral-400 font-light tracking-wide"
           />
         </div>

@@ -61,21 +61,43 @@ const TextEffect = ({
 
   useGSAP(
     () => {
-      if (!textRef.current) return;
+      if (!textRef.current || !containerRef.current) return;
 
       const chars = textRef.current.querySelectorAll(".char");
       const words = textRef.current.querySelectorAll(".word");
 
+      // Helper function to check if element is already in viewport
+      const isInViewport = () => {
+        const rect = containerRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        // Check if element is in the top 80% of viewport (same as ScrollTrigger start point)
+        const triggerPoint = windowHeight * 0.8;
+        // Element is considered in viewport if its top is above the trigger point
+        // and it's not completely scrolled past
+        return rect.top < triggerPoint && rect.bottom > 0;
+      };
+
+      // Helper to create ScrollTrigger config or null if already in view
+      const getScrollTriggerConfig = () => {
+        // Check if element is already in viewport (e.g., when navigating from another page)
+        // This happens when the page loads at the top and the first section is visible
+        if (isInViewport()) {
+          return null; // Don't use ScrollTrigger if already in view - animation will play immediately
+        }
+        return {
+          trigger: containerRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play reverse play reverse",
+        };
+      };
+
       const animations = {
         matrix: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -105,14 +127,10 @@ const TextEffect = ({
         },
 
         neon: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -153,14 +171,10 @@ const TextEffect = ({
         },
 
         particle: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -191,14 +205,10 @@ const TextEffect = ({
         },
 
         liquid: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -232,14 +242,10 @@ const TextEffect = ({
         },
 
         fadeSlide: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             words,
@@ -266,14 +272,10 @@ const TextEffect = ({
         },
 
         wordWave: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             words,
@@ -302,14 +304,10 @@ const TextEffect = ({
         },
 
         glitch: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -350,14 +348,10 @@ const TextEffect = ({
         },
 
         typewriter: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           gsap.set(chars, { opacity: 0 });
 
@@ -387,14 +381,10 @@ const TextEffect = ({
         },
 
         morphIn: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -425,14 +415,10 @@ const TextEffect = ({
         },
 
         splitFlip: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -462,13 +448,10 @@ const TextEffect = ({
         },
 
         magneticPull: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           chars.forEach((char, i) => {
             const direction = i % 2 === 0 ? 1 : -1;
@@ -502,14 +485,10 @@ const TextEffect = ({
         },
 
         quantumShift: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -541,14 +520,10 @@ const TextEffect = ({
         },
 
         prismBreak: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -576,14 +551,10 @@ const TextEffect = ({
         },
 
         orbitalSpin: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           chars.forEach((char, i) => {
             const angle = (i / chars.length) * Math.PI * 2;
@@ -619,14 +590,10 @@ const TextEffect = ({
         },
 
         hologram: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -668,14 +635,10 @@ const TextEffect = ({
         },
 
         electricArc: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,
@@ -707,14 +670,10 @@ const TextEffect = ({
         },
 
         vortexSwirl: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           chars.forEach((char, i) => {
             const progress = i / chars.length;
@@ -752,14 +711,10 @@ const TextEffect = ({
         },
 
         cascadeRipple: () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-            },
-          });
+          const scrollTriggerConfig = getScrollTriggerConfig();
+          const tl = gsap.timeline(
+            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
+          );
 
           tl.fromTo(
             chars,

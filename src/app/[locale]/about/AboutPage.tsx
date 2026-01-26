@@ -154,10 +154,12 @@ export default function AboutPage() {
         <div className="max-w-4xl text-center relative z-10">
           <TextEffect
             text="About Karim Mounir"
+            delay={1.2}
             className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
           />
           <TextEffect
             text="Designing Spaces with Purpose and Vision"
+            delay={1.2}
             className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide"
           />
         </div>

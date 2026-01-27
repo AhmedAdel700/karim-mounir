@@ -103,7 +103,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100 font-sans">
+    <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100">
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap");
 
@@ -153,7 +153,7 @@ export default function AboutPage() {
 
         <div className="max-w-4xl text-center relative z-10">
           <TextEffect
-            text="About Karim Mounir"
+            text="Karim Mounir"
             delay={1.2}
             className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
           />

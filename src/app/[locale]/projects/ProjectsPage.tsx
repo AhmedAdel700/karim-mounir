@@ -54,12 +54,6 @@ export default function ProjectsPage() {
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black flex flex-col justify-center items-center pt-16">
       <div className="container mx-auto px-4 flex flex-col gap-6">
-        <div className="text-center">
-          <TextEffect
-            text={"Explore Our Categories"}
-            className="text-5xl md:text-7xl font-medium text-white tracking-tight"
-          />
-        </div>
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {CATEGORIES.map((category) => {

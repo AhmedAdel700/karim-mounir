@@ -42,8 +42,9 @@ import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const TextEffect = ({
   text,
@@ -61,43 +62,33 @@ const TextEffect = ({
 
   useGSAP(
     () => {
-      if (!textRef.current || !containerRef.current) return;
+      if (!textRef.current) return;
 
-      const chars = textRef.current.querySelectorAll(".char");
-      const words = textRef.current.querySelectorAll(".word");
+      const split = new SplitText(textRef.current, {
+        type: "chars,words",
+        charsClass: "char inline-block cursor-pointer",
+        wordsClass: "word inline-block",
+      });
 
-      // Helper function to check if element is already in viewport
-      const isInViewport = () => {
-        const rect = containerRef.current.getBoundingClientRect();
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        // Check if element is in the top 80% of viewport (same as ScrollTrigger start point)
-        const triggerPoint = windowHeight * 0.8;
-        // Element is considered in viewport if its top is above the trigger point
-        // and it's not completely scrolled past
-        return rect.top < triggerPoint && rect.bottom > 0;
-      };
+      const chars = split.chars;
+      const words = split.words;
 
-      // Helper to create ScrollTrigger config or null if already in view
-      const getScrollTriggerConfig = () => {
-        // Check if element is already in viewport (e.g., when navigating from another page)
-        // This happens when the page loads at the top and the first section is visible
-        if (isInViewport()) {
-          return null; // Don't use ScrollTrigger if already in view - animation will play immediately
-        }
-        return {
-          trigger: containerRef.current,
-          start: "top 80%",
-          end: "bottom 20%",
-          toggleActions: "play reverse play reverse",
-        };
-      };
+      const createTimeline = () =>
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 100%",
+            end: "bottom 10%",
+            toggleActions: "play reverse play reverse",
+          },
+          onComplete() {
+            split.revert();
+          },
+        });
 
       const animations = {
         matrix: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -122,15 +113,12 @@ const TextEffect = ({
               },
               ease: "bounce.out",
               delay: delay,
-            },
+            }
           );
         },
 
         neon: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -153,7 +141,7 @@ const TextEffect = ({
               },
               ease: "power2.inOut",
               delay: delay,
-            },
+            }
           ).to(
             chars,
             {
@@ -166,15 +154,12 @@ const TextEffect = ({
                 from: "random",
               },
             },
-            "-=0.5",
+            "-=0.5"
           );
         },
 
         particle: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -200,15 +185,12 @@ const TextEffect = ({
               },
               ease: "expo.inout",
               delay: delay,
-            },
+            }
           );
         },
 
         liquid: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -237,15 +219,12 @@ const TextEffect = ({
               },
               ease: "elastic.out(1, 0.4)",
               delay: delay,
-            },
+            }
           );
         },
 
         fadeSlide: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             words,
@@ -267,15 +246,12 @@ const TextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            },
+            }
           );
         },
 
         wordWave: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             words,
@@ -299,15 +275,12 @@ const TextEffect = ({
               },
               ease: "elastic.out(1, 0.5)",
               delay: delay,
-            },
+            }
           );
         },
 
         glitch: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -333,7 +306,7 @@ const TextEffect = ({
               },
               ease: "steps(12)",
               delay: delay,
-            },
+            }
           ).to(
             chars,
             {
@@ -343,15 +316,12 @@ const TextEffect = ({
               yoyo: true,
               stagger: 0.01,
             },
-            "-=0.3",
+            "-=0.3"
           );
         },
 
         typewriter: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           gsap.set(chars, { opacity: 0 });
 
@@ -373,7 +343,7 @@ const TextEffect = ({
                     duration: 0.05,
                     yoyo: true,
                     repeat: 1,
-                  },
+                  }
                 );
               }
             },
@@ -381,10 +351,7 @@ const TextEffect = ({
         },
 
         morphIn: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -410,15 +377,12 @@ const TextEffect = ({
               },
               ease: "back.out(1.7)",
               delay: delay,
-            },
+            }
           );
         },
 
         splitFlip: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -443,15 +407,12 @@ const TextEffect = ({
               },
               ease: "power3.out",
               delay: delay,
-            },
+            }
           );
         },
 
         magneticPull: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           chars.forEach((char, i) => {
             const direction = i % 2 === 0 ? 1 : -1;
@@ -485,10 +446,7 @@ const TextEffect = ({
         },
 
         quantumShift: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -515,15 +473,12 @@ const TextEffect = ({
               },
               ease: "expo.out",
               delay: delay,
-            },
+            }
           );
         },
 
         prismBreak: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -546,15 +501,12 @@ const TextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            },
+            }
           );
         },
 
         orbitalSpin: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           chars.forEach((char, i) => {
             const angle = (i / chars.length) * Math.PI * 2;
@@ -590,10 +542,7 @@ const TextEffect = ({
         },
 
         hologram: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -616,7 +565,7 @@ const TextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            },
+            }
           )
             .to(
               chars,
@@ -629,16 +578,13 @@ const TextEffect = ({
                   yoyo: true,
                 },
               },
-              "-=0.4",
+              "-=0.4"
             )
             .to(chars, { opacity: 1, duration: 0.2 });
         },
 
         electricArc: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -665,15 +611,12 @@ const TextEffect = ({
               },
               ease: "rough({ strength: 2, points: 20, clamp: true })",
               delay: delay,
-            },
+            }
           );
         },
 
         vortexSwirl: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           chars.forEach((char, i) => {
             const progress = i / chars.length;
@@ -711,10 +654,7 @@ const TextEffect = ({
         },
 
         cascadeRipple: () => {
-          const scrollTriggerConfig = getScrollTriggerConfig();
-          const tl = gsap.timeline(
-            scrollTriggerConfig ? { scrollTrigger: scrollTriggerConfig } : {}
-          );
+          const tl = createTimeline();
 
           tl.fromTo(
             chars,
@@ -738,7 +678,7 @@ const TextEffect = ({
               },
               ease: "elastic.out(1, 0.6)",
               delay: delay,
-            },
+            }
           ).to(
             chars,
             {
@@ -752,7 +692,7 @@ const TextEffect = ({
               yoyo: true,
               repeat: 1,
             },
-            "-=0.5",
+            "-=0.5"
           );
         },
       };
@@ -791,6 +731,10 @@ const TextEffect = ({
           char.addEventListener("mouseleave", onLeave);
         });
       }
+
+      return () => {
+        split.revert();
+      };
     },
     {
       scope: containerRef,
@@ -801,49 +745,8 @@ const TextEffect = ({
         delay,
         duration,
       ],
-    },
-  );
-
-  const renderText = () => {
-    const words = text.split(" ");
-
-    if (lang === "ar") {
-      return words.map((word, index) => (
-        <span
-          key={index}
-          className="word inline-block"
-          style={{ whiteSpace: "pre" }}
-        >
-          {word}
-          {index < words.length - 1 ? " " : ""}
-        </span>
-      ));
     }
-
-    return words.map((word, wordIndex) => (
-      <span
-        key={wordIndex}
-        className="word inline-block"
-        style={{ whiteSpace: "pre" }}
-      >
-        {word.split("").map((char, charIndex) => (
-          <span
-            key={`${wordIndex}-${charIndex}`}
-            className="char inline-block cursor-pointer"
-            style={{
-              display: "inline-block",
-              transformOrigin: "center center",
-            }}
-          >
-            {char}
-          </span>
-        ))}
-        {wordIndex < words.length - 1 && (
-          <span className="char inline-block">&nbsp;</span>
-        )}
-      </span>
-    ));
-  };
+  );
 
   const marginStyle = {};
   if (mt !== 0) marginStyle.marginTop = `${mt}px`;
@@ -865,7 +768,7 @@ const TextEffect = ({
           textTransform: "none",
         }}
       >
-        {renderText()}
+        {text}
       </div>
     </div>
   );

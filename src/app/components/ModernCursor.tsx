@@ -16,12 +16,9 @@ const ModernCursor: React.FC = () => {
   const cursorDotRef = useRef<HTMLDivElement>(null);
 
   const [isHovering, setIsHovering] = useState(false);
-  const [particles, setParticles] = useState<Particle[]>([]);
 
   const mousePos = useRef({ x: 0, y: 0 });
   const cursorPos = useRef({ x: 0, y: 0 });
-  const lastParticleTime = useRef(0);
-  const particleIdCounter = useRef(0);
 
   /* =========================
      Mouse listeners
@@ -29,22 +26,6 @@ const ModernCursor: React.FC = () => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
-
-      const now = Date.now();
-      if (now - lastParticleTime.current > 30) {
-        const newParticle: Particle = {
-          id: particleIdCounter.current++,
-          x: e.clientX,
-          y: e.clientY,
-          angle: Math.random() * Math.PI * 2,
-          velocity: Math.random() * 0.8 + 1,
-          life: Math.random() * 40 + 30,
-          frame: 0,
-        };
-
-        setParticles((prev) => [...prev, newParticle]);
-        lastParticleTime.current = now;
-      }
     };
 
     const handleMouseEnter = (e: Event) => {
@@ -83,8 +64,9 @@ const ModernCursor: React.FC = () => {
     let animationFrameId: number;
 
     const animate = () => {
-      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.25;
-      cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.25;
+      // Make the cursor follow faster (less laggy).
+      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.5;
+      cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.5;
 
       if (cursorRef.current) {
         cursorRef.current.style.left = `${cursorPos.current.x}px`;

@@ -109,7 +109,7 @@ export default function Hero() {
   return (
     <main
       ref={container}
-      className="hero relative h-screen overflow-hidden border-b border-white/20 bg-gradient-to-br from-black via-neutral-900 to-black flex flex-col items-center justify-center px-4"
+      className="hero relative h-screen overflow-hidden bg-gradient-to-br from-black via-neutral-900 to-black flex flex-col items-center justify-center px-4"
     >
       {/* Video Background */}
       <div className="parallax">

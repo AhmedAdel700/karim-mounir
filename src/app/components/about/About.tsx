@@ -17,7 +17,7 @@ export default function About() {
     }, []);
 
     return isDesktop;
-  }
+  }                                                       
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -225,7 +225,7 @@ export default function About() {
                     text={
                       "Karim Mounir leads an integrated design practice where architecture and interiors are conceived as one unified system, guided by clarity of purpose and restraint."
                     }
-                    animationType="morphIn"
+                    animationType="wordWave"
                     delay={1}
                     className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                   />
@@ -234,14 +234,14 @@ export default function About() {
                     text={
                       "His work approaches architecture as a spatial narrative shaped by light, proportion, material, and human experience, creating environments that are intelligent, enduring, and meaningful."
                     }
-                    animationType="morphIn"
-                    delay={1}
+                    animationType="wordWave"
+                    delay={3.5}
                     className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                   />
 
                   <TextEffect
                     text={"Karim Mounir"}
-                    delay={9}
+                    delay={6}
                     animationType="magneticPull"
                     className="text-end text-2xl md:!text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                   />
@@ -249,7 +249,7 @@ export default function About() {
                   <TextEffect
                     text={"Design Leader & Principal Architect"}
                     animationType="magneticPull"
-                    delay={9}
+                    delay={6}
                     className="text-end text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                   />
                 </div>

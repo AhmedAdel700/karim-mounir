@@ -293,7 +293,7 @@ export default function ServicesPage() {
         ref={heroRef}
         className="relative min-h-screen flex flex-col justify-center items-center px-6 py-20 z-10"
       >
-        <div className="max-w-8xl text-center relative z-10">
+        <div className="max-w-6xl text-center relative z-10">
           <TextEffect
             text="Our Services"
             delay={1.2}
@@ -303,13 +303,15 @@ export default function ServicesPage() {
           <TextEffect
             text="Our services are conceived as part of a unified design approach—where architecture, interiors, and execution are seamlessly integrated."
             delay={1.2}
-            className="text-lg md:text-xl text-neutral-400 font-light tracking-wide mb-1"
+            className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1"
+            animationType="wordWave"
           />
 
           <TextEffect
             text="Each service responds to context, purpose, and experience, ensuring that every project is coherent, intentional, and enduring."
             delay={1.2}
-            className="text-xl md:text-lg text-neutral-400 font-light tracking-wide"
+            className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide"
+            animationType="wordWave"
           />
         </div>
       </section>

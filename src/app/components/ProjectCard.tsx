@@ -6,63 +6,111 @@ import { Project } from "../types/project.Types";
 interface ProjectCardProps {
   project: Project;
   href?: string;
+  index: number;
 }
 
-export default function ProjectCard({ project, href }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  href,
+  index,
+}: ProjectCardProps) {
   const card = (
     <>
-      {/* Image Container */}
-      <div className="relative h-64 overflow-hidden bg-neutral-950">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent opacity-60" />
+      {/* Animated Border Glow */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/12 via-white/6 to-white/12 blur-xl animate-border-flow" />
       </div>
 
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-neutral-200 transition-colors">
-          {project.title}
-        </h3>
-        <p className="text-neutral-400 leading-relaxed line-clamp-3">
-          {project.description}
-        </p>
+      {/* Main Card Content */}
+      <div className="relative bg-zinc-950/90 backdrop-blur-sm border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
+        {/* Image with Parallax Effect */}
+        <div className="relative h-72 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 z-10 mix-blend-overlay" />
 
-        {/* Hover Indicator */}
-        <div className="mt-6 flex items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="text-sm font-medium tracking-wide">
-            View Details
-          </span>
-          <svg
-            className="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform duration-300"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            className="object-cover transition-all duration-1000 ease-out group-hover:scale-105 group-hover:brightness-110"
+          />
+
+          {/* Dramatic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-zinc-950/40 z-10" />
+
+          {/* Floating Number */}
+          <div className="absolute top-6 right-6 z-20 opacity-20 group-hover:opacity-40 transition-opacity duration-500">
+            <span
+              className="text-8xl font-bold text-white"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              {index + 1 > 10 ? index + 1 : `0${index + 1}`}
+            </span>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="relative p-8 space-y-6">
+          {/* Decorative Line */}
+          <div className="w-12 h-px bg-gradient-to-r from-white/70 to-transparent group-hover:w-24 transition-all duration-700" />
+
+          {/* Title */}
+          <h3
+            className="text-3xl font-light text-white tracking-tight leading-tight group-hover:tracking-wide transition-all duration-500"
+            style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+            {project.title}
+          </h3>
+
+          {/* Description */}
+          <p
+            className="text-zinc-400 text-base leading-relaxed line-clamp-3 font-light"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "0.01em",
+            }}
+          >
+            {project.description}
+          </p>
+
+          {/* Interactive Footer */}
+          <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50 group-hover:border-white/25 transition-colors duration-500">
+            <span
+              className="text-xs uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors duration-300"
+              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
+            >
+              Explore Project
+            </span>
+
+            {/* Animated Arrow */}
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/12 to-white/6 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500" />
+              <svg
+                className="w-5 h-5 text-zinc-400 group-hover:text-white transition-all duration-300 relative z-10"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M7 17L17 7M17 7H7M17 7V17"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Corner Accent */}
-      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </>
   );
 
   const className =
-    "group relative block bg-neutral-900/50 rounded-xl overflow-hidden border border-neutral-800 hover:border-neutral-700 transition-all duration-500 hover:shadow-2xl hover:shadow-white/5";
+    "group relative block transition-all duration-700 hover:scale-[1.02]";
 
   if (href) {
     return (
-      <Link href={href} className={className} aria-label={`Open ${project.title}`}>
+      <Link href={href} className={className} aria-label={`/${project.title}`}>
         {card}
       </Link>
     );

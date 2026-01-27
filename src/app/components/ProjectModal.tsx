@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { usePathname } from "next/navigation";
+import { useLenis } from "lenis/react";
 import { Category } from "../types/project.Types";
 import ProjectCard from "./ProjectCard";
 
@@ -13,6 +14,7 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ category, onClose }: ProjectModalProps) {
   const pathname = usePathname();
+  const lenis = useLenis();
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -98,23 +100,25 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
   useEffect(() => {
     if (!category) return;
 
-    const stopWheel = (e: WheelEvent) => {
-      if (
-        !(
-          e.target instanceof HTMLElement &&
-          e.target.closest(".modal-scroll-area")
-        )
-      ) {
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener("wheel", stopWheel, { passive: false });
+    // Lock the page scroll while the modal is open but allow scrolling inside it.
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("wheel", stopWheel);
+      document.body.style.overflow = previousOverflow;
     };
   }, [category]);
+
+  useEffect(() => {
+    if (!category || !lenis) return;
+
+    // Pause Lenis smooth scroll so native wheel events reach the modal.
+    lenis.stop();
+
+    return () => {
+      lenis.start();
+    };
+  }, [category, lenis]);
 
   if (!category) return null;
 
@@ -175,17 +179,23 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
         </div>
 
         {/* Scrollable Projects Area */}
-        <div className="flex-1 overflow-y-auto overscroll-contain touch-pan-y">
+        <div
+          className="modal-scroll-area flex-1 overflow-y-auto overscroll-contain touch-pan-y"
+          data-lenis-prevent
+          data-lenis-prevent-wheel
+          data-lenis-prevent-touch
+        >
           <div className="container mx-auto px-6 py-12">
             <div
               ref={projectsRef}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {category.projects.map((project) => (
+              {category.projects.map((project, index) => (
                 <ProjectCard
                   key={project.id}
                   project={project}
-                  href={`${pathname}?category=${category.slug}&project=${project.slug}`}
+                  index={index}
+                  href={`${pathname}/${project.slug}?category=${category.slug}`}
                 />
               ))}
             </div>

@@ -24,7 +24,7 @@ export default function ProjectCard({
       </div>
 
       {/* Main Card Content */}
-      <div className="relative bg-zinc-950/90 backdrop-blur-md border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
+      <div className="relative bg-zinc-950/90 border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
         {/* Image Section */}
         <div className="relative h-72 overflow-hidden">
           {/* Glass overlay */}

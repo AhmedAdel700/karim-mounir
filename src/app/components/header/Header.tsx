@@ -168,6 +168,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch
                 style={{
                   transitionDelay: (navReady && pathname === "/") ? `${index * 100}ms` : "0ms",
                   transform: (navReady || pathname !== "/") ? "translateX(0)" : "translateX(10px)",
@@ -186,7 +187,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center justify-center w-[180px]">
-          <Link href="/" onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
+          <Link href="/" prefetch onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
             <div
               style={{
                 opacity: (logoReady || pathname !== "/") ? 1 : 0,
@@ -212,6 +213,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                 prefetch
                 style={{
                   transitionDelay: (navReady && pathname === "/") ? `${index * 100}ms` : "0ms",
                   transform: (navReady || pathname !== "/") ? "translateX(0)" : "translateX(-10px)",
@@ -249,7 +251,7 @@ export default function Header() {
 
       <div className="flex xl:hidden items-center justify-between w-full">
         <div className="flex items-center gap-3 cursor-pointer">
-          <Link href="/" onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
+          <Link href="/" prefetch onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
             <Image src={logo} alt="Logo" width={100} height={100} priority className="brightness-0 invert hover:opacity-80 transition-opacity" />
           </Link>
         </div>
@@ -280,7 +282,7 @@ export default function Header() {
           {mobileLinks.map((item) => {
             const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
-              <Link key={item.href} href={item.href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); viewRouter.push(item.href, { onTransitionReady: slideInOut }); }} className={clsx("px-4 py-3 text-sm uppercase transition border-b border-white/10 text-white", isActive ? "bg-white/10 font-bold text-main-primary" : "hover:bg-white/15")}>
+              <Link prefetch key={item.href} href={item.href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); viewRouter.push(item.href, { onTransitionReady: slideInOut }); }} className={clsx("px-4 py-3 text-sm uppercase transition border-b border-white/10 text-white", isActive ? "bg-white/10 font-bold text-main-primary" : "hover:bg-white/15")}>
                 {item.label}
               </Link>
             );

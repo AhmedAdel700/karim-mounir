@@ -7,7 +7,6 @@ import { gsap } from "gsap";
 import { CATEGORIES } from "@/app/data/projects";
 import ProjectModal from "@/app/components/ProjectModal";
 import CategoryCard from "@/app/components/CategoryCard";
-import TextEffect from "@/app/components/TextEffect";
 
 export default function ProjectsPage() {
   const router = useRouter();

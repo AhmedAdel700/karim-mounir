@@ -2,7 +2,7 @@
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import ModernTextEffect from "@/app/components/ModernTextEffect";
 import { SplitText } from "gsap/all";
 
@@ -13,24 +13,38 @@ export default function Hero() {
   const bgRef = useRef<HTMLVideoElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
 
-  // Animate H1 chars
+  const [videoReady, setVideoReady] = useState(false);
+
+  // Wait for video to be ready
+  useEffect(() => {
+    const video = bgRef.current;
+    if (!video) return;
+
+    const handleLoaded = () => setVideoReady(true);
+
+    video.addEventListener("canplaythrough", handleLoaded, { once: true });
+
+    return () => {
+      video.removeEventListener("canplaythrough", handleLoaded);
+    };
+  }, []);
+
+  // Animate H1 chars AFTER video is ready
   useGSAP(
     () => {
+      if (!videoReady) return; // wait for video
+
       const split = new SplitText(".hero-title", {
         type: "chars",
         smartWrap: true,
       });
 
-      // Set initial state immediately to prevent flash
       gsap.set(split.chars, {
         y: 60,
         opacity: 0,
         filter: "blur(8px)",
         rotateX: -45,
         immediateRender: true,
-        onComplete: () => {
-          split.revert();
-        },
       });
 
       gsap.to(split.chars, {
@@ -41,23 +55,20 @@ export default function Hero() {
         duration: 1.1,
         ease: "power3.out",
         stagger: { each: 0.04, from: "center" },
-        delay: 2.6,
-        onComplete: () => {
-          split.revert();
-        },
+        delay: 0.2, // small delay after video
+        onComplete: () => split.revert(),
       });
     },
-    { scope: container },
+    { scope: container, dependencies: [videoReady] }
   );
 
-  // Animate paragraph words
+  // Animate paragraph words AFTER video is ready
   useGSAP(
     () => {
-      if (!paragraphRef.current) return;
+      if (!videoReady || !paragraphRef.current) return;
 
       const split = new SplitText(".hero-paragraph", { type: "words" });
 
-      // Set initial state immediately to prevent flash
       gsap.set(split.words, {
         y: 60,
         opacity: 0,
@@ -66,7 +77,6 @@ export default function Hero() {
         immediateRender: true,
       });
 
-      // Show paragraph container after words are set up
       gsap.set(paragraphRef.current, { opacity: 1, immediateRender: true });
 
       gsap.to(split.words, {
@@ -77,7 +87,7 @@ export default function Hero() {
         duration: 1.5,
         ease: "power3.out",
         stagger: { each: 0.02, from: "center" },
-        delay: 5,
+        delay: 2.6,
         scrollTrigger: {
           trigger: ".hero-paragraph",
           start: "top 80%",
@@ -86,25 +96,8 @@ export default function Hero() {
         },
       });
     },
-    { scope: container },
+    { scope: container, dependencies: [videoReady] }
   );
-
-  // // Mouse parallax effect on background
-  // useEffect(() => {
-  //   const handleMouseMove = (e: MouseEvent) => {
-  //     if (!bgRef.current) return;
-
-  //     // Normalize mouse position
-  //     const x = (e.clientX / window.innerWidth - 0.5) * 10; // max 10px shift
-  //     const y = (e.clientY / window.innerHeight - 0.5) * 10;
-
-  //     // Apply transform
-  //     bgRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.02)`;
-  //   };
-
-  //   window.addEventListener("mousemove", handleMouseMove);
-  //   return () => window.removeEventListener("mousemove", handleMouseMove);
-  // }, []);
 
   return (
     <main
@@ -116,7 +109,7 @@ export default function Hero() {
         <video
           ref={bgRef}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out will-change-transform"
-          style={{ transform: "scale(1.02)" }} // <-- initial zoom
+          style={{ transform: "scale(1.02)" }}
           src="/hero1.mp4"
           autoPlay
           muted
@@ -125,8 +118,6 @@ export default function Hero() {
           aria-hidden
         />
       </div>
-      {/* Overlay */}
-      {/* <div className="absolute inset-0 bg-black/10" /> */}
 
       <ModernTextEffect
         text={"Karim Mounir"}
@@ -135,25 +126,21 @@ export default function Hero() {
         duration={4}
         fontStyle="uppercase"
         className="text-main-primary inline-block text-5xl sm:text-7xl md:text-9xl tracking-tight relative z-10 text-center font-medium bg-clip-text text-transparent
-    [&_.char]:bg-gradient-to-r
-    [&_.char]:from-deep-gray
-    [&_.char]:via-mid-gray
-    [&_.char]:to-deep-gray
-    [&_.char]:bg-clip-text
-    [&_.char]:text-transparent
-    [&_.char]:bg-[length:100%_100%]
-    [&_.char]:bg-[position:0_0]
-    [&_.char]:will-change-transform
-    [&_.char]:opacity-0 hero-font"
+        [&_.char]:bg-gradient-to-r
+        [&_.char]:from-deep-gray
+        [&_.char]:via-mid-gray
+        [&_.char]:to-deep-gray
+        [&_.char]:bg-clip-text
+        [&_.char]:text-transparent
+        [&_.char]:bg-[length:100%_100%]
+        [&_.char]:bg-[position:0_0]
+        [&_.char]:will-change-transform
+        [&_.char]:opacity-0 hero-font"
       />
+
       <p
         ref={paragraphRef}
-        className="
-    hero-paragraph
-    relative z-10 text-center pb-3 font-medium
-    text-base sm:text-4xl lg:text-5xl text-mid-gray capitalize
-    [&_.word]:opacity-0
-  "
+        className="hero-paragraph relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-5xl text-mid-gray capitalize [&_.word]:opacity-0"
         style={{ opacity: 0 }}
       >
         “Design Beyond Form”

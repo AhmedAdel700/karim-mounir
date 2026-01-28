@@ -17,29 +17,30 @@ export default function ProjectCard({
   const card = (
     <>
       {/* Animated Border Glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
         <div className="absolute inset-0 bg-gradient-to-r from-white/12 via-white/6 to-white/12 blur-xl animate-border-flow" />
       </div>
 
       {/* Main Card Content */}
-      <div className="relative bg-zinc-950/90 backdrop-blur-sm border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
-        {/* Image with Parallax Effect */}
+      <div className="relative bg-zinc-950/90 backdrop-blur-md border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
+        {/* Image Section */}
         <div className="relative h-72 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 z-10 mix-blend-overlay" />
+          {/* Glass overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-white/5 z-10" />
 
           <Image
             src={project.image}
             alt={project.title}
             fill
-            className="object-cover transition-all duration-1000 ease-out group-hover:scale-105 group-hover:brightness-110"
+            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
           />
 
-          {/* Dramatic Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10" />
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-zinc-950/40 z-10" />
+          {/* Gradient overlays */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent to-zinc-950/40 z-10" />
 
           {/* Floating Number */}
-          <div className="absolute top-6 right-6 z-20 opacity-20 group-hover:opacity-40 transition-opacity duration-500">
+          <div className="pointer-events-none absolute top-6 right-6 z-20 opacity-20 group-hover:opacity-40 transition-opacity duration-500">
             <span
               className="text-8xl font-bold text-white"
               style={{ fontFamily: "'Playfair Display', serif" }}
@@ -52,7 +53,7 @@ export default function ProjectCard({
         {/* Content Section */}
         <div className="relative p-8 space-y-6">
           {/* Decorative Line */}
-          <div className="w-12 h-px bg-gradient-to-r from-white/70 to-transparent group-hover:w-24 transition-all duration-700" />
+          <div className="pointer-events-none w-12 h-px bg-gradient-to-r from-white/70 to-transparent group-hover:w-24 transition-all duration-700" />
 
           {/* Title */}
           <h3
@@ -64,7 +65,7 @@ export default function ProjectCard({
 
           {/* Description */}
           <p
-            className="text-zinc-400 text-base leading-relaxed line-clamp-3 font-light"
+            className="text-zinc-400 text-base leading-relaxed line-clamp-2 font-light"
             style={{
               fontFamily: "'Inter', sans-serif",
               letterSpacing: "0.01em",
@@ -73,7 +74,7 @@ export default function ProjectCard({
             {project.description}
           </p>
 
-          {/* Interactive Footer */}
+          {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50 group-hover:border-white/25 transition-colors duration-500">
             <span
               className="text-xs uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors duration-300"
@@ -82,11 +83,11 @@ export default function ProjectCard({
               Explore Project
             </span>
 
-            {/* Animated Arrow */}
-            <div className="relative w-10 h-10 flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/12 to-white/6 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500" />
+            {/* Arrow */}
+            <div className="relative w-9 h-9 flex items-center justify-center">
+              <div className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-500" />
               <svg
-                className="w-5 h-5 text-zinc-400 group-hover:text-white transition-all duration-300 relative z-10"
+                className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors duration-300 relative z-10"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -106,7 +107,7 @@ export default function ProjectCard({
   );
 
   const className =
-    "group relative block transition-all duration-700 hover:scale-[1.02]";
+    "group relative block transition-transform duration-700 hover:scale-[1.02]";
 
   if (href) {
     return (

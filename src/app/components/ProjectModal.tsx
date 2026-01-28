@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -12,9 +13,13 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
-export default function ProjectModal({ category, onClose }: ProjectModalProps) {
+export default function ProjectModal({
+  category,
+  onClose,
+}: ProjectModalProps) {
   const pathname = usePathname();
   const lenis = useLenis();
+
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -25,99 +30,104 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
     () => {
       if (!category) return;
 
+      const cards = projectsRef.current?.children || [];
+
+      // Initial states
       gsap.set(overlayRef.current, { opacity: 0 });
       gsap.set(contentRef.current, { y: "100%" });
 
-      if (projectsRef.current?.children?.length) {
-        gsap.set(projectsRef.current.children, { opacity: 1, y: 0 });
-      }
+      gsap.set(cards, {
+        opacity: 0,
+        y: 20,
+        willChange: "transform, opacity",
+        force3D: true,
+      });
+
+      // Disable hover during intro animation
+      gsap.set(projectsRef.current, { pointerEvents: "none" });
 
       const tl = gsap.timeline();
 
       tl.to(overlayRef.current, {
         opacity: 1,
-        duration: 0.4,
-        ease: "power2.out",
+        duration: 0.25,
+        ease: "power1.out",
       })
         .to(
           contentRef.current,
           {
             y: "0%",
-            duration: 0.6,
-            ease: "power3.out",
+            duration: 0.45,
+            ease: "power1.out",
           },
-          "-=0.2",
+          "-=0.1",
         )
         .from(
           headerRef.current,
           {
             opacity: 0,
-            y: -20,
-            duration: 0.4,
-            ease: "power2.out",
+            y: -16,
+            duration: 0.3,
+            ease: "power1.out",
           },
-          "-=0.3",
+          "-=0.25",
         )
-        .fromTo(
-          projectsRef.current?.children || [],
-          { opacity: 0, y: 30 },
+        .to(
+          cards,
           {
             opacity: 1,
             y: 0,
-            stagger: 0.1,
-            duration: 0.5,
-            ease: "power2.out",
-            clearProps: "opacity,transform",
+            stagger: 0.04,
+            duration: 0.35,
+            ease: "power1.out",
+            clearProps: "opacity",
           },
-          "-=0.2",
-        );
+          "-=0.15",
+        )
+        .add(() => {
+          // Re-enable hover after animation
+          gsap.set(projectsRef.current, { pointerEvents: "auto" });
+        });
     },
     { dependencies: [category], scope: modalRef },
   );
 
   const handleClose = () => {
-    if (!modalRef.current || !overlayRef.current || !contentRef.current) return;
+    if (!contentRef.current || !overlayRef.current) return;
 
-    const tl = gsap.timeline({
-      onComplete: onClose,
-    });
+    const tl = gsap.timeline({ onComplete: onClose });
 
     tl.to(contentRef.current, {
       y: "100%",
-      duration: 0.5,
-      ease: "power3.in",
+      duration: 0.4,
+      ease: "power1.in",
     }).to(
       overlayRef.current,
       {
         opacity: 0,
-        duration: 0.3,
-        ease: "power2.in",
+        duration: 0.25,
+        ease: "power1.in",
       },
-      "-=0.3",
+      "-=0.2",
     );
   };
 
   useEffect(() => {
     if (!category) return;
 
-    // Lock the page scroll while the modal is open but allow scrolling inside it.
-    const previousOverflow = document.body.style.overflow;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = prevOverflow;
     };
   }, [category]);
 
   useEffect(() => {
     if (!category || !lenis) return;
 
-    // Pause Lenis smooth scroll so native wheel events reach the modal.
     lenis.stop();
-
-    return () => {
-      lenis.start();
-    };
+    return () => lenis.start();
   }, [category, lenis]);
 
   if (!category) return null;
@@ -130,8 +140,8 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
       {/* Overlay */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 z-0 bg-black/80 backdrop-blur-sm opacity-0"
         onClick={handleClose}
+        className="absolute inset-0 z-0 bg-black/80 opacity-0"
       />
 
       {/* Modal Content */}
@@ -142,7 +152,7 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
         {/* Header */}
         <div
           ref={headerRef}
-          className="relative border-b border-neutral-800 bg-black/40 backdrop-blur-md shrink-0"
+          className="border-b border-neutral-800 bg-black/40 shrink-0"
         >
           <div className="container mx-auto px-6 py-8 flex items-center justify-between">
             <div>
@@ -173,30 +183,35 @@ export default function ProjectModal({ category, onClose }: ProjectModalProps) {
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              <span className="absolute inset-0 border border-white rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
             </button>
           </div>
         </div>
 
-        {/* Scrollable Projects Area */}
+        {/* Scroll Area */}
         <div
-          className="modal-scroll-area flex-1 overflow-y-auto overscroll-contain touch-pan-y"
+          className="flex-1 overflow-y-auto overscroll-contain"
           data-lenis-prevent
-          data-lenis-prevent-wheel
-          data-lenis-prevent-touch
         >
           <div className="container mx-auto px-6 py-12">
             <div
               ref={projectsRef}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                lg:grid-cols-3
+                gap-8
+                auto-rows-fr
+              "
             >
               {category.projects.map((project, index) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  index={index}
-                  href={`${pathname}/${project.slug}?category=${category.slug}`}
-                />
+                <div key={project.id} className="h-full">
+                  <ProjectCard
+                    project={project}
+                    index={index}
+                    href={`${pathname}/${project.slug}?category=${category.slug}`}
+                  />
+                </div>
               ))}
             </div>
           </div>

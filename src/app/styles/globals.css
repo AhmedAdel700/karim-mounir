@@ -8,29 +8,88 @@
   --color-main-white: #ffffff;
 }
 
-html[lang="ar"] body {
-  font-family: var(--font-arabic), sans-serif;
+html[lang="ar"] * {
+  font-family: var(--font-arabic), sans-serif !important;
 }
 
-html[lang="en"] body {
-  font-family: var(--font-montserrat), sans-serif;
-}
-
-/* .hero-font {
-  font-family: var(--font-sakana), sans-serif !important;
-} */
-.hero-font {
-  font-family: var(--font-panama), sans-serif !important;
-  font-weight: 600;
-}
-
-* {
-  cursor: none !important;
+html[lang="en"] * {
+  font-family: var(--font-montserrat), sans-serif !important;
 }
 
 body {
   margin: 0;
   color: var(--color-main-white);
+}
+
+/* Hide native cursor */
+html,
+body {
+  cursor: none;
+}
+
+a,
+button,
+[role="button"],
+.hoverable {
+  cursor: none !important;
+}
+
+
+.modern-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  will-change: transform, width, height, backdrop-filter;
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    backdrop-filter 0.18s ease;
+}
+
+/* Hover = interactive glass */
+.modern-cursor.hover {
+  width: 44px;
+  height: 44px;
+
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+/* Inner dot */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  pointer-events: none;
+  z-index: 999999;
+  transition: transform 0.1s linear;
+}
+
+/* Optional: scale dot on hover */
+.cursor-dot.hover {
+  transform: scale(1.2);
 }
 
 /* Start Of About Sectio --- Scroll Horizolial (Css) */
@@ -45,13 +104,13 @@ body {
   flex-direction: row;
   position: relative;
   flex-wrap: nowrap;
-  width: max-content;
+  width: fit-content;
   will-change: transform;
 }
 
 .scroll-section-horizontaliy {
-  min-width: 100vw;
   height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,7 +125,7 @@ body {
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
-
+  
   .scroll-section-inner {
     min-height: 100vh;
   }
@@ -78,62 +137,6 @@ body {
   font-size: 30px;
 }
 /* End Of About Sectio --- Scroll Horizolial (Css) */
-
-.cursor-container {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-  top: 0;
-  left: 0;
-}
-
-.cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  pointer-events: none;
-  transition: all 0.15s ease;
-  transform: translate(-50%, -50%);
-  backdrop-filter: blur(2px);
-}
-
-.cursor.hover {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 1);
-}
-
-.cursor-dot {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background: #fff;
-  border-radius: 50%;
-  pointer-events: none;
-  transition: all 0.1s ease;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.cursor-dot.hover {
-  width: 8px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.particle {
-  position: fixed;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  pointer-events: none;
-}
 
 ::selection {
   background: color-mix(in srgb, var(--color-mid-gray) 40%, transparent);
@@ -276,7 +279,7 @@ section {
 
 /* Services Section - Override global section styles */
 .services-section {
-  height: 100vh !important;
+  height: auto !important;
   min-height: 100vh;
-  overflow: hidden !important;
+  overflow: visible !important;
 }

@@ -1,142 +1,97 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  angle: number;
-  velocity: number;
-  life: number;
-  frame: number;
-}
+const ModernCursor = () => {
+  const cursorRef = useRef<HTMLDivElement>(null); // outer circle
+  const dotRef = useRef<HTMLDivElement>(null); // inner dot
+  const [hovering, setHovering] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-const ModernCursor: React.FC = () => {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
+  const mouse = useRef({ x: 0, y: 0 });
+  const pos = useRef({ x: 0, y: 0 });
 
-  const [isHovering, setIsHovering] = useState(false);
-
-  const mousePos = useRef({ x: 0, y: 0 });
-  const cursorPos = useRef({ x: 0, y: 0 });
-
-  /* =========================
-     Mouse listeners
-  ========================= */
+  // mark component as mounted
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
-    };
+    setMounted(true);
+  }, []);
 
-    const handleMouseEnter = (e: Event) => {
-      if (!(e.target instanceof HTMLElement)) return;
+  // pointer tracking
+  useEffect(() => {
+    if (!mounted) return;
 
-      const hoverEl = e.target.closest("button, a, .hoverable");
-      if (hoverEl) {
-        setIsHovering(true);
+    const move = (e: PointerEvent) => {
+      mouse.current.x = e.clientX;
+      mouse.current.y = e.clientY;
+
+      if (pos.current.x === 0 && pos.current.y === 0) {
+        pos.current.x = e.clientX;
+        pos.current.y = e.clientY;
       }
     };
 
-    const handleMouseLeave = (e: Event) => {
-      if (!(e.target instanceof HTMLElement)) return;
-
-      const hoverEl = e.target.closest("button, a, .hoverable");
-      if (hoverEl) {
-        setIsHovering(false);
-      }
+    const over = (e: PointerEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.closest("a, button, [data-cursor='hover'], .hoverable")) setHovering(true);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseenter", handleMouseEnter, true);
-    document.addEventListener("mouseleave", handleMouseLeave, true);
+    const out = (e: PointerEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.closest("a, button, [data-cursor='hover'], .hoverable")) setHovering(false);
+    };
+
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerover", over);
+    window.addEventListener("pointerout", out);
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseenter", handleMouseEnter, true);
-      document.removeEventListener("mouseleave", handleMouseLeave, true);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerover", over);
+      window.removeEventListener("pointerout", out);
     };
-  }, []);
+  }, [mounted]);
 
-  /* =========================
-     Cursor follow animation
-  ========================= */
+  // animation loop
   useEffect(() => {
-    let animationFrameId: number;
+    if (!mounted) return;
 
-    const animate = () => {
-      // Make the cursor follow faster (less laggy).
-      cursorPos.current.x += (mousePos.current.x - cursorPos.current.x) * 0.5;
-      cursorPos.current.y += (mousePos.current.y - cursorPos.current.y) * 0.5;
+    let raf: number;
+    const loop = () => {
+      pos.current.x += (mouse.current.x - pos.current.x) * 0.25;
+      pos.current.y += (mouse.current.y - pos.current.y) * 0.25;
 
       if (cursorRef.current) {
-        cursorRef.current.style.left = `${cursorPos.current.x}px`;
-        cursorRef.current.style.top = `${cursorPos.current.y}px`;
+        cursorRef.current.style.transform = `
+          translate3d(${pos.current.x}px, ${pos.current.y}px, 0)
+          translate(-50%, -50%)
+        `;
       }
 
-      if (cursorDotRef.current) {
-        cursorDotRef.current.style.left = `${mousePos.current.x}px`;
-        cursorDotRef.current.style.top = `${mousePos.current.y}px`;
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0) translate(-50%, -50%)`;
       }
 
-      animationFrameId = requestAnimationFrame(animate);
+      raf = requestAnimationFrame(loop);
     };
 
-    animate();
+    loop();
+    return () => cancelAnimationFrame(raf);
+  }, [mounted]);
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  if (!mounted) return null; // prevents hydration error
 
-  // /* =========================
-  //    Particle animation
-  // ========================= */
-  // useEffect(() => {
-  //   let animationFrameId: number;
-
-  //   const animateParticles = () => {
-  //     setParticles((prev) =>
-  //       prev
-  //         .map((p) => ({ ...p, frame: p.frame + 1 }))
-  //         .filter((p) => p.frame < p.life)
-  //     );
-
-  //     animationFrameId = requestAnimationFrame(animateParticles);
-  //   };
-
-  //   animateParticles();
-
-  //   return () => cancelAnimationFrame(animationFrameId);
-  // }, []);
-
-  /* =========================
-     Render
-  ========================= */
   return (
-    <div className="cursor-container">
-      <div ref={cursorRef} className={`cursor ${isHovering ? "hover" : ""}`} />
+    <>
+      {/* Outer glass circle */}
       <div
-        ref={cursorDotRef}
-        className={`cursor-dot ${isHovering ? "hover" : ""}`}
+        ref={cursorRef}
+        className={`modern-cursor ${hovering ? "hover" : ""}`}
       />
-
-      {/* {particles.map((p) => {
-        const progress = p.frame / p.life;
-        const x = p.x + Math.cos(p.angle) * p.velocity * p.frame;
-        const y =
-          p.y + Math.sin(p.angle) * p.velocity * p.frame - p.frame * 0.2;
-
-        return (
-          <div
-            key={p.id}
-            className="particle"
-            style={{
-              left: `${x}px`,
-              top: `${y}px`,
-              opacity: 1 - progress,
-            }}
-          />
-        );
-      })} */}
-    </div>
+      {/* Inner dot */}
+      <div
+        ref={dotRef}
+        className={`cursor-dot ${hovering ? "hover" : ""}`}
+      />
+    </>
   );
 };
 

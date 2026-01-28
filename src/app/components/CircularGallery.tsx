@@ -12,9 +12,12 @@ import { useEffect, useRef } from "react";
 
 type GL = Renderer["gl"];
 
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+function debounce<T extends (...args: unknown[]) => void>(
+  func: T,
+  wait: number,
+) {
   let timeout: number;
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: Parameters<T>) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(() => func.apply(this, args), wait);
   };
@@ -748,7 +751,15 @@ export default function CircularGallery({
     return () => {
       app.destroy();
     };
-  }, [computedItems, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+  }, [
+    computedItems,
+    bend,
+    textColor,
+    borderRadius,
+    font,
+    scrollSpeed,
+    scrollEase,
+  ]);
   return (
     <div
       className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing mt-[-130px] lg:mt-[-150px]"

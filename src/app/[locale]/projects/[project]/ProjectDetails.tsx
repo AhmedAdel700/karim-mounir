@@ -25,17 +25,17 @@ export default function ProjectDetails({
 
       if (img && typeof img === "object") {
         // Next.js StaticImageData directly
-        if ("src" in img && typeof (img as any).src === "string") {
-          return (img as any).src;
+        if ("src" in img && typeof (img as Record<string, unknown>).src === "string") {
+          return (img as Record<string, string>).src;
         }
 
         // Wrapped object: { image: StaticImageData | string, text?: string }
         if ("image" in img) {
-          const inner = (img as any).image;
+          const inner = (img as Record<string, unknown>).image;
 
           if (typeof inner === "string") return inner;
           if (inner && typeof inner === "object" && "src" in inner) {
-            return (inner as any).src as string;
+            return (inner as Record<string, string>).src as string;
           }
         }
       }
@@ -47,7 +47,7 @@ export default function ProjectDetails({
   const titles =
     rawImages.map((img: unknown) => {
       if (img && typeof img === "object" && "text" in img) {
-        return (img as any).text as string;
+        return (img as Record<string, unknown>).text as string;
       }
       return data?.title ?? "";
     }) ?? [];

@@ -25,6 +25,7 @@ export default function page({
       { image: p4, text: "Luxury Resort" },
       { image: p5, text: "Sports Complex" },
     ],
+    imagesArray: [p1, p2, p3, p4, p5],
     location: "New Cairo",
     type: "Commercial",
   };

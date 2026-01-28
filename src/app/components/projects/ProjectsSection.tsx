@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
+import { useTransitionRouter } from "next-view-transitions";
 
 import p1 from "@/app/images/p1.jpg";
 import p2 from "@/app/images/p2.jpg";
@@ -14,6 +15,7 @@ import p4 from "@/app/images/p4.jpg";
 import FlipText from "../FlipText";
 import { FadeInWords, TextReveal } from "@/app/[locale]/about/AboutPage";
 import { Link } from "@/navigations";
+import { slideInOut } from "@/lib/utils";
 
 interface ProjectCard {
   id: number;
@@ -71,6 +73,7 @@ export default function ProjectsSection() {
   const outroRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const lenis = useLenis();
+  const viewRouter = useTransitionRouter();
 
   useEffect(() => {
     if (!lenis) return;
@@ -488,7 +491,8 @@ export default function ProjectsSection() {
                     </p>
                   </div>
                   <div className="card-text-animate">
-                    <button
+                    <Link
+                      href={`/projects?category=${project.title}`}
                       className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold tracking-tight text-black transition duration-400 ease-out hover:-translate-y-0.5"
                       style={{
                         background:
@@ -508,7 +512,7 @@ export default function ProjectsSection() {
                       <span className="relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white text-[11px] transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]">
                         →
                       </span>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -575,10 +579,17 @@ export default function ProjectsSection() {
                     <Link
                       href="/projects"
                       className="group/btn relative inline-flex items-center gap-3 text-xl font-light tracking-wide px-10 py-5 border border-white overflow-hidden transition-all duration-300 hover:scale-105"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        viewRouter.push("/projects", {
+                          onTransitionReady: slideInOut,
+                        });
+                      }}
                     >
                       <span className="relative z-10 group-hover/btn:text-black transition-colors duration-300">
                         View Projects
                       </span>
+
                       <svg
                         className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1"
                         fill="none"
@@ -592,6 +603,7 @@ export default function ProjectsSection() {
                           d="M17 8l4 4m0 0l-4 4m4-4H3"
                         />
                       </svg>
+
                       <div className="absolute inset-0 bg-white transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
                     </Link>
                   </div>

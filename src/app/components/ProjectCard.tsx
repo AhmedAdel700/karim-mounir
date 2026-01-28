@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
+import { useTransitionRouter } from "next-view-transitions";
 import { Project } from "../types/project.Types";
+import { slideInOut } from "@/lib/utils";
 
 interface ProjectCardProps {
   project: Project;
@@ -14,6 +15,7 @@ export default function ProjectCard({
   href,
   index,
 }: ProjectCardProps) {
+  const viewRouter = useTransitionRouter();
   const card = (
     <>
       {/* Animated Border Glow */}
@@ -111,9 +113,23 @@ export default function ProjectCard({
 
   if (href) {
     return (
-      <Link href={href} className={className} aria-label={`/${project.title}`}>
+      <article
+        className={className}
+        role="link"
+        tabIndex={0}
+        aria-label={`/${project.title}`}
+        onClick={() => {
+          if (!href) return;
+          viewRouter.push(href, { onTransitionReady: slideInOut });
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && href) {
+            viewRouter.push(href, { onTransitionReady: slideInOut });
+          }
+        }}
+      >
         {card}
-      </Link>
+      </article>
     );
   }
 

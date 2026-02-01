@@ -122,8 +122,11 @@ export default function Header() {
   }, [pathname]);
 
   const switchLocale = (target: "en" | "ar") => {
-    if (target === locale) return setLangOpen(false);
-    router.refresh();
+    if (target === locale) {
+      setLangOpen(false);
+      return;
+    }
+
     router.replace(pathname, { locale: target });
     setLangOpen(false);
   };

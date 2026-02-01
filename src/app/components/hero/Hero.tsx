@@ -35,7 +35,9 @@ export default function Hero() {
       </div>
 
       <ModernTextEffect
+        key={`name-${locale}`}
         text={"Karim Mounir"}
+        lang={locale === "ar" ? "ar" : "en"}
         animationType={"particle"}
         delay={2}
         duration={4}
@@ -55,6 +57,8 @@ export default function Hero() {
 
       <ModernTextEffect
         text={"“Design Beyond Form”"}
+        key={`tagline-${locale}`}
+        lang={locale === "ar" ? "ar" : "en"}
         animationType={"matrix"}
         delay={5.5}
         duration={2.5}

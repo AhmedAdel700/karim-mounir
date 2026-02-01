@@ -74,13 +74,20 @@ const ModernTextEffect = ({
     () => {
       if (!textRef.current) return;
 
-      // Kill all existing GSAP animations and ScrollTriggers for this container
-      gsap.killTweensOf(textRef.current.querySelectorAll(".char, .word"));
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.trigger === containerRef.current) {
-          trigger.kill();
-        }
-      });
+      if (!textRef.current) return;
+
+      // Ensure ScrollTrigger refreshes after layout changes/font loading
+      const refreshTrigger = () => {
+        ScrollTrigger.refresh();
+      };
+      
+      // Handle font loading which can affect layout
+      document.fonts.ready.then(refreshTrigger);
+
+      // Small delay fallback for layout stabilization
+      const timeoutCtx = gsap.delayedCall(0.1, refreshTrigger);
+
+
 
       // Clear existing hover listeners
       hoverListenersRef.current.forEach(({ char, onEnter, onLeave }) => {

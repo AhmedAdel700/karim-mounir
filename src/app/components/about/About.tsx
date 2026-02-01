@@ -122,10 +122,7 @@ export default function About() {
   return (
     <>
       {isDesktop ? (
-        <div
-          ref={containerRef}
-          className="scroll-section-outer"
-        >
+        <div ref={containerRef} className="scroll-section-outer">
           <div ref={scrollContainerRef} className="scroll-section-inner">
             {/* OUR VISION */}
             <div
@@ -258,7 +255,7 @@ export default function About() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-10 lg:gap-24 bg-[var(--color-dark-gray)] min-h-fit">
+        <div className="flex flex-col gap-10 lg:gap-24 bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] min-h-fit">
           <section
             ref={visionRef}
             className="px-6 py-6 lg:py-24 text-center max-h-fit"

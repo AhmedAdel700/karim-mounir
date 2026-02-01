@@ -37,7 +37,7 @@
  * @param {number} mb - Bottom margin in pixels
  */
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -57,13 +57,44 @@ const ModernTextEffect = ({
 }) => {
   const containerRef = useRef(null);
   const textRef = useRef(null);
+  const hoverListenersRef = useRef([]);
+
+  // Cleanup function to remove event listeners
+  useEffect(() => {
+    return () => {
+      hoverListenersRef.current.forEach(({ char, onEnter, onLeave }) => {
+        char.removeEventListener("mouseenter", onEnter);
+        char.removeEventListener("mouseleave", onLeave);
+      });
+      hoverListenersRef.current = [];
+    };
+  }, []);
 
   useGSAP(
     () => {
       if (!textRef.current) return;
 
+      // Kill all existing GSAP animations and ScrollTriggers for this container
+      gsap.killTweensOf(textRef.current.querySelectorAll(".char, .word"));
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.trigger === containerRef.current) {
+          trigger.kill();
+        }
+      });
+
+      // Clear existing hover listeners
+      hoverListenersRef.current.forEach(({ char, onEnter, onLeave }) => {
+        char.removeEventListener("mouseenter", onEnter);
+        char.removeEventListener("mouseleave", onLeave);
+      });
+      hoverListenersRef.current = [];
+
       const chars = textRef.current.querySelectorAll(".char");
       const words = textRef.current.querySelectorAll(".word");
+
+      // Reset all chars and words to default state before animating
+      gsap.set(chars, { clearProps: "all" });
+      gsap.set(words, { clearProps: "all" });
 
       const animations = {
         matrix: () => {
@@ -834,40 +865,33 @@ const ModernTextEffect = ({
 
           char.addEventListener("mouseenter", onEnter);
           char.addEventListener("mouseleave", onLeave);
+
+          // Store listeners for cleanup
+          hoverListenersRef.current.push({ char, onEnter, onLeave });
         });
       }
     },
     {
       scope: containerRef,
       dependencies: [text, lang, animationType, delay, duration],
+      revertOnUpdate: true, // This ensures GSAP cleans up on dependency changes
     },
   );
 
   const renderText = () => {
     const words = text.split(" ");
 
-    if (lang === "ar") {
-      return words.map((word, index) => (
-        <span
-          key={index}
-          className="word inline-block"
-          style={{ whiteSpace: "pre" }}
-        >
-          {word}
-          {index < words.length - 1 ? " " : ""}
-        </span>
-      ));
-    }
-
+    // For Arabic, split into characters just like English
+    // The lang prop will control the animation direction
     return words.map((word, wordIndex) => (
       <span
-        key={wordIndex}
+        key={`${wordIndex}-${lang}`} // Add lang to key to force re-render
         className="word inline-block"
         style={{ whiteSpace: "pre" }}
       >
         {word.split("").map((char, charIndex) => (
           <span
-            key={`${wordIndex}-${charIndex}`}
+            key={`${wordIndex}-${charIndex}-${lang}`} // Add lang to key
             className="char inline-block cursor-pointer"
             style={{
               display: "inline-block",
@@ -878,7 +902,12 @@ const ModernTextEffect = ({
           </span>
         ))}
         {wordIndex < words.length - 1 && (
-          <span className="char inline-block">&nbsp;</span>
+          <span
+            className="char inline-block"
+            key={`space-${wordIndex}-${lang}`}
+          >
+            &nbsp;
+          </span>
         )}
       </span>
     ));

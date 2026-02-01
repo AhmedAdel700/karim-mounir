@@ -5,12 +5,14 @@ import { useGSAP } from "@gsap/react";
 import { useRef  } from "react";
 import ModernTextEffect from "@/app/components/ModernTextEffect";
 import { SplitText } from "gsap/all";
+import { useLocale } from "next-intl";
 
 gsap.registerPlugin(useGSAP, SplitText);
 
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
+  const locale = useLocale();
 
   return (
     <main

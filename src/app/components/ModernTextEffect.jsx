@@ -874,7 +874,7 @@ const ModernTextEffect = ({
     {
       scope: containerRef,
       dependencies: [text, lang, animationType, delay, duration],
-      revertOnUpdate: true, // This ensures GSAP cleans up on dependency changes
+      revertOnUpdate: true, // This ensures GSAP cleans up on dependency changes (VIP)
     },
   );
 

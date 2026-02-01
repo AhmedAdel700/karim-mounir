@@ -106,6 +106,7 @@ button,
   flex-wrap: nowrap;
   width: fit-content;
   will-change: transform;
+  background-color: var(--color-dark-gray); /* Match theme to hide sub-pixel gaps */
 }
 
 .scroll-section-horizontaliy {

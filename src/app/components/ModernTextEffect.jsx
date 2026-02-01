@@ -99,7 +99,7 @@ const ModernTextEffect = ({
               },
               ease: "bounce.out",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -134,7 +134,7 @@ const ModernTextEffect = ({
               },
               ease: "power2.inOut",
               delay: delay,
-            }
+            },
           ).to(
             chars,
             {
@@ -147,7 +147,7 @@ const ModernTextEffect = ({
                 from: "random",
               },
             },
-            "-=0.5"
+            "-=0.5",
           );
         },
 
@@ -185,7 +185,7 @@ const ModernTextEffect = ({
               },
               ease: "expo.inout",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -226,7 +226,7 @@ const ModernTextEffect = ({
               },
               ease: "elastic.out(1, 0.4)",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -260,7 +260,7 @@ const ModernTextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -296,7 +296,7 @@ const ModernTextEffect = ({
               },
               ease: "elastic.out(1, 0.5)",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -334,7 +334,7 @@ const ModernTextEffect = ({
               },
               ease: "steps(12)",
               delay: delay,
-            }
+            },
           ).to(
             chars,
             {
@@ -344,7 +344,7 @@ const ModernTextEffect = ({
               yoyo: true,
               stagger: 0.01,
             },
-            "-=0.3"
+            "-=0.3",
           );
         },
 
@@ -378,7 +378,7 @@ const ModernTextEffect = ({
                     duration: 0.05,
                     yoyo: true,
                     repeat: 1,
-                  }
+                  },
                 );
               }
             },
@@ -419,7 +419,7 @@ const ModernTextEffect = ({
               },
               ease: "back.out(1.7)",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -456,7 +456,7 @@ const ModernTextEffect = ({
               },
               ease: "power3.out",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -536,7 +536,7 @@ const ModernTextEffect = ({
               },
               ease: "expo.out",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -571,7 +571,7 @@ const ModernTextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -649,7 +649,7 @@ const ModernTextEffect = ({
               },
               ease: "power2.out",
               delay: delay,
-            }
+            },
           )
             .to(
               chars,
@@ -662,7 +662,7 @@ const ModernTextEffect = ({
                   yoyo: true,
                 },
               },
-              "-=0.4"
+              "-=0.4",
             )
             .to(chars, { opacity: 1, duration: 0.2 });
         },
@@ -702,7 +702,7 @@ const ModernTextEffect = ({
               },
               ease: "rough({ strength: 2, points: 20, clamp: true })",
               delay: delay,
-            }
+            },
           );
         },
 
@@ -783,7 +783,7 @@ const ModernTextEffect = ({
               },
               ease: "elastic.out(1, 0.6)",
               delay: delay,
-            }
+            },
           ).to(
             chars,
             {
@@ -797,7 +797,7 @@ const ModernTextEffect = ({
               yoyo: true,
               repeat: 1,
             },
-            "-=0.5"
+            "-=0.5",
           );
         },
       };
@@ -840,7 +840,7 @@ const ModernTextEffect = ({
     {
       scope: containerRef,
       dependencies: [text, lang, animationType, delay, duration],
-    }
+    },
   );
 
   const renderText = () => {

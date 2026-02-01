@@ -130,7 +130,7 @@ export default function About() {
             {/* OUR VISION */}
             <div
               ref={visionRef}
-              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] relative overflow-hidden"
+              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] relative overflow-hidden will-change-transform"
             >
               <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
 
@@ -169,7 +169,7 @@ export default function About() {
             {/* OWNER SECTION */}
             <div
               ref={ownerSectionRef}
-              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)]"
+              className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] will-change-transform"
             >
               <div className="flex flex-col lg:flex-row items-center justify-center gap-12 px-8 py-8 lg:py-0 max-w-7xl mx-auto w-full">
                 <div className="relative">
@@ -202,7 +202,7 @@ export default function About() {
                   </div>
 
                   <div
-                    className="owner-border absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+                    className="absolute inset-0 border-4 border-main-white shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                     style={{
                       opacity: ownerVisible ? 1 : 0,
                       transform: ownerVisible ? "scale(1)" : "scale(0.9)",

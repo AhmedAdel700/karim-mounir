@@ -15,16 +15,16 @@ export default function Header() {
   const [showHeader, setShowHeader] = useState(true);
   const [langOpen, setLangOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  
+
   const [logoReady, setLogoReady] = useState(false);
   const [navReady, setNavReady] = useState(false);
-  
+
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const isAR = locale === "ar";
   const langLabel = isAR ? "AR" : "EN";
-  
+
   const langRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -32,7 +32,7 @@ export default function Header() {
   const ticking = useRef(false);
   const lastScrollY = useRef(0);
   const lastDirection = useRef<"up" | "down">("up");
-  
+
   const THRESHOLD = 12;
   const DIRECTION_EPS = 6;
 
@@ -46,16 +46,6 @@ export default function Header() {
   const mobileLinks = [{ href: "/", label: t("Home") }, ...LINKS];
   const desktopLeftLinks = LINKS.slice(0, 2);
   const desktopRightLinks = LINKS.slice(2);
-
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1280px)");
-    const updateHeaderState = () => setIsDesktop(mediaQuery.matches);
-    updateHeaderState();
-    mediaQuery.addEventListener("change", updateHeaderState);
-    return () => mediaQuery.removeEventListener("change", updateHeaderState);
-  }, []);
 
   // Simplified reveal sequence (only on Home)
   useEffect(() => {
@@ -112,10 +102,13 @@ export default function Header() {
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (langRef.current && !langRef.current.contains(target)) setLangOpen(false);
+      if (langRef.current && !langRef.current.contains(target))
+        setLangOpen(false);
       if (
-        mobileRef.current && !mobileRef.current.contains(target) &&
-        toggleRef.current && !toggleRef.current.contains(target)
+        mobileRef.current &&
+        !mobileRef.current.contains(target) &&
+        toggleRef.current &&
+        !toggleRef.current.contains(target)
       ) {
         setMobileOpen(false);
       }
@@ -130,18 +123,35 @@ export default function Header() {
 
   const switchLocale = (target: "en" | "ar") => {
     if (target === locale) return setLangOpen(false);
+    router.refresh();
     router.replace(pathname, { locale: target });
     setLangOpen(false);
   };
 
   function slideInOut() {
     document.documentElement.animate(
-      [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0.2, transform: "translateY(-35%)" }],
-      { duration: 1000, easing: "cubic-bezier(0.87, 0, 0.13, 1)", fill: "forwards", pseudoElement: "::view-transition-old(root)" }
+      [
+        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0.2, transform: "translateY(-35%)" },
+      ],
+      {
+        duration: 1000,
+        easing: "cubic-bezier(0.87, 0, 0.13, 1)",
+        fill: "forwards",
+        pseudoElement: "::view-transition-old(root)",
+      },
     );
     document.documentElement.animate(
-      [{ clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" }, { clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)" }],
-      { duration: 1000, easing: "cubic-bezier(0.87, 0, 0.13, 1)", fill: "forwards", pseudoElement: "::view-transition-new(root)" }
+      [
+        { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
+        { clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)" },
+      ],
+      {
+        duration: 1000,
+        easing: "cubic-bezier(0.87, 0, 0.13, 1)",
+        fill: "forwards",
+        pseudoElement: "::view-transition-new(root)",
+      },
     );
   }
 
@@ -152,14 +162,18 @@ export default function Header() {
         "fixed top-0 left-0 w-full z-[100] flex items-center justify-between px-6 h-fit",
         "transition-all duration-500 ease-in-out",
         scrolled ? "backdrop-blur-md bg-white/5" : "bg-transparent",
-        showHeader ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+        showHeader
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-full opacity-0",
       )}
     >
       <div className="hidden xl:flex items-center w-full gap-6">
         <nav
           className={clsx(
             "flex flex-1 justify-end gap-8 uppercase tracking-wide text-white transition-all duration-700",
-            (navReady || pathname !== "/") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 blur-sm"
+            navReady || pathname !== "/"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3 blur-sm",
           )}
         >
           {desktopLeftLinks.map((item, index) => {
@@ -170,33 +184,65 @@ export default function Header() {
                 href={item.href}
                 prefetch
                 style={{
-                  transitionDelay: (navReady && pathname === "/") ? `${index * 100}ms` : "0ms",
-                  transform: (navReady || pathname !== "/") ? "translateX(0)" : "translateX(10px)",
+                  transitionDelay:
+                    navReady && pathname === "/" ? `${index * 100}ms` : "0ms",
+                  transform:
+                    navReady || pathname !== "/"
+                      ? "translateX(0)"
+                      : "translateX(10px)",
                 }}
                 onClick={(e) => {
                   e.preventDefault();
                   viewRouter.push(item.href, { onTransitionReady: slideInOut });
                 }}
-                className={clsx("group relative text-sm py-1 transition-all", isActive && "text-main-primary font-bold")}
+                className={clsx(
+                  "group relative text-sm py-1 transition-all",
+                  isActive && "text-main-primary font-bold",
+                )}
               >
-                <span className="group-hover:opacity-90 transition-opacity">{item.label}</span>
-                <span className={clsx("absolute -bottom-1 left-0 h-[1.5px] transition-all duration-300 bg-current", isActive ? "w-full opacity-80" : "w-0 group-hover:w-full opacity-60")} />
+                <span className="group-hover:opacity-90 transition-opacity">
+                  {item.label}
+                </span>
+                <span
+                  className={clsx(
+                    "absolute -bottom-1 left-0 h-[1.5px] transition-all duration-300 bg-current",
+                    isActive
+                      ? "w-full opacity-80"
+                      : "w-0 group-hover:w-full opacity-60",
+                  )}
+                />
               </Link>
             );
           })}
         </nav>
 
         <div className="flex items-center justify-center w-[180px]">
-          <Link href="/" prefetch onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
+          <Link
+            href="/"
+            prefetch
+            onClick={(e) => {
+              e.preventDefault();
+              viewRouter.push("/", { onTransitionReady: slideInOut });
+            }}
+          >
             <div
               style={{
-                opacity: (logoReady || pathname !== "/") ? 1 : 0,
-                transform: (logoReady || pathname !== "/") ? "scale(1)" : "scale(1.1)",
-                filter: (logoReady || pathname !== "/") ? "blur(0px)" : "blur(10px)",
+                opacity: logoReady || pathname !== "/" ? 1 : 0,
+                transform:
+                  logoReady || pathname !== "/" ? "scale(1)" : "scale(1.1)",
+                filter:
+                  logoReady || pathname !== "/" ? "blur(0px)" : "blur(10px)",
                 transition: "all 1000ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
-              <Image src={logo} alt="Logo" width={pathname === "/" ? 140 : 100} height={pathname === "/" ? 140 : 100} priority className="brightness-0 invert hover:opacity-80 transition-opacity" />
+              <Image
+                src={logo}
+                alt="Logo"
+                width={pathname === "/" ? 140 : 100}
+                height={pathname === "/" ? 140 : 100}
+                priority
+                className="brightness-0 invert hover:opacity-80 transition-opacity"
+              />
             </div>
           </Link>
         </div>
@@ -204,7 +250,9 @@ export default function Header() {
         <nav
           className={clsx(
             "flex flex-1 justify-start gap-8 uppercase tracking-wide text-white transition-all duration-700",
-            (navReady || pathname !== "/") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 blur-sm"
+            navReady || pathname !== "/"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3 blur-sm",
           )}
         >
           {desktopRightLinks.map((item, index) => {
@@ -213,19 +261,35 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                 prefetch
+                prefetch
                 style={{
-                  transitionDelay: (navReady && pathname === "/") ? `${index * 100}ms` : "0ms",
-                  transform: (navReady || pathname !== "/") ? "translateX(0)" : "translateX(-10px)",
+                  transitionDelay:
+                    navReady && pathname === "/" ? `${index * 100}ms` : "0ms",
+                  transform:
+                    navReady || pathname !== "/"
+                      ? "translateX(0)"
+                      : "translateX(-10px)",
                 }}
                 onClick={(e) => {
                   e.preventDefault();
                   viewRouter.push(item.href, { onTransitionReady: slideInOut });
                 }}
-                className={clsx("group relative text-sm py-1 transition-all", isActive && "text-main-primary font-bold")}
+                className={clsx(
+                  "group relative text-sm py-1 transition-all",
+                  isActive && "text-main-primary font-bold",
+                )}
               >
-                <span className="group-hover:opacity-90 transition-opacity">{item.label}</span>
-                <span className={clsx("absolute -bottom-1 left-0 h-[1.5px] transition-all duration-300 bg-current", isActive ? "w-full opacity-80" : "w-0 group-hover:w-full opacity-60")} />
+                <span className="group-hover:opacity-90 transition-opacity">
+                  {item.label}
+                </span>
+                <span
+                  className={clsx(
+                    "absolute -bottom-1 left-0 h-[1.5px] transition-all duration-300 bg-current",
+                    isActive
+                      ? "w-full opacity-80"
+                      : "w-0 group-hover:w-full opacity-60",
+                  )}
+                />
               </Link>
             );
           })}
@@ -233,16 +297,46 @@ export default function Header() {
 
         <div className="flex items-center gap-2 ml-4">
           <div className="relative" ref={langRef}>
-            <button onClick={() => setLangOpen(!langOpen)} className="flex items-center gap-1 text-sm uppercase px-2 py-1 rounded text-white hover:bg-white/10 transition">
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 text-sm uppercase px-2 py-1 rounded text-white hover:bg-white/10 transition"
+            >
               {langLabel}
-              <ChevronDown className={clsx("h-4 w-4 transition-transform duration-300 text-white", langOpen && "rotate-180")} />
+              <ChevronDown
+                className={clsx(
+                  "h-4 w-4 transition-transform duration-300 text-white",
+                  langOpen && "rotate-180",
+                )}
+              />
             </button>
-            <div className={clsx("absolute top-full mt-2 w-28 bg-black/70 backdrop-blur-md transition-all duration-200", langOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2", locale === "en" ? "right-0" : "left-0")}>
-              <button onClick={() => switchLocale("en")} className={clsx("w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white", locale === "en" && "bg-white/10")}>
-                {t("English")}<Globe size={16} className="text-white" />
+            <div
+              className={clsx(
+                "absolute top-full mt-2 w-28 bg-black/70 backdrop-blur-md transition-all duration-200",
+                langOpen
+                  ? "opacity-100 visible translate-y-0"
+                  : "opacity-0 invisible -translate-y-2",
+                locale === "en" ? "right-0" : "left-0",
+              )}
+            >
+              <button
+                onClick={() => switchLocale("en")}
+                className={clsx(
+                  "w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white",
+                  locale === "en" && "bg-white/10",
+                )}
+              >
+                {t("English")}
+                <Globe size={16} className="text-white" />
               </button>
-              <button onClick={() => switchLocale("ar")} className={clsx("w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white", locale === "ar" && "bg-white/10")}>
-                {t("Arabic")}<Globe size={16} className="text-white" />
+              <button
+                onClick={() => switchLocale("ar")}
+                className={clsx(
+                  "w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white",
+                  locale === "ar" && "bg-white/10",
+                )}
+              >
+                {t("Arabic")}
+                <Globe size={16} className="text-white" />
               </button>
             </div>
           </div>
@@ -251,38 +345,129 @@ export default function Header() {
 
       <div className="flex xl:hidden items-center justify-between w-full">
         <div className="flex items-center gap-3 cursor-pointer">
-          <Link href="/" prefetch onClick={(e) => { e.preventDefault(); viewRouter.push("/", { onTransitionReady: slideInOut }); }}>
-            <Image src={logo} alt="Logo" width={100} height={100} priority className="brightness-0 invert hover:opacity-80 transition-opacity" />
+          <Link
+            href="/"
+            prefetch
+            onClick={(e) => {
+              e.preventDefault();
+              viewRouter.push("/", { onTransitionReady: slideInOut });
+            }}
+          >
+            <Image
+              src={logo}
+              alt="Logo"
+              width={100}
+              height={100}
+              priority
+              className="brightness-0 invert hover:opacity-80 transition-opacity"
+            />
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          <button ref={toggleRef} onClick={() => setMobileOpen(!mobileOpen)} className="flex flex-col items-center justify-center w-8 h-8 space-y-1.5 focus:outline-none" aria-label="Toggle menu">
-            <span className={clsx("block w-6 h-[2px] rounded bg-white transition-transform duration-300", mobileOpen ? "rotate-45 translate-y-[8px] !bg-red-800" : "")} />
-            <span className={clsx("block w-6 h-[2px] rounded bg-white transition-opacity duration-300", mobileOpen ? "opacity-0" : "opacity-100")} />
-            <span className={clsx("block w-6 h-[2px] rounded bg-white transition-transform duration-300", mobileOpen ? "-rotate-45 -translate-y-[8px] !bg-red-800" : "")} />
+          <button
+            ref={toggleRef}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="flex flex-col items-center justify-center w-8 h-8 space-y-1.5 focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            <span
+              className={clsx(
+                "block w-6 h-[2px] rounded bg-white transition-transform duration-300",
+                mobileOpen ? "rotate-45 translate-y-[8px] !bg-red-800" : "",
+              )}
+            />
+            <span
+              className={clsx(
+                "block w-6 h-[2px] rounded bg-white transition-opacity duration-300",
+                mobileOpen ? "opacity-0" : "opacity-100",
+              )}
+            />
+            <span
+              className={clsx(
+                "block w-6 h-[2px] rounded bg-white transition-transform duration-300",
+                mobileOpen ? "-rotate-45 -translate-y-[8px] !bg-red-800" : "",
+              )}
+            />
           </button>
           <div className="relative" ref={langRef}>
-            <button onClick={() => setLangOpen(!langOpen)} className="flex items-center gap-1 text-sm uppercase px-2 py-1 rounded text-white hover:bg-white/10 transition">
-              {langLabel}<ChevronDown className={clsx("h-4 w-4 transition-transform duration-300 text-white", langOpen && "rotate-180")} />
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 text-sm uppercase px-2 py-1 rounded text-white hover:bg-white/10 transition"
+            >
+              {langLabel}
+              <ChevronDown
+                className={clsx(
+                  "h-4 w-4 transition-transform duration-300 text-white",
+                  langOpen && "rotate-180",
+                )}
+              />
             </button>
-            <div className={clsx("absolute top-full mt-2 w-28 bg-black/70 backdrop-blur-md transition-all duration-200", langOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2", locale === "en" ? "right-0" : "left-0")}>
-              <button onClick={() => switchLocale("en")} className={clsx("w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white", locale === "en" && "bg-white/10")}>
-                {t("English")}<Globe size={16} className="text-white" />
+            <div
+              className={clsx(
+                "absolute top-full mt-2 w-28 bg-black/70 backdrop-blur-md transition-all duration-200",
+                langOpen
+                  ? "opacity-100 visible translate-y-0"
+                  : "opacity-0 invisible -translate-y-2",
+                locale === "en" ? "right-0" : "left-0",
+              )}
+            >
+              <button
+                onClick={() => switchLocale("en")}
+                className={clsx(
+                  "w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white",
+                  locale === "en" && "bg-white/10",
+                )}
+              >
+                {t("English")}
+                <Globe size={16} className="text-white" />
               </button>
-              <button onClick={() => switchLocale("ar")} className={clsx("w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white", locale === "ar" && "bg-white/10")}>
-                {t("Arabic")}<Globe size={16} className="text-white" />
+              <button
+                onClick={() => switchLocale("ar")}
+                className={clsx(
+                  "w-full text-start px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between text-white",
+                  locale === "ar" && "bg-white/10",
+                )}
+              >
+                {t("Arabic")}
+                <Globe size={16} className="text-white" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div ref={mobileRef} className={clsx("xl:hidden absolute top-full inset-x-4 bg-black/70 backdrop-blur-md transition-all duration-300", mobileOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-4")}>
+      <div
+        ref={mobileRef}
+        className={clsx(
+          "xl:hidden absolute top-full inset-x-4 bg-black/70 backdrop-blur-md transition-all duration-300",
+          mobileOpen
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible -translate-y-4",
+        )}
+      >
         <nav className="flex flex-col">
           {mobileLinks.map((item) => {
-            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
             return (
-              <Link prefetch key={item.href} href={item.href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); viewRouter.push(item.href, { onTransitionReady: slideInOut }); }} className={clsx("px-4 py-3 text-sm uppercase transition border-b border-white/10 text-white", isActive ? "bg-white/10 font-bold text-main-primary" : "hover:bg-white/15")}>
+              <Link
+                prefetch
+                key={item.href}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  viewRouter.push(item.href, { onTransitionReady: slideInOut });
+                }}
+                className={clsx(
+                  "px-4 py-3 text-sm uppercase transition border-b border-white/10 text-white",
+                  isActive
+                    ? "bg-white/10 font-bold text-main-primary"
+                    : "hover:bg-white/15",
+                )}
+              >
                 {item.label}
               </Link>
             );

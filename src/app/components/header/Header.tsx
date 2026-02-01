@@ -126,7 +126,7 @@ export default function Header() {
       return;
     }
 
-    window.location.href = `/${target}${pathname}`;
+    window.location.href = `/${target}${pathname}`; // this bec the gsap for some reason dont fire the animation on the new locale (i gusse its my issue not gsap's)
   };
 
   function slideInOut() {

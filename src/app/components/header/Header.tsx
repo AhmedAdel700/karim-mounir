@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Link, usePathname, useRouter } from "@/navigations";
+import { Link, usePathname } from "@/navigations";
 import Image from "next/image";
 import logo from "@/app/images/logo.png";
 import { ChevronDown, Globe } from "lucide-react";
@@ -20,7 +20,6 @@ export default function Header() {
   const [navReady, setNavReady] = useState(false);
 
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
   const isAR = locale === "ar";
   const langLabel = isAR ? "AR" : "EN";
@@ -127,8 +126,7 @@ export default function Header() {
       return;
     }
 
-    router.replace(pathname, { locale: target });
-    setLangOpen(false);
+    window.location.href = `/${target}${pathname}`;
   };
 
   function slideInOut() {

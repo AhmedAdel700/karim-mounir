@@ -1,9 +1,16 @@
 "use client";
+
 import { useLocale } from "next-intl";
 import { useRef, useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
 import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
 import TextEffect from "../TextEffect";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   function useIsDesktop() {
@@ -17,80 +24,92 @@ export default function About() {
     }, []);
 
     return isDesktop;
-  }                                                       
+  }
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const visionRef = useRef<HTMLDivElement | null>(null);
   const ownerSectionRef = useRef<HTMLDivElement | null>(null);
+
   const locale = useLocale();
-  const isDesktop = useIsDesktop();
   const isRTL = locale === "ar";
+  const isDesktop = useIsDesktop();
 
   const [visionVisible, setVisionVisible] = useState(false);
   const [ownerVisible, setOwnerVisible] = useState(false);
 
-  useEffect(() => {
-    if (!isDesktop) return;
-
-    let ctx: ReturnType<typeof import("gsap").default.context> | undefined;
-
-    const loadGSAP = async () => {
-      const gsap = (await import("gsap")).default;
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-
+  /* ===============================
+     GSAP HORIZONTAL SCROLL (useGSAP)
+  =============================== */
+  useGSAP(
+    () => {
+      if (!isDesktop) return;
       if (!containerRef.current || !scrollContainerRef.current) return;
 
-      ctx = gsap.context(() => {
-        const sections = gsap.utils.toArray<HTMLElement>(
-          ".scroll-section-horizontaliy",
-        );
+      const sections = gsap.utils.toArray<HTMLElement>(
+        ".scroll-section-horizontaliy",
+      );
 
-        ScrollTrigger.refresh();
+      ScrollTrigger.refresh();
 
-        const horizontalScrollLength =
-          scrollContainerRef.current!.offsetWidth - window.innerWidth;
-        const pauseDuration = window.innerHeight * 0.3;
+      const horizontalScrollLength =
+        scrollContainerRef.current.offsetWidth - window.innerWidth;
 
-        gsap.set(sections, {
-          xPercent: isRTL ? 100 : -100 * (sections.length - 1),
-        });
+      const pauseDuration = window.innerHeight * 0.3;
 
-        gsap
-          .timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top top",
-              pin: true,
-              pinSpacing: true,
-              scrub: 1,
-              anticipatePin: 0,
-              refreshPriority: 1,
-              end: () => "+=" + (horizontalScrollLength + pauseDuration * 2),
-              invalidateOnRefresh: true,
-            },
-          })
-          .to({}, { duration: pauseDuration })
-          .to(sections, {
-            xPercent: 0,
-            ease: "none",
-            duration: horizontalScrollLength,
-          })
-          .to({}, { duration: pauseDuration });
-      }, containerRef);
-    };
+      gsap.set(sections, {
+        xPercent: isRTL ? 100 : -100 * (sections.length - 1),
+      });
 
-    const timer = setTimeout(() => {
-      loadGSAP();
-    }, 100);
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            pin: true,
+            pinSpacing: true,
+            scrub: 1,
+            anticipatePin: 0,
+            refreshPriority: 1,
+            end: () => "+=" + (horizontalScrollLength + pauseDuration * 2),
+            invalidateOnRefresh: true,
+          },
+        })
+        .to({}, { duration: pauseDuration })
+        .to(sections, {
+          xPercent: 0,
+          ease: "none",
+          duration: horizontalScrollLength,
+        })
+        .to({}, { duration: pauseDuration });
 
-    return () => {
-      clearTimeout(timer);
-      if (ctx) ctx.revert();
-    };
-  }, [isRTL, isDesktop]);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 15%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
+      tl.from(".about-animate > *", {
+        y: 120,
+        opacity: 0,
+        duration: 3.5,
+        ease: "power4.out",
+        stagger: 0.6,
+        filter: "blur(5px)",
+        scale: 1.2,
+      });
+    },
+    {
+      scope: containerRef,
+      dependencies: [isDesktop, isRTL],
+    },
+  );
+
+  /* ===============================
+     INTERSECTION OBSERVERS
+  =============================== */
   useEffect(() => {
     if (!visionRef.current) return;
 
@@ -211,44 +230,31 @@ export default function About() {
                   />
                 </div>
 
-                <div className="flex-1 max-w-4xl">
-                  <TextEffect
-                    text={"Meet Our Founder"}
-                    animationType="magneticPull"
-                    className="text-4xl md:text-5xl font-bold text-main-white mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                  />
+                <div className="flex-1 max-w-4xl about-animate">
+                  <h2 className="text-4xl md:text-5xl font-bold text-main-white mb-4">
+                    Meet Our Founder
+                  </h2>
 
-                  <TextEffect
-                    text={
-                      "Karim Mounir leads an integrated design practice where architecture and interiors are conceived as one unified system, guided by clarity of purpose and restraint."
-                    }
-                    animationType="wordWave"
-                    delay={1}
-                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                  />
+                  <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
+                    Karim Mounir leads an integrated design practice where
+                    architecture and interiors are conceived as one unified
+                    system, guided by clarity of purpose and restraint.
+                  </p>
 
-                  <TextEffect
-                    text={
-                      "His work approaches architecture as a spatial narrative shaped by light, proportion, material, and human experience, creating environments that are intelligent, enduring, and meaningful."
-                    }
-                    animationType="wordWave"
-                    delay={3.5}
-                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                  />
+                  <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
+                    His work approaches architecture as a spatial narrative
+                    shaped by light, proportion, material, and human experience,
+                    creating environments that are intelligent, enduring, and
+                    meaningful.
+                  </p>
 
-                  <TextEffect
-                    text={"Karim Mounir"}
-                    delay={6}
-                    animationType="magneticPull"
-                    className="text-end text-2xl md:!text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                  />
+                  <h3 className="text-end !text-2xl md:!text-5xl text-gray-200 font-semibold">
+                    Karim Mounir
+                  </h3>
 
-                  <TextEffect
-                    text={"Design Leader & Principal Architect"}
-                    animationType="magneticPull"
-                    delay={6}
-                    className="text-end text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-                  />
+                  <h3 className="text-end !text-lg text-gray-200 font-semibold">
+                    Design Leader & Principal Architect
+                  </h3>
                 </div>
               </div>
             </div>

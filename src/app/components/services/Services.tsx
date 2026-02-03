@@ -40,46 +40,17 @@ export default function Services() {
     setMounted(true);
   }, []);
 
-  // Stars Animation (Client Only) - Separated to avoid re-triggering main animations
-  useGSAP(
-    () => {
-      if (!mounted) return;
-
-      const stars = gsap.utils.toArray<HTMLElement>(".star");
-      stars.forEach((star) => {
-        gsap.set(star, {
-          left: Math.random() * 100 + "%",
-          top: Math.random() * 100 + "%",
-        });
-      });
-
-      gsap.to(".star", {
-        opacity: "random(0.2, 1)",
-        scale: "random(0.5, 1.5)",
-        duration: "random(2, 5)",
-        repeat: -1,
-        yoyo: true,
-        stagger: {
-          amount: 5,
-          from: "random",
-        },
-      });
-    },
-    { scope: container, dependencies: [mounted] },
-  );
-
-  // Main UI Animations (Hero & Services)
   useGSAP(
     () => {
       const heroTl = gsap.timeline({
         scrollTrigger: {
           trigger: "#hero-services",
           start: "top 90%",
-          toggleActions: "play none none reverse",
+          toggleActions:"play reverse play reverse"
         },
       });
 
-      heroTl.from(".hero-intro > *", {
+      heroTl.from("#hero-services > *", {
         y: 100,
         opacity: 0,
         filter: "blur(10px)",
@@ -96,7 +67,6 @@ export default function Services() {
           scrollTrigger: {
             trigger: card,
             start: "top 90%",
-            toggleActions: "play none none reverse",
           },
           y: 0,
           opacity: 1,
@@ -116,19 +86,8 @@ export default function Services() {
     >
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center px-6 overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          {mounted &&
-            [...Array(30)].map((_, i) => (
-              <div
-                key={i}
-                className="star absolute w-1 h-1 bg-white rounded-full"
-              />
-            ))}
-        </div>
-
         <div
-          className="hero-intro relative z-10 max-w-6xl mx-auto text-center"
+          className="relative z-10 max-w-6xl mx-auto text-center"
           id="hero-services"
         >
           <div className="mb-6 overflow-hidden">
@@ -140,15 +99,15 @@ export default function Services() {
             </span>
           </div>
 
-          <h1
-            className="hero-title text-7xl md:text-8xl lg:text-9xl font-extralight tracking-tight mb-10 leading-none"
+          <h2
+            className="text-7xl md:text-8xl lg:text-9xl font-extralight tracking-tight mb-10"
             style={{ fontFamily: '"Lora", Georgia, serif' }}
           >
             Our Services
-          </h1>
+          </h2>
 
           <p
-            className="hero-desc text-lg md:text-2xl text-white/60 font-light max-w-3xl mx-auto leading-relaxed"
+            className="text-lg md:text-2xl text-white/60 font-light max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: '"Montserrat", sans-serif' }}
           >
             Crafting exceptional spaces through thoughtful design, innovative

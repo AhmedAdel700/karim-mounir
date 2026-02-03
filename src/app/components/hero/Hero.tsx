@@ -20,9 +20,10 @@ export default function Hero() {
     });
 
     tl.from('h1', {
-      y: -150,
+      // y: -150,
       filter: "blur(10px)",
-      opacity: 0
+      opacity: 0,
+      scale: 1.35
     })
   })
   return (

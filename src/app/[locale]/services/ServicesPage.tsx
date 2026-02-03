@@ -9,6 +9,7 @@ import p1 from "@/app/images/p1.jpg";
 import p2 from "@/app/images/p2.jpg";
 import p3 from "@/app/images/p3.jpg";
 import p4 from "@/app/images/p4.jpg";
+import { FadeInWords } from "../about/AboutPage";
 gsap.registerPlugin(ScrollTrigger);
 
 interface Service {
@@ -148,8 +149,7 @@ export default function ServicesPage() {
             title.innerHTML = chars
               .map(
                 (char) =>
-                  `<span class="inline-block">${
-                    char === " " ? "&nbsp;" : char
+                  `<span class="inline-block">${char === " " ? "&nbsp;" : char
                   }</span>`,
               )
               .join("");
@@ -294,25 +294,13 @@ export default function ServicesPage() {
         className="relative min-h-screen flex flex-col justify-center items-center px-6 py-20 z-10"
       >
         <div className="max-w-6xl text-center relative z-10">
-          <TextEffect
-            text="Our Services"
-            delay={1.2}
-            className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
-          />
+          <div className="text-6xl md:text-8xl font-medium tracking-tight mb-1">
+            <FadeInWords text="Our Services" />
+          </div>
 
-          <TextEffect
-            text="Our services are conceived as part of a unified design approach—where architecture, interiors, and execution are seamlessly integrated."
-            delay={1.2}
-            className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1"
-            animationType="wordWave"
-          />
-
-          <TextEffect
-            text="Each service responds to context, purpose, and experience, ensuring that every project is coherent, intentional, and enduring."
-            delay={1.2}
-            className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide"
-            animationType="wordWave"
-          />
+          <div className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1">
+            <FadeInWords text="Our services are conceived as part of a unified design approach—where architecture, interiors, and execution are seamlessly integrated. Each service responds to context, purpose, and experience, ensuring that every project is coherent, intentional, and enduring." />
+          </div>
         </div>
       </section>
 
@@ -327,9 +315,8 @@ export default function ServicesPage() {
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
-                className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${
-                  isLeft ? "" : "md:flex-row-reverse"
-                }`}
+                className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${isLeft ? "" : "md:flex-row-reverse"
+                  }`}
                 style={{ perspective: "1000px" }}
               >
                 {/* Text Content */}
@@ -374,15 +361,17 @@ export default function ServicesPage() {
             <div className="w-2 h-2 bg-white/20 rounded-full"></div>
             <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           </div>
-          <h2 className="text-4xl md:text-6xl font-extralight mb-8 tracking-tight">
-            An Integrated Design Approach
-          </h2>
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light">
-            Our strength lies in connecting architecture, interiors, planning,
+          <div className="text-4xl md:text-6xl font-extralight mb-8 tracking-tight">
+            <FadeInWords text="An Integrated Design Approach" />
+          </div>
+
+          <div className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light">
+            <FadeInWords text="Our strength lies in connecting architecture, interiors, planning,
             and execution into one continuous process. This integration ensures
             consistency, reduces fragmentation, and results in environments that
-            feel complete, intentional, and enduring.
-          </p>
+            feel complete, intentional, and enduring." />
+          </div>
+
         </div>
       </section>
 

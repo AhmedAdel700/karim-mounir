@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, ReactNode } from "react";
 import idea from "@/app/images/idea2.jpg";
 import Image from "next/image";
-import TextEffect from "@/app/components/TextEffect";
+import { usePageReady } from "@/app/hooks/usePageReady";
 
 interface TextRevealProps {
   children: ReactNode;
@@ -40,9 +40,8 @@ export function TextReveal({ children, delay = 0 }: TextRevealProps) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
+      className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
     >
       {children}
     </div>
@@ -54,45 +53,37 @@ interface FadeInWordsProps {
   delay?: number;
 }
 
+
 export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
+  const pageReady = usePageReady(600); // match route transition
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const words = text.split(" ");
 
   useEffect(() => {
+    if (!pageReady) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setTimeout(() => setIsVisible(true), delay);
-        } else {
-          setIsVisible(false);
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.2 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [delay]);
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [pageReady, delay]);
 
   return (
     <div ref={ref} className="inline">
       {words.map((word, index) => (
         <span
           key={index}
-          className={`inline-block transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-          style={{
-            transitionDelay: isVisible ? `${index * 50}ms` : "0ms",
-          }}
+          className={`inline-block transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          style={{ transitionDelay: `${index * 50}ms` }}
         >
           {word}&nbsp;
         </span>
@@ -100,6 +91,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
     </div>
   );
 }
+
 
 export default function AboutPage() {
   return (
@@ -152,16 +144,13 @@ export default function AboutPage() {
       <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden">
 
         <div className="max-w-4xl text-center relative z-10">
-          <TextEffect
-            text="Karim Mounir"
-            delay={1.2}
-            className="text-6xl md:text-8xl font-medium tracking-tight mb-1"
-          />
-          <TextEffect
-            text="Designing Spaces with Purpose and Vision"
-            delay={1.2}
-            className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide"
-          />
+          <div className="text-6xl md:text-8xl font-medium tracking-tight mb-1">
+            <FadeInWords text="Karim Mounir" />
+          </div>
+
+          <div className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide">
+            <FadeInWords text="Designing Spaces with Purpose and Vision" />
+          </div>
         </div>
       </section>
 
@@ -199,9 +188,9 @@ export default function AboutPage() {
         </div>
 
         <div className="max-w-4xl mx-auto relative z-10">
-          <p className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
+          <div className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
             <FadeInWords text="Karim Mounir approaches architecture as a narrative of light, proportion, and human experience. Each project is a seamless blend of concept and execution, guided by clarity and purpose." />
-          </p>
+          </div>
         </div>
       </section>
 

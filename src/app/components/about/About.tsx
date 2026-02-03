@@ -8,7 +8,6 @@ import { useGSAP } from "@gsap/react";
 
 import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
-import TextEffect from "../TextEffect";
 
 gsap.registerPlugin(ScrollTrigger);
 

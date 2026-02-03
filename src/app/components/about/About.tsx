@@ -86,7 +86,7 @@ export default function About() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 15%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play reverse play reverse",
         },
       });
 

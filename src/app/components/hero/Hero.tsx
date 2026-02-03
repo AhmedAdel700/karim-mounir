@@ -16,7 +16,7 @@ export default function Hero() {
 
   useGSAP(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 2, ease: "power2.inOut" },
+      defaults: { duration: 2, ease: "power2.inOut", delay: 1.5 },
     });
 
     tl.from('h1', {

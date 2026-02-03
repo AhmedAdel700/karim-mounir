@@ -2,7 +2,7 @@
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef  } from "react";
+import { useRef } from "react";
 import ModernTextEffect from "@/app/components/ModernTextEffect";
 import { SplitText } from "gsap/all";
 import { useLocale } from "next-intl";
@@ -14,6 +14,17 @@ export default function Hero() {
   const bgRef = useRef<HTMLVideoElement>(null);
   const locale = useLocale();
 
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 2, ease: "power2.inOut" },
+    });
+
+    tl.from('h1', {
+      y: -150,
+      filter: "blur(10px)",
+      opacity: 0
+    })
+  })
   return (
     <main
       ref={container}
@@ -34,7 +45,7 @@ export default function Hero() {
         />
       </div>
 
-      <ModernTextEffect
+      {/* <ModernTextEffect
         key={`name-${locale}`}
         text={"Karim Mounir"}
         lang={locale === "ar" ? "ar" : "en"}
@@ -53,17 +64,21 @@ export default function Hero() {
         [&_.char]:bg-[position:0_0]
         [&_.char]:will-change-transform
         [&_.char]:opacity-0 hero-font"
-      />
+      /> */}
 
-      <ModernTextEffect
+      {/* <ModernTextEffect
         text={"“Design Beyond Form”"}
         key={`tagline-${locale}`}
         lang={locale === "ar" ? "ar" : "en"}
         animationType={"matrix"}
-        delay={5.5}
+        delay={1}
         duration={2.5}
-        className="relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-5xl text-mid-gray capitalize [&_.char]:opacity-0"
-      />
+        className="relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-6xl xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0"
+      /> */}
+
+      <h1 className="relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-6xl xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0">
+        “Design Beyond Form”
+      </h1>
     </main>
   );
 }

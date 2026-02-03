@@ -20,7 +20,6 @@ export default function Hero() {
     });
 
     tl.from('h1', {
-      // y: -150,
       filter: "blur(10px)",
       opacity: 0,
       scale: 1.35
@@ -77,7 +76,7 @@ export default function Hero() {
         className="relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-6xl xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0"
       /> */}
 
-      <h1 className="relative z-10 text-center pb-3 font-medium text-base sm:text-4xl lg:text-6xl xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0">
+      <h1 className="relative z-10 text-center pb-3 font-medium text-2xl md:text-6xl xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0">
         “Design Beyond Form”
       </h1>
     </main>

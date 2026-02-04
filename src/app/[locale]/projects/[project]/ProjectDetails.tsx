@@ -139,12 +139,14 @@ export default function ProjectDetails({ data }: { data: any }) {
         </div>
 
         {/* Dynamic Grid Gallery */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 auto-rows-[280px]">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-3 auto-rows-[280px]">
           {data.imagesArray.map((img, i) => {
-            let spanClass = "col-span-6 row-span-1"; // default small
-            if (i === 0) spanClass = "md:col-span-8 md:row-span-2";
+            let spanClass = "col-span-1"; // default: 1 per row
+
+            if (i === 0) spanClass = "xl:col-span-8 xl:row-span-2";
             else if (i === 1 || i === 2)
-              spanClass = "md:col-span-4 md:row-span-1";
+              spanClass = "xl:col-span-4 xl:row-span-1";
+            else spanClass = "xl:col-span-6 xl:row-span-1";
 
             return (
               <div

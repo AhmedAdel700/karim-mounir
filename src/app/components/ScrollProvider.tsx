@@ -32,7 +32,16 @@ function LenisScrollTrigger({ children }: { children: ReactNode }) {
 
 export default function ScrollProvider({ children }: { children: ReactNode }) {
   return (
-    <ReactLenis root>
+    <ReactLenis
+      root
+      options={{
+        duration: 1.7, // ⬅ increase for smoother, decrease for snappier
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+      }}
+    >
       <LenisScrollTrigger>{children}</LenisScrollTrigger>
     </ReactLenis>
   );

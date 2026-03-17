@@ -10,6 +10,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const servicesApiData: ServicesResponse = await fetchServicesData(locale);
+
+  if (!servicesApiData?.data?.seo) {
+    return { title: "Services" };
+  }
+
   const { seo } = servicesApiData.data;
 
   const metaTags = seo.meta.meta_tags;
@@ -74,7 +79,7 @@ export default async function page({
 }) {
   const { locale } = await params;
   const servicesApiData: ServicesResponse = await fetchServicesData(locale);
-  const schema = servicesApiData.data.seo?.schema;
+  const schema = servicesApiData?.data?.seo?.schema;
 
   return (
     <>

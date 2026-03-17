@@ -81,7 +81,7 @@ export default async function page({
 }) {
   const { locale } = await params;
   const aboutApiData: AboutResponse = await fetchAboutData(locale);
-  const schema = aboutApiData.data.seo?.schema;
+  const schema = aboutApiData?.data?.seo?.schema;
 
   return (
     <>

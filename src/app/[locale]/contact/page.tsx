@@ -10,6 +10,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const contactApiData: ContactResponse = await fetchContactData(locale);
+
+  if (!contactApiData?.data?.seo) {
+    return { title: "Contact" };
+  }
+
   const { seo } = contactApiData.data;
 
   const metaTags = seo.meta.meta_tags;

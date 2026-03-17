@@ -84,6 +84,11 @@ export default async function Home({
 }) {
   const { locale } = await params;
   const homeApiData: HomeResponse = await fetchHomeData(locale);
+
+  if (!homeApiData || !homeApiData.seo) {
+    return <main className="home"></main>;
+  }
+
   const schema = homeApiData.seo.schema;
 
   const {

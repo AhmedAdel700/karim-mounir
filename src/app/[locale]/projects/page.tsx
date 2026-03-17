@@ -79,7 +79,7 @@ export default async function page({
 }) {
   const { locale } = await params;
   const projectsApiData = await fetchProjectsData(locale);
-  const schema = projectsApiData.data.seo?.schema;
+  const schema = projectsApiData?.data?.seo?.schema;
 
   return (
     <>

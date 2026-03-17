@@ -1,64 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
 import { useTransitionRouter } from "next-view-transitions";
-
-import p1 from "@/app/images/p1.jpg";
-import p2 from "@/app/images/p2.jpg";
-import p3 from "@/app/images/p3.jpg";
-import p4 from "@/app/images/p4.jpg";
 import FlipText from "../FlipText";
 import { FadeInWords, TextReveal } from "@/app/[locale]/about/AboutPage";
 import { Link } from "@/navigations";
 import { slideInOut } from "@/lib/utils";
-
-interface ProjectCard {
-  id: number;
-  title: string;
-  description: string;
-  image: StaticImageData;
-  cta: string;
-}
-
-const projectCards: ProjectCard[] = [
-  {
-    id: 1,
-    title: "commercial",
-    description:
-      "Transforming office spaces, corporate headquarters, and collaborative hubs into immersive environments where design meets productivity and creativity.",
-    image: p1,
-    cta: "Discover Workspaces",
-  },
-  {
-    id: 2,
-    title: "recreational",
-    description:
-      "Crafting unforgettable leisure and hospitality experiences with dynamic design, lighting, and movement that delight every visitor.",
-    image: p2,
-    cta: "Explore Experience Hubs",
-  },
-  {
-    id: 3,
-    title: "residential",
-    description:
-      "Designing homes and living spaces that blend comfort, innovation, and storytelling to create personalized, inspiring environments.",
-    image: p3,
-    cta: "Step Inside Living Spaces",
-  },
-  {
-    id: 4,
-    title: "administration",
-    description:
-      "Creating institutional and brand spaces that communicate identity, streamline operations, and leave a lasting impression.",
-    image: p4,
-    cta: "See Brand Installations",
-  },
-];
+import { Category } from "@/types/homeApiTypes";
+import { useLocale, useTranslations } from "next-intl";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const marqueeTexts = [
   "Design Beyond Boundaries",
@@ -67,13 +22,15 @@ const marqueeTexts = [
   "Digital Visions",
 ];
 
-export default function ProjectsSection() {
+export default function ProjectsSection({ categories }: { categories: Category[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLElement>(null);
   const outroRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const lenis = useLenis();
   const viewRouter = useTransitionRouter();
+  const t = useTranslations("home")
+  const locale = useLocale();
 
   useEffect(() => {
     if (!lenis) return;
@@ -425,7 +382,7 @@ export default function ProjectsSection() {
 
       {/* Cards Section */}
       <section className="projects-cards relative flex flex-col bg-[var(--color-primary)] text-white gap-[25vh]">
-        {projectCards.map((project, index) => (
+        {categories.map((project, index) => (
           <div
             key={project.id}
             ref={(el) => {
@@ -457,8 +414,8 @@ export default function ProjectsSection() {
               {index === 0 ? (
                 <div className="card-img absolute inset-0 w-full h-full overflow-hidden rounded-[150px] z-0">
                   <Image
-                    src={project.image.src}
-                    alt={project.title}
+                    src={project.image}
+                    alt={project.alt_image || "Category Image"}
                     fill
                     className="absolute top-0 left-0 w-full h-full object-cover will-change-transform"
                   />
@@ -469,7 +426,7 @@ export default function ProjectsSection() {
               ) : (
                 <div
                   className="card-img absolute inset-0 left-0 w-[100vw] h-[100vh] bg-center bg-cover will-change-transform z-0"
-                  style={{ backgroundImage: `url(${project.image.src})` }}
+                  style={{ backgroundImage: `url(${project.image})` }}
                 ></div>
               )}
 
@@ -478,21 +435,21 @@ export default function ProjectsSection() {
                 <div className="card-copy max-w-4xl space-y-4 md:space-y-6 text-center flex flex-col items-center">
                   <div className="card-text-animate flex items-center justify-center gap-3 text-lg uppercase tracking-[0.28em] text-white">
                     <span className="h-px w-10 bg-white" />
-                    Category {project.id.toString().padStart(2, "0")}
+                    {t("Category")} 0{index + 1}
                   </div>
                   <div className="card-title text-center card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
-                      {project.title}
+                      {project.name}
                     </h2>
                   </div>
-                  <div className="card-description max-w-2xl card-text-animate mx-auto">
+                  <div className="card-description max-w-4xl card-text-animate mx-auto">
                     <p className="text-lg md:text-xl leading-relaxed text-white/85 mb-5">
-                      {project.description}
+                      {project.short_desc}
                     </p>
                   </div>
                   <div className="card-text-animate">
                     <Link
-                      href={`/projects?category=${project.title}`}
+                      href={`/projects?category=${project.slug}`}
                       className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold tracking-tight text-black transition duration-400 ease-out hover:-translate-y-0.5"
                       style={{
                         background:
@@ -507,10 +464,10 @@ export default function ProjectsSection() {
                       </span>
                       <span className="absolute inset-y-0 left-[-40%] w-[40%] -skew-x-12 bg-white/50 opacity-50 transition-all duration-700 group-hover:translate-x-[220%]" />
                       <span className="relative z-10 text-[var(--color-primary)]">
-                        {project.cta}
+                        {project.name}
                       </span>
-                      <span className="relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white text-[11px] transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]">
-                        →
+                      <span className="relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]">
+                        <ArrowRight size={14} />
                       </span>
                     </Link>
                   </div>
@@ -590,19 +547,11 @@ export default function ProjectsSection() {
                         View Projects
                       </span>
 
-                      <svg
-                        className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        />
-                      </svg>
+                      {locale === "en" ? (
+                        <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1" />
+                      ) : (
+                        <ArrowLeft className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1" />
+                      )}
 
                       <div className="absolute inset-0 bg-white transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
                     </Link>

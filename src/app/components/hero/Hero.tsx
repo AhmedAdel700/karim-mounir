@@ -3,13 +3,13 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import ModernTextEffect from "@/app/components/ModernTextEffect";
 import { SplitText } from "gsap/all";
 import { useLocale } from "next-intl";
+import { Banner } from "@/types/homeApiTypes";
 
 gsap.registerPlugin(useGSAP, SplitText);
 
-export default function Hero() {
+export default function Hero({ banner }: { banner: Banner }) {
   const container = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
   const locale = useLocale();
@@ -77,7 +77,7 @@ export default function Hero() {
       /> */}
 
       <h1 className="relative z-10 text-center pb-3 font-medium text-2xl md:text-6xl xl:text-7xl 2xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0">
-        “Design Beyond Form”
+        “{banner.title}”
       </h1>
     </main>
   );

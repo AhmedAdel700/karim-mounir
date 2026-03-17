@@ -1,8 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useTransitionRouter } from "next-view-transitions";
-import { Project } from "../types/project.Types";
+import { ArrowUpRight, ArrowUpLeft } from "lucide-react";
+import { Project } from "@/types/projectsApiTypes";
 import { slideInOut } from "@/lib/utils";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ProjectCardProps {
   project: Project;
@@ -16,6 +18,8 @@ export default function ProjectCard({
   index,
 }: ProjectCardProps) {
   const viewRouter = useTransitionRouter();
+  const locale = useLocale();
+  const t = useTranslations("home");
   const card = (
     <>
       {/* Animated Border Glow */}
@@ -32,7 +36,7 @@ export default function ProjectCard({
 
           <Image
             src={project.image}
-            alt={project.title}
+            alt={project.alt_image || project.name}
             fill
             className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
           />
@@ -47,7 +51,7 @@ export default function ProjectCard({
               className="text-8xl font-bold text-white"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              {index + 1 > 10 ? index + 1 : `0${index + 1}`}
+              {index + 1 > 9 ? index + 1 : `0${index + 1}`}
             </span>
           </div>
         </div>
@@ -62,7 +66,7 @@ export default function ProjectCard({
             className="text-3xl font-light text-white tracking-tight leading-tight group-hover:tracking-wide transition-all duration-500"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            {project.title}
+            {project.name}
           </h3>
 
           {/* Description */}
@@ -73,7 +77,7 @@ export default function ProjectCard({
               letterSpacing: "0.01em",
             }}
           >
-            {project.description}
+            {project.short_desc}
           </p>
 
           {/* Footer */}
@@ -82,25 +86,23 @@ export default function ProjectCard({
               className="text-xs uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors duration-300"
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
             >
-              Explore Project
+              {t("explore our project")}
             </span>
 
             {/* Arrow */}
             <div className="relative w-9 h-9 flex items-center justify-center">
               <div className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-500" />
-              <svg
-                className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors duration-300 relative z-10"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {locale === "en" ? (
+                <ArrowUpRight
+                  className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors duration-300 relative z-10"
                   strokeWidth={1.5}
-                  d="M7 17L17 7M17 7H7M17 7V17"
                 />
-              </svg>
+              ) : (
+                <ArrowUpLeft
+                  className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors duration-300 relative z-10"
+                  strokeWidth={1.5}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -109,7 +111,7 @@ export default function ProjectCard({
   );
 
   const className =
-    "group relative block transition-transform duration-700 hover:scale-[1.02]";
+    "group relative block transition-transform duration-700 hover:scale-[1.02] cursor-pointer";
 
   if (href) {
     return (
@@ -117,7 +119,7 @@ export default function ProjectCard({
         className={className}
         role="link"
         tabIndex={0}
-        aria-label={`/${project.title}`}
+        aria-label={project.name}
         onClick={() => {
           if (!href) return;
           viewRouter.push(href, { onTransitionReady: slideInOut });

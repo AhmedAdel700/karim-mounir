@@ -8,10 +8,11 @@ import { useGSAP } from "@gsap/react";
 
 import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
+import { AboutStruct, About as AboutType } from "@/types/homeApiTypes";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function About() {
+export default function About({ about, about_structs }: { about: AboutType, about_structs: AboutStruct[] }) {
   function useIsDesktop() {
     const [isDesktop, setIsDesktop] = useState(false);
 
@@ -161,7 +162,7 @@ export default function About() {
                     transitionDelay: visionVisible ? "200ms" : "0ms",
                   }}
                 >
-                  Our Vision
+                  {about_structs[0].title}
                 </h2>
 
                 <p
@@ -175,8 +176,7 @@ export default function About() {
                     transitionDelay: visionVisible ? "800ms" : "0ms",
                   }}
                 >
-                  is architecture that endures throughful in function,
-                  distinctive in identity, and timeless in its impact
+                  {about_structs[0].text}
                 </p>
               </div>
             </div>
@@ -207,8 +207,8 @@ export default function About() {
                       }}
                     >
                       <Image
-                        src={ownerImg}
-                        alt="Owner"
+                        src={about.image}
+                        alt={about.alt_image || "Karim Mounir Picture"}
                         fill
                         className="object-cover"
                         priority
@@ -231,28 +231,26 @@ export default function About() {
 
                 <div className="flex-1 max-w-4xl about-animate">
                   <h2 className="text-4xl md:text-5xl font-bold text-main-white mb-4">
-                    Meet Our Founder
+                    {about.title}
                   </h2>
 
                   <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
-                    Karim Mounir leads an integrated design practice where
-                    architecture and interiors are conceived as one unified
-                    system, guided by clarity of purpose and restraint.
+                    {about.text}
                   </p>
 
-                  <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
+                  {/* <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
                     His work approaches architecture as a spatial narrative
                     shaped by light, proportion, material, and human experience,
                     creating environments that are intelligent, enduring, and
                     meaningful.
-                  </p>
+                  </p> */}
 
                   <h3 className="text-end !text-2xl md:!text-5xl text-gray-200 font-semibold">
-                    Karim Mounir
+                    {about.title2}
                   </h3>
 
                   <h3 className="text-end !text-lg text-gray-200 font-semibold">
-                    Design Leader & Principal Architect
+                    {about.short_desc}
                   </h3>
                 </div>
               </div>

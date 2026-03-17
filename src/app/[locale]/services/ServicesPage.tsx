@@ -3,60 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import TextEffect from "@/app/components/TextEffect";
-import Image, { StaticImageData } from "next/image";
-import p1 from "@/app/images/p1.jpg";
-import p2 from "@/app/images/p2.jpg";
-import p3 from "@/app/images/p3.jpg";
-import p4 from "@/app/images/p4.jpg";
+import Image from "next/image";
 import { FadeInWords } from "../about/AboutPage";
+import { ServicesResponse } from "@/types/servicesApiTypes";
+import { useLocale, useTranslations } from "next-intl";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
-interface Service {
-  title: string;
-  subtitle: string;
-  description: string;
-  image: StaticImageData;
-}
-
-export default function ServicesPage() {
+export default function ServicesPage({ servicesApiData }: { servicesApiData: ServicesResponse }) {
   const heroRef = useRef<HTMLElement>(null);
   const servicesRef = useRef<(HTMLDivElement | null)[]>([]);
   const integratedRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const floatingShapes = useRef<(HTMLDivElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
-
-  const services: Service[] = [
-    {
-      title: "Architecture",
-      subtitle: "Foundation of Vision",
-      description:
-        "We design architecture as a spatial framework that balances identity, performance, and long-term value. Our approach integrates concept, structure, and context to create buildings that are clear in intent, responsive to their environment, and resilient over time. Architecture is developed with a strong emphasis on proportion, material honesty, and functional clarity—shaping spaces that serve both users and stakeholders with equal precision.",
-      image: p1,
-    },
-    {
-      title: "Interior Design",
-      subtitle: "Crafting Experience",
-      description:
-        "Interior design is conceived as an extension of architecture, not a separate layer. We craft interior environments that reinforce the architectural concept while enhancing human experience through light, material, and spatial rhythm. Each interior is designed to support function, atmosphere, and identity—creating spaces that are expressive, intuitive, and aligned with the overall design narrative.",
-      image: p2,
-    },
-    {
-      title: "Space Planning",
-      subtitle: "Strategic Layout",
-      description:
-        "Our space planning process focuses on efficiency, flexibility, and clarity. We translate operational needs into intelligent layouts that optimize flow, usability, and long-term adaptability. By understanding how spaces are used and experienced, we create planning strategies that support performance while maintaining architectural integrity and spatial quality.",
-      image: p3,
-    },
-    {
-      title: "Fit-Out & Execution",
-      subtitle: "Precision Delivered",
-      description:
-        "Fit-out and execution are approached with the same design rigor as concept development. We oversee implementation to ensure design intent is preserved through detailing, materials, and construction quality. This integrated approach allows us to deliver projects that are not only visually coherent, but also technically sound, efficiently executed, and aligned with the original vision.",
-      image: p4,
-    },
-  ];
+  const locale = useLocale();
+  const t = useTranslations("home");
 
   useEffect(() => {
     setMounted(true);
@@ -145,11 +107,11 @@ export default function ServicesPage() {
           const title = service.querySelector("h3");
           if (title) {
             const titleText = title.textContent || "";
-            const chars = titleText.split("");
-            title.innerHTML = chars
+            const items = locale === "ar" ? titleText.split(" ") : titleText.split("");
+            title.innerHTML = items
               .map(
-                (char) =>
-                  `<span class="inline-block">${char === " " ? "&nbsp;" : char
+                (item) =>
+                  `<span class="inline-block">${item === " " ? "&nbsp;" : item}${locale === "ar" ? "&nbsp;" : ""
                   }</span>`,
               )
               .join("");
@@ -294,12 +256,12 @@ export default function ServicesPage() {
         className="relative min-h-screen flex flex-col justify-center items-center px-6 py-20 z-10"
       >
         <div className="max-w-6xl text-center relative z-10">
-          <div className="text-6xl md:text-8xl font-medium tracking-tight mb-1">
-            <FadeInWords text="Our Services" />
+          <div className="text-5xl md:text-8xl font-medium tracking-tight mb-2">
+            <FadeInWords text={t("Our Services")} />
           </div>
 
           <div className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1">
-            <FadeInWords text="Our services are conceived as part of a unified design approach—where architecture, interiors, and execution are seamlessly integrated. Each service responds to context, purpose, and experience, ensuring that every project is coherent, intentional, and enduring." />
+            <FadeInWords text={t("Our services description")} />
           </div>
         </div>
       </section>
@@ -307,11 +269,11 @@ export default function ServicesPage() {
       {/* Services Section */}
       <section className="relative py-5 px-6 z-10 min-h-fit">
         <div className="max-w-7xl mx-auto space-y-[100px] md:space-y-[250px] 2xl:space-y-[300px]">
-          {services.map((service, index) => {
+          {servicesApiData.data.services.map((service, index) => {
             const isLeft = index % 2 === 0;
             return (
               <div
-                key={index}
+                key={service.id}
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
@@ -323,17 +285,17 @@ export default function ServicesPage() {
                 <div className="flex-1 space-y-8 text-start">
                   <div className="space-y-4">
                     <h3 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight leading-tight">
-                      {service.title}
+                      {service.name}
                     </h3>
                     <p className="service-subtitle text-base font-normal tracking-[0.25em] uppercase text-gray-500 font-light">
-                      {service.subtitle}
+                      {service.short_desc}
                     </p>
                   </div>
                   <div
                     className={`service-line h-px w-56 bg-gradient-to-r from-transparent via-white/20 to-white/40`}
                   ></div>
                   <p className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light">
-                    {service.description}
+                    {service.long_desc}
                   </p>
                 </div>
 
@@ -341,7 +303,7 @@ export default function ServicesPage() {
                 <div className="service-image-container flex-1 w-full aspect-[4/3] md:aspect-[3/4] lg:aspect-[4/3] relative overflow-hidden rounded-2xl border border-white/10 group">
                   <Image
                     src={service.image}
-                    alt={service.title}
+                    alt={service.alt_image || service.name}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -362,14 +324,11 @@ export default function ServicesPage() {
             <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           </div>
           <div className="text-4xl md:text-6xl font-extralight mb-8 tracking-tight">
-            <FadeInWords text="An Integrated Design Approach" />
+            <FadeInWords text={t("An Integrated Design Approach")} />
           </div>
 
           <div className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light">
-            <FadeInWords text="Our strength lies in connecting architecture, interiors, planning,
-            and execution into one continuous process. This integration ensures
-            consistency, reduces fragmentation, and results in environments that
-            feel complete, intentional, and enduring." />
+            <FadeInWords text={t("Integrated approach description")} />
           </div>
 
         </div>
@@ -380,17 +339,15 @@ export default function ServicesPage() {
         <div className="max-w-5xl w-full">
           <div ref={ctaRef} className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl"></div>
-            <div className="relative bg-gradient-to-br from-neutral-900/90 to-neutral-800/90 backdrop-blur-xl border border-neutral-700/50 rounded-3xl p-12 md:p-16">
+            <div className="relative bg-gradient-to-br from-neutral-900/90 to-neutral-800/90 backdrop-blur-xl border border-neutral-700/50 rounded-3xl py-8 px-4 md:py-16 md:px-16">
               <div className="absolute top-0 left-0 w-20 h-20 border-t border-l border-neutral-600/30 rounded-tl-3xl"></div>
               <div className="absolute bottom-0 right-0 w-20 h-20 border-b border-r border-neutral-600/30 rounded-br-3xl"></div>
               <div className="text-center space-y-8">
                 <h2 className="text-4xl md:text-6xl font-extralight tracking-tight">
-                  Explore Our Work
+                  {t("Explore Our Work")}
                 </h2>
-                <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto">
-                  Discover how we transform vision into reality. Each project
-                  showcases our commitment to design excellence, spatial
-                  innovation, and enduring quality.
+                <p className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto">
+                  {t("Explore work description")}
                 </p>
                 <div className="pt-4">
                   <Link
@@ -398,21 +355,13 @@ export default function ServicesPage() {
                     className="group/btn relative inline-flex items-center gap-3 text-xl font-light tracking-wide px-10 py-5 border border-white overflow-hidden transition-all duration-300 hover:scale-105"
                   >
                     <span className="relative z-10 group-hover/btn:text-black transition-colors duration-300">
-                      View Projects
+                      {t("View Projects")}
                     </span>
-                    <svg
-                      className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
+                    {locale === "en" ? (
+                      <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1" />
+                    ) : (
+                      <ArrowLeft className="w-5 h-5 relative z-10 group-hover/btn:text-black transition-all duration-300 group-hover/btn:translate-x-1" />
+                    )}
                     <div className="absolute inset-0 bg-white transform translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
                   </Link>
                 </div>

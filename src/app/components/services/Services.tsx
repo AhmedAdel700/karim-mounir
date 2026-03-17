@@ -4,41 +4,15 @@ import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Service } from "@/types/homeApiTypes";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const services = [
-  {
-    title: "Interior Design",
-    description:
-      "Creative interior solutions that combine aesthetics and functionality",
-  },
-  {
-    title: "Architectural Design",
-    description: "Innovative architectural concepts tailored to your vision",
-  },
-  {
-    title: "3D Visualization",
-    description: "Realistic 3D renders to visualize spaces before execution",
-  },
-  {
-    title: "Fit-Out & Execution",
-    description: "High-quality interior fit-out with precise project execution",
-  },
-  {
-    title: "Space Planning",
-    description: "Optimized layouts designed for comfort, flow, and efficiency",
-  },
-];
-
-export default function Services() {
+export default function Services({ services }: { services: Service[] }) {
   const container = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const t = useTranslations("home");
 
   useGSAP(
     () => {
@@ -95,23 +69,22 @@ export default function Services() {
               className="inline-block text-sm tracking-[0.3em] uppercase text-white/50 font-light"
               style={{ fontFamily: '"Montserrat", sans-serif' }}
             >
-              What We Do
+              {t("What We Do")}
             </span>
           </div>
 
           <h2
-            className="text-7xl md:text-8xl lg:text-9xl font-extralight tracking-tight mb-10"
+            className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-tight mb-8 lg:mb-10"
             style={{ fontFamily: '"Lora", Georgia, serif' }}
           >
-            Our Services
+            {t("Our Services")}
           </h2>
 
           <p
             className="text-lg md:text-2xl text-white/60 font-light max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: '"Montserrat", sans-serif' }}
           >
-            Crafting exceptional spaces through thoughtful design, innovative
-            thinking, and meticulous execution
+            {t("Crafting exceptional spaces through thoughtful design, innovative thinking, and meticulous execution")}
           </p>
         </div>
       </section>
@@ -142,7 +115,7 @@ export default function Services() {
                         className="text-4xl md:text-6xl font-light tracking-tight leading-tight"
                         style={{ fontFamily: '"Lora", Georgia, serif' }}
                       >
-                        {service.title}
+                        {service.name}
                       </h2>
 
                       <div className="w-24 h-px bg-white/30 mx-auto transition-all duration-500 group-hover:w-32 group-hover:bg-white/60" />
@@ -151,7 +124,7 @@ export default function Services() {
                         className="text-lg md:text-xl text-white/60 leading-relaxed font-light max-w-2xl mx-auto"
                         style={{ fontFamily: '"Montserrat", sans-serif' }}
                       >
-                        {service.description}
+                        {service.short_desc}
                       </p>
                     </div>
                   </div>

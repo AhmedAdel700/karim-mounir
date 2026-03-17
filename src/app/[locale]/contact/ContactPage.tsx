@@ -1,18 +1,23 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { Mail, MapPin, Phone, Facebook, Linkedin, X, Send } from "lucide-react";
+import React, { useRef, useEffect, useState } from "react";
+import { Mail, MapPin, Phone, Facebook, Linkedin, X, Send, Instagram, Youtube } from "lucide-react";
+import { sendContactData } from "@/api/contactService";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFormSchema } from "../../lib/createFormSchema";
 import type { z } from "zod";
+import { ContactResponse } from "@/types/contactApiTypes";
+import { Link } from "@/navigations";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ContactPage: React.FC = () => {
+const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
+  contactApiData,
+}) => {
   const locale = useLocale();
   const schema = createFormSchema(locale);
   type FormValues = z.infer<typeof schema>;
@@ -20,15 +25,31 @@ const ContactPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
+  const [submitStatus, setSubmitStatus] = useState<{
+    message: string;
+    isError: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (submitStatus) {
+      const timer = setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitStatus]);
+
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const socialRef = useRef<HTMLDivElement | null>(null);
+  const t = useTranslations("home");
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -116,27 +137,60 @@ const ContactPage: React.FC = () => {
     ScrollTrigger.refresh();
   }, []);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form submitted:", data);
-
+  const onSubmit = async (data: FormValues) => {
     if (submitButtonRef.current) {
       const button = submitButtonRef.current;
-
-      // Snappy click animation
-      button.animate(
-        [
-          { transform: "scale(1)" },
-          { transform: "scale(0.9)" },
-          { transform: "scale(1)" },
-        ],
-        { duration: 150, easing: "ease-in-out" }
-      );
-
       const originalText = button.innerHTML;
-      button.innerHTML = "Sent!";
-      setTimeout(() => {
-        button.innerHTML = originalText;
-      }, 1200);
+
+      try {
+        setSubmitStatus(null);
+        button.disabled = true;
+        button.innerHTML = locale === "en" ? "Sending..." : "جاري الإرسال...";
+
+        const result = await sendContactData({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+        });
+
+        if (result.success) {
+          button.innerHTML = locale === "en" ? "Sent!" : "تم الإرسال!";
+          setSubmitStatus({
+            message: result.data.message || (locale === "en" ? "Message sent successfully" : "تم إرسال الرسالة بنجاح"),
+            isError: false,
+          });
+          reset();
+          // Snappy click animation
+          button.animate(
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(0.9)" },
+              { transform: "scale(1)" },
+            ],
+            { duration: 150, easing: "ease-in-out" }
+          );
+        } else {
+          button.innerHTML = locale === "en" ? "Error!" : "خطأ!";
+          setSubmitStatus({
+            message: result.message || (locale === "en" ? "Something went wrong" : "حدث خطأ ما"),
+            isError: true,
+          });
+          console.error("Submission failed:", result.message);
+        }
+      } catch (err) {
+        button.innerHTML = locale === "en" ? "Error!" : "خطأ!";
+        setSubmitStatus({
+          message: locale === "en" ? "Something went wrong" : "حدث خطأ ما",
+          isError: true,
+        });
+        console.error("Submission error:", err);
+      } finally {
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 2000);
+      }
     }
   };
 
@@ -161,10 +215,10 @@ const ContactPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold text-[var(--color-main-white)] mb-4">
-            Get In Touch
+            {contactApiData.data.contact_section.title}
           </h2>
           <p className="text-[var(--color-mid-gray)] text-lg">
-            Lets create something amazing together
+            {contactApiData.data.contact_section.short_desc}
           </p>
         </div>
 
@@ -176,35 +230,34 @@ const ContactPage: React.FC = () => {
               className="space-y-6"
             >
               {[
-                { field: "name", type: "text" },
-                { field: "email", type: "email" },
-                { field: "phone", type: "text" },
-                { field: "message", type: "textarea" },
-              ].map(({ field, type }) => {
-                const error = errors[field as keyof FormValues]?.message;
+                { id: "name", label: t("name"), type: "text" },
+                { id: "email", label: t("email"), type: "email" },
+                { id: "phone", label: t("phone"), type: "text" },
+                { id: "message", label: t("message"), type: "textarea" },
+              ].map(({ id, label, type }) => {
+                const error = errors[id as keyof FormValues]?.message;
                 const isTextArea = type === "textarea";
                 return (
-                  <div key={field} className="form-input">
+                  <div key={id} className="form-input">
                     <label
-                      htmlFor={field}
+                      htmlFor={id}
                       className="block text-[var(--color-mid-gray)] text-sm font-medium mb-2"
                     >
-                      {field.charAt(0).toUpperCase() + field.slice(1)}
+                      {label}
                     </label>
                     {isTextArea ? (
                       <textarea
-                        id={field}
+                        id={id}
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        {...register(field as any)}
+                        {...register(id as any)}
                         rows={6}
                         className="w-full bg-[color-mix(in_srgb,var(--color-primary)_50%,transparent)] border-1 border-white/15 rounded-lg px-4 py-3 text-[var(--color-main-white)] focus:border-[var(--color-mid-gray)] focus:outline-none transition-all duration-300 resize-none"
                       />
                     ) : (
                       <input
                         type={type}
-                        id={field}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        {...register(field as any)}
+                        id={id}
+                        {...register(id as any)}
                         className="w-full bg-[color-mix(in_srgb,var(--color-primary)_50%,transparent)] border-1 border-white/15 rounded-lg px-4 py-3 text-[var(--color-main-white)] focus:border-[var(--color-mid-gray)] focus:outline-none transition-all duration-300"
                       />
                     )}
@@ -220,9 +273,21 @@ const ContactPage: React.FC = () => {
                 type="submit"
                 className="w-full bg-[var(--color-main-white)] text-[var(--color-primary)] font-semibold py-3 rounded-lg hover:bg-[var(--color-mid-gray)] transition-all duration-300 flex items-center justify-center gap-2 group"
               >
-                Send Message
+                {t("Send Message")}
                 <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
+
+              {submitStatus && (
+                <div
+                  className={`p-4 rounded-lg text-sm font-medium transition-all duration-500 ${
+                    submitStatus.isError
+                      ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                      : "bg-green-500/10 text-green-400 border border-green-500/20"
+                  }`}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
             </form>
           </div>
 
@@ -231,13 +296,29 @@ const ContactPage: React.FC = () => {
             {/* Contact Info */}
             <div className="space-y-6">
               {[
-                { Icon: Mail, title: "Email", info: "karim-mounir@gmail.com" },
-                { Icon: Phone, title: "Phone", info: "012345678910" },
                 {
-                  Icon: MapPin,
-                  title: "Location",
-                  info: "25 - Asmaa Fahmi - Cairo",
+                  Icon: Mail,
+                  title: locale === "en" ? "Email" : "البريد الإلكتروني",
+                  info: contactApiData.data.contact_data.email,
                 },
+                ...(contactApiData.data.contact_data.phone.length > 0
+                  ? [
+                      {
+                        Icon: Phone,
+                        title: locale === "en" ? "Phone" : "الهاتف",
+                        info: contactApiData.data.contact_data.phone[0].phone,
+                      },
+                    ]
+                  : []),
+                ...(contactApiData.data.contact_data.address.length > 0
+                  ? [
+                      {
+                        Icon: MapPin,
+                        title: locale === "en" ? "Location" : "الموقع",
+                        info: contactApiData.data.contact_data.address[0].address,
+                      },
+                    ]
+                  : []),
               ].map(({ Icon, title, info }) => (
                 <div
                   key={title}
@@ -262,22 +343,40 @@ const ContactPage: React.FC = () => {
               className="pt-8 border-t border-[var(--color-deep-gray)]"
             >
               <h3 className="text-[var(--color-main-white)] font-semibold mb-6">
-                Follow Us
+                {locale === "en" ? "Follow Us" : "تابعنا"}
               </h3>
               <div className="flex gap-4">
                 {[
-                  { Icon: Facebook, href: "#" },
-                  { Icon: Linkedin, href: "#" },
-                  { Icon: X, href: "#" },
-                ].map(({ Icon, href }, i) => (
-                  <a
-                    key={i}
-                    href={href}
-                    className="social-icon w-12 h-12 bg-[color-mix(in_srgb,var(--color-main-white)_10%,transparent)] rounded-lg flex items-center justify-center hover:bg-[var(--color-main-white)] hover:text-[var(--color-primary)] text-[var(--color-mid-gray)] transition-all duration-300 group"
-                  >
-                    <Icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  </a>
-                ))}
+                  {
+                    Icon: Facebook,
+                    href: contactApiData.data.social_media.facebook,
+                  },
+                  {
+                    Icon: Linkedin,
+                    href: contactApiData.data.social_media.linkedin,
+                  },
+                  { Icon: X, href: contactApiData.data.social_media.twitter },
+                  {
+                    Icon: Instagram,
+                    href: contactApiData.data.social_media.instagram,
+                  },
+                  {
+                    Icon: Youtube,
+                    href: contactApiData.data.social_media.youtube,
+                  },
+                ]
+                  .filter((social) => social.href)
+                  .map(({ Icon, href }, i) => (
+                    <Link
+                      key={i}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-icon w-12 h-12 bg-[color-mix(in_srgb,var(--color-main-white)_10%,transparent)] rounded-lg flex items-center justify-center hover:bg-[var(--color-main-white)] hover:text-[var(--color-primary)] text-[var(--color-mid-gray)] transition-all duration-300 group"
+                    >
+                      <Icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                    </Link>
+                  ))}
               </div>
             </div>
           </div>

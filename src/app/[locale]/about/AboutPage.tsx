@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, ReactNode } from "react";
 import idea from "@/app/images/idea2.jpg";
 import Image from "next/image";
 import { usePageReady } from "@/app/hooks/usePageReady";
+import { AboutResponse } from "@/types/aboutApiTypes";
 
 interface TextRevealProps {
   children: ReactNode;
@@ -93,7 +94,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
 }
 
 
-export default function AboutPage() {
+export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse}) {
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100">
       <style jsx global>{`

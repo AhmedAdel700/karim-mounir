@@ -5,8 +5,9 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { usePathname } from "next/navigation";
 import { useLenis } from "lenis/react";
-import { Category } from "../types/project.Types";
+import { Category } from "@/types/projectsApiTypes";
 import ProjectCard from "./ProjectCard";
+import { useTranslations } from "next-intl";
 
 interface ProjectModalProps {
   category: Category | null;
@@ -19,6 +20,7 @@ export default function ProjectModal({
 }: ProjectModalProps) {
   const pathname = usePathname();
   const lenis = useLenis();
+  const t = useTranslations("home");
 
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -157,11 +159,11 @@ export default function ProjectModal({
           <div className="container mx-auto px-6 py-8 flex items-center justify-between">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-                {category.title}
+                {category.name}
               </h2>
               <p className="text-neutral-400 mt-2">
                 {category.projects.length}{" "}
-                {category.projects.length === 1 ? "Project" : "Projects"}
+                {category.projects.length === 1 ? t("project"): t("projects")}
               </p>
             </div>
 

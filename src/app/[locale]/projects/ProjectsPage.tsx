@@ -4,22 +4,24 @@ import { useMemo, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { gsap } from "gsap";
 
-import { CATEGORIES } from "@/app/data/projects";
+import { CategoriesResponse } from "@/types/projectsApiTypes";
 import ProjectModal from "@/app/components/ProjectModal";
 import CategoryCard from "@/app/components/CategoryCard";
 
-export default function ProjectsPage() {
+export default function ProjectsPage({projectsApiData}: {projectsApiData: CategoriesResponse}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const gridRef = useRef<HTMLDivElement | null>(null);
 
+  const categories = projectsApiData?.data?.categories ?? [];
+
   const selectedCategory = useMemo(() => {
     const slug = searchParams.get("category");
     if (!slug) return null;
-    return CATEGORIES.find((c) => c.slug === slug) ?? null;
-  }, [searchParams]);
+    return categories.find((c) => c.slug === slug) ?? null;
+  }, [searchParams, categories]);
 
   const handleCloseModal = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -55,7 +57,7 @@ export default function ProjectsPage() {
       <div className="container mx-auto px-5 xl:px-8 flex flex-col gap-6">
 
         <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {CATEGORIES.map((category) => {
+          {categories.map((category) => {
             const params = new URLSearchParams(searchParams.toString());
             params.set("category", category.slug);
             params.delete("project");

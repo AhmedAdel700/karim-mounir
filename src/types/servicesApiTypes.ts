@@ -1,6 +1,7 @@
 export interface ServicesResponse {
   data: {
     services: Service[];
+    services_page_section: ServicesPageSectionItem[];
     seo: SEO;
   };
 }
@@ -21,6 +22,21 @@ export interface Service {
   meta_title: string;
   meta_description: string | null;
   index: number;
+}
+
+/* ================= SERVICES PAGE SECTION ================= */
+
+export interface ServicesPageSectionItem {
+  id: number;
+  key: string;
+  title: string;
+  second_title: string | null;
+  short_desc: string | null;
+  long_desc: string | null;
+  image: string | null;
+  alt_image: string | null;
+  icon: string | null;
+  alt_icon: string | null;
 }
 
 /* ================= SLUGS ================= */

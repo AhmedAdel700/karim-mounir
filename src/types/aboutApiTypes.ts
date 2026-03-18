@@ -1,12 +1,12 @@
 export interface AboutResponse {
   data: {
     about: About;
-    about_structs: AboutStruct[];
+    our_values: OurValues;
     seo: SEO;
   };
 }
 
-/* ================= ABOUT ================= */
+// About
 export interface About {
   title: string;
   title2: string | null;
@@ -14,35 +14,79 @@ export interface About {
   text: string;
   image: string;
   alt_image: string | null;
-  banner: string;
-  alt_banner: string | null;
-  banner2: string;
-  alt_banner2: string | null;
-}
-
-/* ================= ABOUT STRUCT ================= */
-export interface AboutStruct {
-  title: string;
-  text: string;
   icon: string;
   alt_icon: string | null;
-  order: number;
+  vision: Vision;
+  statistics: Statistics;
+  studio_section: StudioSection;
+  team_company_section: TeamCompanySection;
+  about_section: AboutSection;
 }
 
-/* ================= SEO ================= */
+// Vision
+export interface Vision {
+  title: string;
+  text: string;
+  image: string;
+  alt_image: string | null;
+}
+
+// Statistics
+export interface Statistics {
+  years_of_experience: number;
+  projects_completed: number;
+}
+
+// Studio Section
+export interface StudioSection {
+  title: string;
+  text: string;
+  text2: string;
+}
+
+// Team & Company
+export interface TeamCompanySection {
+  team_members: number;
+  established_year: number;
+}
+
+// About Section
+export interface AboutSection {
+  title: string;
+  text: string;
+}
+
+// Our Values
+export interface OurValues {
+  title: string;
+  values: ValueItem[];
+}
+
+export interface ValueItem {
+  id: number;
+  title: string;
+  order: number;
+  short_desc: string | null;
+  long_desc: string | null;
+  image: string;
+  alt_image: string | null;
+  icon: string;
+  alt_icon: string | null;
+}
+
+// SEO (reusing your previous pattern but structured)
 export interface SEO {
-  meta: Meta;
+  meta: SEOMeta;
   schema: SchemaItem[];
 }
 
-export interface Meta {
+export interface SEOMeta {
   meta_tags: MetaTags;
   open_graph: OpenGraph;
   twitter_card: TwitterCard;
   hreflang_tags: HreflangTags;
 }
 
-/* ================= META TAGS ================= */
 export interface MetaTags {
   content_type: string;
   title: string;
@@ -52,7 +96,6 @@ export interface MetaTags {
   robots: string;
 }
 
-/* ================= OPEN GRAPH ================= */
 export interface OpenGraph {
   "og:title": string;
   "og:description": string;
@@ -61,7 +104,6 @@ export interface OpenGraph {
   "og:type": string;
 }
 
-/* ================= TWITTER ================= */
 export interface TwitterCard {
   "twitter:card": string;
   "twitter:title": string;
@@ -69,14 +111,13 @@ export interface TwitterCard {
   "twitter:image": string;
 }
 
-/* ================= HREFLANG ================= */
 export interface HreflangTags {
   en: string;
   ar: string;
   "x-default": string;
 }
 
-/* ================= SCHEMA ================= */
+// Schema
 export interface SchemaItem {
   "@context": string;
   "@type": string;

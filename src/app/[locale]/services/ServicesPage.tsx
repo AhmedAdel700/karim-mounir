@@ -4,7 +4,7 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { FadeInWords } from "../about/AboutPage";
+import { FadeInWords, TextReveal } from "../about/AboutPage";
 import { ServicesResponse } from "@/types/servicesApiTypes";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -248,6 +248,18 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
     return () => ctx.revert();
   }, [mounted]);
 
+  const breadcrumbSection = servicesApiData.data.services_page_section.find(
+    (item) => item.key === "services_page_breadcrumb",
+  );
+
+  const integratedSection = servicesApiData.data.services_page_section.find(
+    (item) => item.key === "services_page_section",
+  );
+
+  const exploreSection = servicesApiData.data.services_page_section.find(
+    (item) => item.key === "explore_our_works_section",
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black text-white overflow-hidden">
       {/* Hero Section */}
@@ -257,11 +269,18 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
       >
         <div className="max-w-6xl text-center relative z-10">
           <div className="text-5xl md:text-8xl font-medium tracking-tight mb-2">
-            <FadeInWords text={t("Our Services")} />
+            <FadeInWords text={breadcrumbSection?.title} />
           </div>
 
           <div className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1">
-            <FadeInWords text={t("Our services description")} />
+            <TextReveal>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html:
+                    breadcrumbSection?.long_desc,
+                }}
+              />
+            </TextReveal>
           </div>
         </div>
       </section>
@@ -324,11 +343,18 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
             <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           </div>
           <div className="text-4xl md:text-6xl font-extralight mb-8 tracking-tight">
-            <FadeInWords text={t("An Integrated Design Approach")} />
+            <FadeInWords text={integratedSection?.title} />
           </div>
 
           <div className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light">
-            <FadeInWords text={t("Integrated approach description")} />
+            <TextReveal>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html:
+                    integratedSection?.long_desc,
+                }}
+              />
+            </TextReveal>
           </div>
 
         </div>
@@ -344,11 +370,15 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
               <div className="absolute bottom-0 right-0 w-20 h-20 border-b border-r border-neutral-600/30 rounded-br-3xl"></div>
               <div className="text-center space-y-8">
                 <h2 className="text-4xl md:text-6xl font-extralight tracking-tight">
-                  {t("Explore Our Work")}
+                  {exploreSection?.title || t("Explore Our Work")}
                 </h2>
-                <p className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto">
-                  {t("Explore work description")}
-                </p>
+                <div
+                  className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      exploreSection?.long_desc,
+                  }}
+                />
                 <div className="pt-4">
                   <Link
                     href="/projects"
@@ -367,8 +397,8 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 </div>
                 <div className="flex items-center justify-center gap-3 pt-6">
                   <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-600"></div>
-                  <span className="text-neutral-500 text-xs tracking-[0.3em] uppercase font-light">
-                    From Concept to Completion
+                  <span className={`text-neutral-500 ${locale === "en" ? "text-xs" : "text-base"} tracking-[0.3em] uppercase font-normal`}>
+                    {t("From Concept to Completion")}
                   </span>
                   <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-600"></div>
                 </div>

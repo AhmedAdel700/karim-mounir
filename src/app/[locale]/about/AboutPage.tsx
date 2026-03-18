@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useEffect, useRef, useState, ReactNode } from "react";
-import idea from "@/app/images/idea2.jpg";
+import React, { useEffect, useRef, useState, ReactNode, useMemo } from "react";
+
 import Image from "next/image";
 import { usePageReady } from "@/app/hooks/usePageReady";
 import { AboutResponse } from "@/types/aboutApiTypes";
+import { useLocale, useTranslations } from "next-intl";
 
 interface TextRevealProps {
   children: ReactNode;
@@ -56,13 +57,12 @@ interface FadeInWordsProps {
 
 
 export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
-  const pageReady = usePageReady(600); // match route transition
+  const pageReady = usePageReady(600);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const words = text.split(" ");
 
   useEffect(() => {
-    setIsVisible(false); // Reset visibility when text or readiness changes
+    setIsVisible(false);
     if (!pageReady) return;
 
     const observer = new IntersectionObserver(
@@ -71,31 +71,91 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
           setTimeout(() => setIsVisible(true), delay);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [pageReady, delay, text]);
 
+  // Recursively transform HTML string to a stable React element tree with animated words
+  const animatedElements = useMemo(() => {
+    if (!text) return null;
+    if (typeof document === "undefined") return <span dangerouslySetInnerHTML={{ __html: text }} />;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+    let globalWordIdx = 0;
+
+    const traverse = (node: Node, path: string): React.ReactNode => {
+      // Handle Text Nodes: split into words and wrap in animated spans
+      if (node.nodeType === Node.TEXT_NODE) {
+        const words = (node.textContent || "").split(/(\s+)/);
+        return words.map((word, i) => {
+          if (word.match(/^\s+$/)) {
+            return <React.Fragment key={`${path}-s-${i}`}>{word}</React.Fragment>;
+          }
+          if (!word) return null;
+
+          const currentIdx = globalWordIdx++;
+          return (
+            <span
+              key={`${path}-w-${i}`}
+              className={`inline-block transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+              style={{ transitionDelay: `${currentIdx * 50}ms` }}
+            >
+              {word}
+            </span>
+          );
+        });
+      }
+
+      // Handle Element Nodes: preserve tags and recurse down
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const Tag = el.tagName.toLowerCase() as any;
+        const attrs: any = {};
+
+        Array.from(el.attributes).forEach((attr) => {
+          const name = attr.name.toLowerCase();
+          if (name === "style" || name.startsWith("on")) return;
+          attrs[name === "class" ? "className" : name] = attr.value;
+        });
+
+        const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+
+        if (VOID_ELEMENTS.has(Tag)) {
+          return <Tag key={path} {...attrs} />;
+        }
+
+        return (
+          <Tag key={path} {...attrs}>
+            {Array.from(el.childNodes).map((child, i) => traverse(child, `${path}-${i}`))}
+          </Tag>
+        );
+      }
+
+      return null;
+    };
+
+    // Parse the body children
+    return Array.from(doc.body.childNodes).map((node, i) =>
+      <React.Fragment key={`root-${i}`}>{traverse(node, `root-${i}`)}</React.Fragment>
+    );
+  }, [text, isVisible]);
+
   return (
     <div ref={ref} className="inline">
-      {words.map((word, index) => (
-        <span
-          key={index}
-          className={`inline-block transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          style={{ transitionDelay: `${index * 50}ms` }}
-        >
-          {word}&nbsp;
-        </span>
-      ))}
+      {animatedElements}
     </div>
   );
 }
 
 
-export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse}) {
+export default function AboutPage({ aboutApiData }: { aboutApiData: AboutResponse }) {
+  const t = useTranslations("home");
+  const locale = useLocale();
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100">
       <style jsx global>{`
@@ -146,12 +206,12 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
       <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden">
 
         <div className="max-w-4xl text-center relative z-10">
-          <div className="text-6xl md:text-8xl font-medium tracking-tight mb-1">
-            <FadeInWords text="Karim Mounir" />
+          <div className="text-6xl md:text-8xl font-medium tracking-tight mb-4">
+            <FadeInWords text={aboutApiData.data.about.title} />
           </div>
 
           <div className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide">
-            <FadeInWords text="Designing Spaces with Purpose and Vision" />
+            <FadeInWords text={aboutApiData.data.about.short_desc} />
           </div>
         </div>
       </section>
@@ -191,7 +251,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
 
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
-            <FadeInWords text="Karim Mounir approaches architecture as a narrative of light, proportion, and human experience. Each project is a seamless blend of concept and execution, guided by clarity and purpose." />
+            <FadeInWords text={aboutApiData.data.about.text} />
           </div>
         </div>
       </section>
@@ -211,9 +271,9 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                 {/* === IMAGE === */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Image
-                    src={idea.src}
-                    alt="Idea Illustration"
-                    className="w-72 h-72 opacity-70"
+                    src={aboutApiData.data.about.icon}
+                    alt={aboutApiData.data.about.alt_icon || "Idea Illustration"}
+                    className="opacity-70 object-cover"
                     fill
                   />
                 </div>
@@ -225,7 +285,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="h-px bg-gradient-to-r from-transparent via-white to-transparent mb-4"></div>
                   <p className="text-white text-xs tracking-[0.3em] font-light uppercase">
-                    Principal Architect
+                    {t("Principal Architect")}
                   </p>
                 </div>
               </div>
@@ -246,38 +306,35 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-px bg-neutral-600"></div>
                   <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
-                    Vision
+                    {t("Vision")}
                   </span>
                 </div>
                 <h2 className="text-5xl md:text-6xl font-extralight tracking-tight text-neutral-100">
-                  Role and Vision
+                  <FadeInWords text={aboutApiData.data.about.vision.title} />
                 </h2>
               </div>
 
               <div className="space-y-4 pl-0 md:pl-4 border-l-0 md:border-l border-neutral-800">
-                <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-300">
-                  As Design Leader and Principal Architect, Karim Mounir
-                  envisions architecture and interiors as one unified whole.
-                </p>
-
-                <p className="text-lg font-light leading-relaxed text-neutral-400">
-                  His approach is grounded in restraint, creating enduring
-                  spaces that elevate everyday life through thoughtful
-                  integration of form, function, and materiality.
-                </p>
+                <div className="text-lg md:text-xl font-light leading-relaxed text-neutral-300">
+                  <FadeInWords text={aboutApiData.data.about.vision.text} />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-6 pt-8">
                 <div className="border-t border-neutral-800 pt-4">
-                  <p className="text-3xl font-light text-white">15+</p>
+                  <p className="text-3xl font-light text-white">
+                    {aboutApiData.data.about.statistics.years_of_experience}+
+                  </p>
                   <p className="text-sm text-neutral-500 font-light tracking-wide">
-                    Years Experience
+                    {t("Years Experience")}
                   </p>
                 </div>
                 <div className="border-t border-neutral-800 pt-4">
-                  <p className="text-3xl font-light text-white">50+</p>
+                  <p className="text-3xl font-light text-white">
+                    {aboutApiData.data.about.statistics.projects_completed}+
+                  </p>
                   <p className="text-sm text-neutral-500 font-light tracking-wide">
-                    Projects Completed
+                    {t("Projects Completed")}
                   </p>
                 </div>
               </div>
@@ -325,12 +382,12 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-16 h-px bg-neutral-600"></div>
                 <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
-                  About Us
+                  {t("The Company")}
                 </span>
                 <div className="w-16 h-px bg-neutral-600"></div>
               </div>
               <h2 className="text-5xl md:text-6xl font-extralight tracking-tight text-neutral-100 mb-6">
-                The Studio
+                {aboutApiData.data.about.studio_section.title}
               </h2>
             </div>
           </TextReveal>
@@ -339,22 +396,11 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
             <TextReveal delay={200}>
               <div className="space-y-6">
                 <p className="text-2xl md:text-3xl font-light leading-relaxed text-neutral-200">
-                  Founded on principles of precision and innovation, our studio
-                  bridges architecture and interior design with seamless
-                  expertise.
+                  {aboutApiData.data.about.studio_section.text}
                 </p>
 
                 <p className="text-lg font-light leading-relaxed text-neutral-400">
-                  We are a multidisciplinary team of architects, designers, and
-                  craftspeople dedicated to creating environments that transcend
-                  trends. Each project is approached with meticulous attention
-                  to detail and a commitment to excellence.
-                </p>
-
-                <p className="text-lg font-light leading-relaxed text-neutral-400">
-                  From concept development to final execution, we maintain
-                  complete creative control, ensuring every element aligns with
-                  our vision of timeless, purposeful design.
+                  {aboutApiData.data.about.studio_section.text2}
                 </p>
               </div>
             </TextReveal>
@@ -368,7 +414,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                     <div className="space-y-6">
                       <div className="border-b border-neutral-700/50 pb-4">
                         <h3 className="text-xl font-light text-neutral-300 mb-2">
-                          Our Expertise
+                          {t("Our Expertise")}
                         </h3>
                       </div>
 
@@ -376,25 +422,25 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                         <div className="flex items-start gap-3">
                           <div className="w-1.5 h-1.5 rounded-full bg-blue-400/60 mt-2 flex-shrink-0"></div>
                           <p className="text-neutral-300 font-light">
-                            Residential Architecture & Interiors
+                            {t("Residential Architecture & Interiors")}
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-1.5 h-1.5 rounded-full bg-purple-400/60 mt-2 flex-shrink-0"></div>
                           <p className="text-neutral-300 font-light">
-                            Commercial & Hospitality Design
+                            {t("Commercial & Hospitality Design")}
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-1.5 h-1.5 rounded-full bg-pink-400/60 mt-2 flex-shrink-0"></div>
                           <p className="text-neutral-300 font-light">
-                            Bespoke Furniture & Fixtures
+                            {t("Bespoke Furniture & Fixtures")}
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-1.5 h-1.5 rounded-full bg-blue-400/60 mt-2 flex-shrink-0"></div>
                           <p className="text-neutral-300 font-light">
-                            Landscape Integration
+                            {t("Landscape Integration")}
                           </p>
                         </div>
                       </div>
@@ -404,15 +450,15 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="bg-neutral-900/60 backdrop-blur-sm border border-neutral-700/40 rounded-xl p-6 text-center">
-                    <p className="text-4xl font-light text-white mb-2">2010</p>
+                    <p className="text-4xl font-light text-white mb-2">{aboutApiData.data.about.team_company_section.established_year}</p>
                     <p className="text-sm text-neutral-500 font-light tracking-wide">
-                      Established
+                      {t("Established")}
                     </p>
                   </div>
                   <div className="bg-neutral-900/60 backdrop-blur-sm border border-neutral-700/40 rounded-xl p-6 text-center">
-                    <p className="text-4xl font-light text-white mb-2">12+</p>
+                    <p className="text-4xl font-light text-white mb-2">{aboutApiData.data.about.team_company_section.team_members}</p>
                     <p className="text-sm text-neutral-500 font-light tracking-wide">
-                      Team Members
+                      {t("Team Members")}
                     </p>
                   </div>
                 </div>
@@ -427,7 +473,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
         <div className="max-w-6xl mx-auto">
           <TextReveal>
             <h2 className="text-4xl md:text-5xl font-extralight mb-20 text-center tracking-tight">
-              Core Values and Approach
+              {aboutApiData.data.our_values.title}
             </h2>
           </TextReveal>
 
@@ -471,7 +517,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                   </div>
                   <div className="flex-1 flex items-center justify-center">
                     <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      Clarity of Purpose
+                      {aboutApiData.data.our_values.values[0].title}
                     </h3>
                   </div>
                 </div>
@@ -521,7 +567,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                   </div>
                   <div className="flex-1 flex items-center justify-center">
                     <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      Design Through Restraint, Not Excess
+                      {aboutApiData.data.our_values.values[1].title}
                     </h3>
                   </div>
                 </div>
@@ -568,7 +614,7 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                   </div>
                   <div className="flex-1 flex items-center justify-center">
                     <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      Spaces that Endure and Inspire
+                      {aboutApiData.data.our_values.values[2].title}
                     </h3>
                   </div>
                 </div>
@@ -617,16 +663,16 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
         <div className="max-w-6xl mx-auto relative z-10">
           <TextReveal>
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-1000 opacity-75 group-hover:opacity-100"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl group-hover:blur-2xl transition-all duration-1000 opacity-75 group-hover:opacity-100"></div>
 
-              <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-800/80 to-neutral-900/90 backdrop-blur-xl border border-neutral-700/50 rounded-3xl p-12 md:p-20 shadow-2xl">
-                <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-neutral-600/50 rounded-tl-3xl"></div>
-                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-neutral-600/50 rounded-br-3xl"></div>
+              <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-800/80 to-neutral-900/90 border border-neutral-700/50 rounded-3xl p-12 md:p-20 shadow-2xl">
+                <div className={`absolute top-0 ${locale === "ar" ? "right-0" : "left-0"} w-20 h-20 border-t-2 ${locale === "ar" ? "border-r-2 rounded-tr-3xl" : "border-l-2 rounded-tl-3xl"} border-neutral-600/50`}></div>
+                <div className={`absolute bottom-0 ${locale === "ar" ? "left-0" : "right-0"} w-20 h-20 border-b-2 ${locale === "ar" ? "border-l-2 rounded-bl-3xl" : "border-r-2 rounded-br-3xl"} border-neutral-600/50`}></div>
 
-                <div className="absolute top-8 left-8 text-neutral-700/30 text-8xl font-serif leading-none">
+                <div className={`absolute top-8 ${locale === "ar" ? "right-8" : "left-8"} text-neutral-700/30 text-8xl font-serif leading-none`}>
                   &quot;
                 </div>
-                <div className="absolute bottom-8 right-8 text-neutral-700/30 text-8xl font-serif leading-none transform rotate-180">
+                <div className={`absolute bottom-8 ${locale === "ar" ? "left-8" : "right-8"} text-neutral-700/30 text-8xl font-serif leading-none transform rotate-180`}>
                   &quot;
                 </div>
 
@@ -650,13 +696,13 @@ export default function AboutPage({aboutApiData}: {aboutApiData: AboutResponse})
                   </div>
 
                   <blockquote className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-neutral-100">
-                    <FadeInWords text="We design not just for today, but for a timeless future." />
+                    <FadeInWords text={t("We design not just for today, but for a timeless future")}/>
                   </blockquote>
 
                   <div className="flex items-center justify-center gap-3 pt-6">
                     <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-600"></div>
-                    <span className="text-neutral-400 text-sm tracking-[0.3em] uppercase font-light">
-                      Karim Mounir
+                    <span className={`text-neutral-400 tracking-[0.3em] uppercase font-normal ${locale === "ar" ? "text-lg" : "text-sm"}`}>
+                      {t("Karim Mounir")}
                     </span>
                     <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-600"></div>
                   </div>

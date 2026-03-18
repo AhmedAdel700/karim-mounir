@@ -77,7 +77,7 @@ export default function Hero({ banner }: { banner: Banner }) {
       /> */}
 
       <h1 className="relative z-10 text-center pb-3 font-medium text-2xl md:text-6xl xl:text-7xl 2xl:text-8xl text-mid-gray capitalize [&_.char]:opacity-0">
-        “{banner.title}”
+        {locale === "ar" ? "”" : "“"}{banner.title}{locale === "ar" ? "“" : "”"}
       </h1>
     </main>
   );

@@ -87,7 +87,7 @@ export default function FlipText({
       trigger.kill();
       split.revert();
     };
-  }, [startTrigger, endTrigger, stagger, duration, ease, rotateFrom]);
+  }, [children, startTrigger, endTrigger, stagger, duration, ease, rotateFrom]);
 
   return (
     <div ref={textRef} className={className}>

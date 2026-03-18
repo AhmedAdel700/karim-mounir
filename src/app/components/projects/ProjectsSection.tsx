@@ -11,7 +11,7 @@ import FlipText from "../FlipText";
 import { FadeInWords, TextReveal } from "@/app/[locale]/about/AboutPage";
 import { Link } from "@/navigations";
 import { slideInOut } from "@/lib/utils";
-import { Category } from "@/types/homeApiTypes";
+import { Category, Section } from "@/types/homeApiTypes";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
@@ -22,7 +22,7 @@ const marqueeTexts = [
   "Digital Visions",
 ];
 
-export default function ProjectsSection({ categories }: { categories: Category[] }) {
+export default function ProjectsSection({ categories, sections }: { categories: Category[], sections: Section[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLElement>(null);
   const outroRef = useRef<HTMLElement>(null);
@@ -31,6 +31,12 @@ export default function ProjectsSection({ categories }: { categories: Category[]
   const viewRouter = useTransitionRouter();
   const t = useTranslations("home")
   const locale = useLocale();
+  const outroSection = sections?.find(
+    (s) => s.key === "highlighted_home_section",
+  );
+  const visionSection = sections?.find(
+    (s) => s.key === "projects_section_home",
+  );
 
   useEffect(() => {
     if (!lenis) return;
@@ -485,11 +491,22 @@ export default function ProjectsSection({ categories }: { categories: Category[]
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
           <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
-            We <span className="text-mid-gray">Design</span> With Purpose
-            Merging <span className="text-mid-gray">Innovation</span>, Technical{" "}
-            <span className="text-mid-gray">Precistion</span>, And Experssive{" "}
-            <span className="text-mid-gray">Beauty</span> To Create Spaces That{" "}
-            <span className="text-mid-gray">Elevate</span> Everyday Life
+            {outroSection?.long_desc ? (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: outroSection.long_desc,
+                }}
+              />
+            ) : (
+              <>
+                We <span className="text-mid-gray">Design</span> With Purpose
+                Merging <span className="text-mid-gray">Innovation</span>,
+                Technical <span className="text-mid-gray">Precistion</span>, And
+                Experssive <span className="text-mid-gray">Beauty</span> To
+                Create Spaces That <span className="text-mid-gray">Elevate</span>{" "}
+                Everyday Life
+              </>
+            )}
           </FlipText>
         </div>
 
@@ -529,7 +546,21 @@ export default function ProjectsSection({ categories }: { categories: Category[]
                   </div>
 
                   <blockquote className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-neutral-100">
-                    <FadeInWords text="Discover how we transform vision into reality" />
+                    <FlipText
+                      rotateFrom={0}
+                      stagger={0.02}
+                      className="inline-block"
+                    >
+                      {visionSection?.long_desc ? (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: visionSection.long_desc,
+                          }}
+                        />
+                      ) : (
+                        "Discover how we transform vision into reality"
+                      )}
+                    </FlipText>
                   </blockquote>
 
                   <div className="pt-4">

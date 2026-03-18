@@ -62,6 +62,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   const words = text.split(" ");
 
   useEffect(() => {
+    setIsVisible(false); // Reset visibility when text or readiness changes
     if (!pageReady) return;
 
     const observer = new IntersectionObserver(
@@ -75,7 +76,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [pageReady, delay]);
+  }, [pageReady, delay, text]);
 
   return (
     <div ref={ref} className="inline">

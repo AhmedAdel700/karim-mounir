@@ -126,7 +126,20 @@ export default function Header() {
       return;
     }
 
-    window.location.href = `/${target}${pathname}`; // this bec the gsap for some reason dont fire the animation on the new locale (i gusse its my issue not gsap's)
+    let targetPath = pathname;
+    const projectSlugs = (window as any).__PROJECT_SLUGS;
+
+    if (projectSlugs && projectSlugs[target]) {
+      const segments = pathname.split("/").filter(Boolean);
+      if (segments.length > 0) {
+        // Replace current slug with translated slug
+        segments[segments.length - 1] = projectSlugs[target];
+        targetPath = "/" + segments.join("/");
+      }
+    }
+
+    const searchStr = window.location.search;
+    window.location.href = `/${target}${targetPath}${searchStr}`;
   };
 
   function slideInOut() {

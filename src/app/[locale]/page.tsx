@@ -96,7 +96,8 @@ export default async function Home({
     about,
     about_structs,
     services,
-    categories
+    categories,
+    sections
   } = homeApiData;
 
   return (
@@ -114,7 +115,7 @@ export default async function Home({
       <Hero banner={banner} />
       <About about={about} about_structs={about_structs} />
       <Services services={services}/>
-      <ProjectsSection categories={categories}/>
+      <ProjectsSection categories={categories} sections={sections} />
     </main>
   );
 }

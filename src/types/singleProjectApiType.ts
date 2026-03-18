@@ -6,16 +6,52 @@ export interface ProjectResponse {
 }
 
 /* ================= PROJECT ================= */
+
 export interface Project {
   id: number;
   name: string;
   order: number;
   short_desc: string;
   long_desc: string;
+  location: string;
   image: string;
-  alt_image: string | null;
+  alt_image: string;
   icon: string;
-  alt_icon: string | null;
+  alt_icon: string;
+  slug: string;
+  slugs: Slugs;
+  meta_title: string;
+  meta_description: string | null;
+  index: number;
+  images: ProjectImage[];
+  category: Category;
+}
+
+export interface Slugs {
+  en: string;
+  ar: string;
+}
+
+export interface ProjectImage {
+  id: number;
+  file_name: string;
+  file_type: string;
+  order: number;
+  path: string;
+}
+
+/* ================= CATEGORY ================= */
+
+export interface Category {
+  id: number;
+  name: string;
+  order: number;
+  short_desc: string | null;
+  long_desc: string | null;
+  image: string;
+  alt_image: string;
+  icon: string;
+  alt_icon: string;
   slug: string;
   slugs: Slugs;
   meta_title: string | null;
@@ -23,16 +59,11 @@ export interface Project {
   index: number;
 }
 
-/* ================= SLUGS ================= */
-export interface Slugs {
-  en: string;
-  ar: string;
-}
-
 /* ================= SEO ================= */
+
 export interface SEO {
   meta: Meta;
-  schema: SchemaItem[];
+  schema: Schema[];
 }
 
 export interface Meta {
@@ -71,7 +102,7 @@ export interface HreflangTags {
   "x-default": string;
 }
 
-export interface SchemaItem {
+export interface Schema {
   "@context": string;
   "@type": string;
   name: string;

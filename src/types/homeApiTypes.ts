@@ -5,6 +5,7 @@ export interface HomeResponse {
   services: Service[];
   categories: Category[];
   projects: Project[];
+  sections: Section[];
   seo: SEO;
 }
 
@@ -93,6 +94,21 @@ export interface Project {
   meta_title: string | null;
   meta_description: string | null;
   index: number;
+}
+
+/* ================= Sections ================= */
+
+export interface Section {
+  id: number;
+  key: string;
+  title: string;
+  second_title: string | null;
+  short_desc: string | null;
+  long_desc: string | null; // contains HTML string
+  image: string | null;
+  alt_image: string | null;
+  icon: string | null;
+  alt_icon: string | null;
 }
 
 /* ================= Shared ================= */

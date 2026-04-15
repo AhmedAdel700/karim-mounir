@@ -158,7 +158,7 @@ export default function ProjectModal({
         >
           <div className="container mx-auto px-6 py-8 flex items-center justify-between">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+              <h2 className="text-xl md:text-5xl font-bold text-white tracking-tight">
                 {category.name}
               </h2>
               <p className="text-neutral-400 mt-2">

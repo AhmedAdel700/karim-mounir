@@ -232,7 +232,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                     {about.title}
                   </h2>
 
-                  <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6" dangerouslySetInnerHTML={{ __html: about.text }} />
+                  <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 border border-red-500" dangerouslySetInnerHTML={{ __html: about.text }} />
 
                   {/* <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
                     His work approaches architecture as a spatial narrative

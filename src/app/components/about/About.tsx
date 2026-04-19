@@ -241,9 +241,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                     meaningful.
                   </p> */}
 
-                  {/* <h3 className="text-end !text-2xl md:!text-5xl text-gray-200 font-semibold" dangerouslySetInnerHTML={{ __html: about.title2 }} /> */}
+                  <h3 className="text-end !text-2xl md:!text-5xl text-gray-200 font-semibold" dangerouslySetInnerHTML={{ __html: about.title2 }} />
 
-                  {/* <h3 className="text-end !text-lg text-gray-200 font-semibold" dangerouslySetInnerHTML={{ __html: about.short_desc }} /> */}
+                  <h3 className="text-end !text-lg text-gray-200 font-semibold" dangerouslySetInnerHTML={{ __html: about.short_desc }} />
                 </div>
               </div>
             </div>

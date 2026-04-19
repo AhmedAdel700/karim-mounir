@@ -248,7 +248,7 @@ const ContactSection: React.FC = () => {
               className="pt-8 border-t border-[var(--color-deep-gray)]"
             >
               <h3 className="text-[var(--color-main-white)] font-semibold mb-6">
-                Follow Us
+                {locale === "en" ? "Connect" : "تابعنا"}
               </h3>
               <div className="flex gap-4">
                 {[

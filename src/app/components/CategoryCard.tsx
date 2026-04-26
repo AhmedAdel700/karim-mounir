@@ -27,7 +27,7 @@ export default function CategoryCard({ category, href }: { category: Category, h
       {/* Content */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-4 transform transition-transform duration-500 group-hover:translate-y-[-8px]">
-          <h2 className="text-4xl md:text-6xl font-normal text-white tracking-wide">
+          <h2 className="text-4xl font-normal text-white tracking-wide">
             {category.name}
           </h2>
           <div className="mt-4 h-0.5 w-16 bg-white mx-auto transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100" />

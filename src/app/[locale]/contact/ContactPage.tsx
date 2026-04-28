@@ -59,9 +59,11 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
     const button = submitButtonRef.current;
     const social = socialRef.current;
 
-    const headerEls = section.querySelectorAll("h2, p");
+    const headerEls = section.querySelectorAll(".contact-header h2, .contact-header p");
     const formInputs = [...(form?.querySelectorAll(".form-input") || [])];
+    const responseNote = form?.querySelector(".response-time");
     if (button) formInputs.push(button);
+    if (responseNote) formInputs.push(responseNote);
     const contactItems = section.querySelectorAll(".contact-item");
     const socialIcons = social?.querySelectorAll(".social-icon") || [];
 
@@ -213,7 +215,7 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
     >
       <div ref={sectionRef} className="max-w-6xl w-full">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="contact-header text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold text-[var(--color-main-white)] mb-4">
             {contactApiData.data.contact_section.title}
           </h2>
@@ -276,6 +278,12 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                 {t("Send Message")}
                 <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
+
+              <p className="response-time text-center text-[var(--color-deep-gray)] text-sm mt-4">
+                {locale === "en"
+                  ? "We Typically Respond Within 24-48 Hours"
+                  : "عادةً ما نرد خلال 24-48 ساعة"}
+              </p>
 
               {submitStatus && (
                 <div

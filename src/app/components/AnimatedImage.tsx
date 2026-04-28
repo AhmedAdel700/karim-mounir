@@ -498,8 +498,10 @@ export const AnimatedImage: React.FC<AnimatedImageProps> = ({
     });
 
     return () => {
+      if (animation.scrollTrigger) {
+        animation.scrollTrigger.kill();
+      }
       animation.kill();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [animationStyle, delay, duration, reverse]);
 

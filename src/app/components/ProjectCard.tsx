@@ -28,7 +28,7 @@ export default function ProjectCard({
       </div>
 
       {/* Main Card Content */}
-      <div className="relative bg-zinc-950/90 border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
+      <div className="relative h-full flex flex-col bg-zinc-950/90 border border-zinc-800/50 group-hover:border-white/30 transition-all duration-700 overflow-hidden">
         {/* Image Section */}
         <div className="relative h-72 overflow-hidden">
           {/* Glass overlay */}
@@ -57,7 +57,7 @@ export default function ProjectCard({
         </div>
 
         {/* Content Section */}
-        <div className="relative p-8 space-y-6">
+        <div className="relative p-8 space-y-6 flex-grow flex flex-col">
           {/* Decorative Line */}
           <div className="pointer-events-none w-12 h-px bg-gradient-to-r from-white/70 to-transparent group-hover:w-24 transition-all duration-700" />
 
@@ -81,7 +81,7 @@ export default function ProjectCard({
           </p>
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50 group-hover:border-white/25 transition-colors duration-500">
+          <div className="mt-auto flex items-center justify-between pt-4 border-t border-zinc-800/50 group-hover:border-white/25 transition-colors duration-500">
             <span
               className="text-xs uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors duration-300"
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
@@ -111,7 +111,7 @@ export default function ProjectCard({
   );
 
   const className =
-    "group relative block transition-transform duration-700 hover:scale-[1.02] cursor-pointer";
+    "group relative block h-full transition-transform duration-700 hover:scale-[1.02] cursor-pointer";
 
   if (href) {
     return (

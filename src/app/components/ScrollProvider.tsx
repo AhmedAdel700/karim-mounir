@@ -14,16 +14,14 @@ function LenisScrollTrigger({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!lenis) return;
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+    const update = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(update);
 
     gsap.ticker.lagSmoothing(0);
 
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
+      gsap.ticker.remove(update);
     };
   }, [lenis]);
 

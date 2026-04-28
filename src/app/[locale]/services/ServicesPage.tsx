@@ -181,29 +181,16 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
             );
           }
 
-          // Description - word-by-word cascade
+          // Description - reveal to preserve HTML structure
           const description = service.querySelector(".service-description");
           if (description) {
-            const descText = description.textContent || "";
-            const words = descText.split(" ");
-            description.innerHTML = words
-              .map(
-                (word) =>
-                  `<span class="inline-block mr-[0.3em]">${word}</span>`,
-              )
-              .join("");
             serviceTimeline.from(
-              description.querySelectorAll("span"),
+              description,
               {
                 opacity: 0,
-                y: 30,
-                rotationX: -45,
-                transformOrigin: "50% 100%",
-                stagger: {
-                  each: 0.015,
-                  from: isLeft ? "start" : "end",
-                },
-                duration: 0.6,
+                y: 20,
+                filter: "blur(8px)",
+                duration: 1.2,
                 ease: "power2.out",
               },
               "-=1.5",
@@ -313,9 +300,10 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                   <div
                     className={`service-line h-px w-56 bg-gradient-to-r from-transparent via-white/20 to-white/40`}
                   ></div>
-                  <p className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light">
-                    {service.long_desc}
-                  </p>
+                  <div
+                    className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light"
+                    dangerouslySetInnerHTML={{ __html: service.long_desc }}
+                  ></div>
                 </div>
 
                 {/* Image Content */}

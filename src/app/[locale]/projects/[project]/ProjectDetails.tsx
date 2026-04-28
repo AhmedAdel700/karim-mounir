@@ -86,12 +86,17 @@ export default function ProjectDetails({
   // GSAP scale-in for lightbox
   useGSAP(() => {
     if (selectedImage !== null && lightboxImageRef.current) {
-      gsap.from(lightboxImageRef.current, {
-        opacity: 0,
-        scale: 0.85,
-        duration: 1,
-        ease: "power2.out",
-      });
+      gsap.fromTo(
+        lightboxImageRef.current,
+        { opacity: 0, scale: 0.95 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: "power2.out",
+          overwrite: true,
+        },
+      );
     }
   }, [selectedImage]);
 
@@ -103,13 +108,30 @@ export default function ProjectDetails({
     });
   };
 
+  const isNavigating = useRef(false);
+
+  const navigateLightbox = (direction: number) => {
+    if (isNavigating.current || selectedImage === null) return;
+    const nextIndex = selectedImage + direction;
+    if (nextIndex >= 0 && nextIndex < projectImages.length) {
+      isNavigating.current = true;
+      setSelectedImage(nextIndex);
+      // Cooldown slightly less than animation duration for responsiveness
+      setTimeout(() => {
+        isNavigating.current = false;
+      }, 400);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedImage(null);
+      if (e.key === "ArrowRight") navigateLightbox(isArabic ? -1 : 1);
+      if (e.key === "ArrowLeft") navigateLightbox(isArabic ? 1 : -1);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [selectedImage, isArabic]);
 
   // Sync translated slugs with window for Header language switcher
   useEffect(() => {
@@ -357,8 +379,9 @@ export default function ProjectDetails({
                 className="absolute left-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-all p-3 hover:bg-white/10 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedImage(selectedImage - 1);
+                  navigateLightbox(-1);
                 }}
+                aria-label="Previous image"
               >
                 <ChevronLeft size={32} strokeWidth={1.5} />
               </button>
@@ -368,8 +391,9 @@ export default function ProjectDetails({
                 className="absolute right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-all p-3 hover:bg-white/10 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedImage(selectedImage + 1);
+                  navigateLightbox(1);
                 }}
+                aria-label="Next image"
               >
                 <ChevronRight size={32} strokeWidth={1.5} />
               </button>

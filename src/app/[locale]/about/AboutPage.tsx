@@ -59,7 +59,12 @@ interface FadeInWordsProps {
 export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   const pageReady = usePageReady(600);
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setIsVisible(false);
@@ -81,7 +86,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   // Recursively transform HTML string to a stable React element tree with animated words
   const animatedElements = useMemo(() => {
     if (!text) return null;
-    if (typeof document === "undefined") return <span dangerouslySetInnerHTML={{ __html: text }} />;
+    if (!mounted) return <span dangerouslySetInnerHTML={{ __html: text }} />;
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(text, "text/html");
@@ -139,11 +144,10 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
       return null;
     };
 
-    // Parse the body children
     return Array.from(doc.body.childNodes).map((node, i) =>
       <React.Fragment key={`root-${i}`}>{traverse(node, `root-${i}`)}</React.Fragment>
     );
-  }, [text, isVisible]);
+  }, [text, isVisible, mounted]);
 
   return (
     <div ref={ref} className="inline">

@@ -35,21 +35,25 @@ export default function ProjectsPage({projectsApiData}: {projectsApiData: Catego
 
     const cards = gridRef.current.children;
 
-    gsap.set(cards, {
-      opacity: 0,
-      y: 100,
-      scale: 0.75,
-    });
+    const ctx = gsap.context(() => {
+      gsap.set(cards, {
+        opacity: 0,
+        y: 100,
+        scale: 0.75,
+      });
 
-    gsap.to(cards, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 1,
-      delay: 1,
-      ease: "power3.out",
-      stagger: 0.15,
-    });
+      gsap.to(cards, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        delay: 1,
+        ease: "power3.out",
+        stagger: 0.15,
+      });
+    }, gridRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (

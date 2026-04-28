@@ -67,76 +67,79 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
     const contactItems = section.querySelectorAll(".contact-item");
     const socialIcons = social?.querySelectorAll(".social-icon") || [];
 
-    // Initial state
-    gsap.set(headerEls, {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      filter: "blur(4px)",
-    });
-    gsap.set(formInputs, {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      filter: "blur(4px)",
-    });
-    gsap.set(contactItems, { opacity: 0, y: 20, scale: 0.95 });
-    gsap.set(socialIcons, { opacity: 0, y: 20, scale: 0.9 });
+    const ctx = gsap.context(() => {
+      // Initial state
+      gsap.set(headerEls, {
+        opacity: 0,
+        y: 20,
+        scale: 0.95,
+        filter: "blur(4px)",
+      });
+      gsap.set(formInputs, {
+        opacity: 0,
+        y: 20,
+        scale: 0.95,
+        filter: "blur(4px)",
+      });
+      gsap.set(contactItems, { opacity: 0, y: 20, scale: 0.95 });
+      gsap.set(socialIcons, { opacity: 0, y: 20, scale: 0.9 });
 
-    // Animate all together
-    const scrollTriggerSettings = {
-      trigger: section,
-      start: "top 85%",
-      toggleActions: "play none none none",
-    };
+      // Animate all together
+      const scrollTriggerSettings = {
+        trigger: section,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      };
 
-    gsap.to(headerEls, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      duration: 0.6,
-      delay: 1,
-      ease: "power3.out",
-      stagger: 0.06,
-      scrollTrigger: scrollTriggerSettings,
-    });
+      gsap.to(headerEls, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 0.6,
+        delay: 1,
+        ease: "power3.out",
+        stagger: 0.06,
+        scrollTrigger: scrollTriggerSettings,
+      });
 
-    gsap.to(formInputs, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      duration: 0.6,
-      delay: 1,
-      ease: "power3.out",
-      stagger: 0.08,
-      scrollTrigger: scrollTriggerSettings,
-    });
+      gsap.to(formInputs, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 0.6,
+        delay: 1,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: scrollTriggerSettings,
+      });
 
-    gsap.to(contactItems, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.6,
-      delay: 1,
-      ease: "power3.out",
-      stagger: 0.1,
-      scrollTrigger: scrollTriggerSettings,
-    });
+      gsap.to(contactItems, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        delay: 1,
+        ease: "power3.out",
+        stagger: 0.1,
+        scrollTrigger: scrollTriggerSettings,
+      });
 
-    gsap.to(socialIcons, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.5,
-      delay: 1,
-      ease: "power3.out",
-      stagger: 0.08,
-      scrollTrigger: scrollTriggerSettings,
-    });
+      gsap.to(socialIcons, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.5,
+        delay: 1,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: scrollTriggerSettings,
+      });
+    }, section);
 
     ScrollTrigger.refresh();
+    return () => ctx.revert();
   }, []);
 
   const onSubmit = async (data: FormValues) => {

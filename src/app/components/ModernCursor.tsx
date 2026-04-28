@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 
 const ModernCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null); // outer circle
@@ -15,81 +16,53 @@ const ModernCursor = () => {
     setMounted(true);
   }, []);
 
-  // pointer tracking
+  // pointer tracking - updates CSS variables
   useEffect(() => {
     if (!mounted) return;
 
-    const move = (e: PointerEvent) => {
-      mouse.current.x = e.clientX;
-      mouse.current.y = e.clientY;
-
-      if (pos.current.x === 0 && pos.current.y === 0) {
-        pos.current.x = e.clientX;
-        pos.current.y = e.clientY;
-      }
+    const move = (e: MouseEvent) => {
+      document.documentElement.style.setProperty("--cursor-x", `${e.clientX}px`);
+      document.documentElement.style.setProperty("--cursor-y", `${e.clientY}px`);
     };
 
-    const over = (e: PointerEvent) => {
+    const over = (e: MouseEvent) => {
       const el = e.target as HTMLElement;
       if (el.closest("a, button, [data-cursor='hover'], .hoverable")) setHovering(true);
     };
 
-    const out = (e: PointerEvent) => {
+    const out = (e: MouseEvent) => {
       const el = e.target as HTMLElement;
       if (el.closest("a, button, [data-cursor='hover'], .hoverable")) setHovering(false);
     };
 
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerover", over);
-    window.addEventListener("pointerout", out);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseover", over);
+    window.addEventListener("mouseout", out);
 
     return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerover", over);
-      window.removeEventListener("pointerout", out);
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseover", over);
+      window.removeEventListener("mouseout", out);
     };
   }, [mounted]);
 
-  // animation loop
-  useEffect(() => {
-    if (!mounted) return;
-
-    let raf: number;
-    const loop = () => {
-      pos.current.x += (mouse.current.x - pos.current.x) * 0.25;
-      pos.current.y += (mouse.current.y - pos.current.y) * 0.25;
-
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `
-          translate3d(${pos.current.x}px, ${pos.current.y}px, 0)
-          translate(-50%, -50%)
-        `;
-      }
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0) translate(-50%, -50%)`;
-      }
-
-      raf = requestAnimationFrame(loop);
-    };
-
-    loop();
-    return () => cancelAnimationFrame(raf);
-  }, [mounted]);
-
-  if (!mounted) return null; // prevents hydration error
+  if (!mounted) return null;
 
   return (
     <>
-      {/* Outer glass circle */}
       <div
-        ref={cursorRef}
         className={`modern-cursor ${hovering ? "hover" : ""}`}
+        style={{
+          left: "var(--cursor-x)",
+          top: "var(--cursor-y)",
+        }}
       />
-      {/* Inner dot */}
       <div
-        ref={dotRef}
         className={`cursor-dot ${hovering ? "hover" : ""}`}
+        style={{
+          left: "var(--cursor-x)",
+          top: "var(--cursor-y)",
+        }}
       />
     </>
   );

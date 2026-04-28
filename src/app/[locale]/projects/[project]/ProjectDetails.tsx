@@ -10,17 +10,24 @@ import {
   ChevronRight,
   HardHat,
   Hammer,
+  Home,
+  FolderOpen,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { slideInOut } from "@/lib/utils";
 import Image from "next/image";
+import fallbackImg from "@/app/images/pd1.jpg";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ProjectResponse } from "@/types/singleProjectApiType";
 
-export default function ProjectDetails({ projectApiData }: { projectApiData: ProjectResponse }) {
+export default function ProjectDetails({
+  projectApiData,
+}: {
+  projectApiData: ProjectResponse;
+}) {
   const t = useTranslations("home");
   const locale = useLocale();
   const isArabic = locale.startsWith("ar");
@@ -36,16 +43,31 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
     return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
   };
 
+  const heroBgImage =
+    projectImages.length > 0 ? getImageUrl(projectImages[0].path) : fallbackImg;
+
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [imageLoaded, setImageLoaded] = useState<boolean[]>(
     new Array(projectImages.length).fill(false),
   );
 
   // Refs for GSAP
+  const heroRef = useRef<HTMLDivElement>(null);
+  const breadcrumbRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
   const badgesRef = useRef<HTMLDivElement>(null);
   const lightboxImageRef = useRef<HTMLDivElement>(null);
+
+  // GSAP fade-in for hero breadcrumb
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.from(heroRef.current, { opacity: 0, duration: 1.2 }).from(
+      breadcrumbRef.current,
+      { opacity: 0, y: 20, duration: 0.8 },
+      "-=0.6",
+    );
+  });
 
   // GSAP fade-in for title, description, badges
   useGSAP(() => {
@@ -103,45 +125,125 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
 
   return (
     <main
-      className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black pt-32 pb-20"
+      className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black"
       dir={isArabic ? "rtl" : "ltr"}
     >
-      <div className="px-6 sm:px-8 2xl:px-12 max-w-[1800px] mx-auto">
-        {/* Back Link */}
-        <div className="w-full flex">
-          <Link
+      {/* ── Hero Breadcrumb Banner ── */}
+      <div
+        ref={heroRef}
+        className="relative w-full h-[50vh] min-h-[300px] max-h-[620px] overflow-hidden"
+      >
+        {/* Background image */}
+        <Image
+          src={heroBgImage}
+          alt={project?.name || "Project"}
+          fill
+          priority
+          className="object-cover object-center"
+        />
+
+        {/* Layered overlays for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30" />
+
+        {/* Subtle noise texture overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+            backgroundSize: "150px 150px",
+          }}
+        />
+
+        {/* Breadcrumb content */}
+        <div
+          ref={breadcrumbRef}
+          className="absolute inset-0 flex flex-col justify-end px-6 sm:px-8 2xl:px-12 pb-10"
+          style={{ maxWidth: "1800px", margin: "0 auto", left: 0, right: 0 }}
+        >
+          {/* Breadcrumb trail */}
+          <nav
+            aria-label="breadcrumb"
+            className="flex items-center gap-2 text-sm sm:text-base text-white/50 mb-4 flex-wrap"
+          >
+            {/* Home */}
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 text-white/50 hover:text-white/90 transition-colors duration-200"
+            >
+              <Home size={14} />
+              <span>{isArabic ? "الرئيسية" : "Home"}</span>
+            </Link>
+
+            {/* Separator */}
+            <span className="text-white/25 select-none">
+              /
+            </span>
+
+            {/* Projects */}
+            <Link
+              href="/projects"
+              className="flex items-center gap-1.5 text-white/50 hover:text-white/90 transition-colors duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                viewRouter.push("/projects", {
+                  onTransitionReady: slideInOut,
+                });
+              }}
+            >
+              <FolderOpen size={14} />
+              <span>{isArabic ? "المشاريع" : "Projects"}</span>
+            </Link>
+
+            {/* Separator */}
+            <span className="text-white/25 select-none">
+              /
+            </span>
+
+            {/* Current project — truncated */}
+            <span className="text-white/90 font-medium truncate max-w-[200px] sm:max-w-xs">
+              {project?.name}
+            </span>
+          </nav>
+
+          {/* Back link (kept inside hero) */}
+          {/* <Link
             href="/projects"
-            className="inline-block text-sm sm:text-lg text-white/70 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white/90 transition-colors duration-200 w-fit"
             onClick={(e) => {
               e.preventDefault();
               viewRouter.push("/projects", { onTransitionReady: slideInOut });
             }}
           >
-            <div className="flex items-center gap-2">
-              {locale === "ar" ? <StepForward /> : <StepBack />}
-              {locale === "ar"
-                ? "العودة إلى المشاريع"
-                : "Back To The Projects Page"}
-            </div>
-          </Link>
+            {isArabic ? <StepForward size={16} /> : <StepBack size={16} />}
+            <span>
+              {isArabic ? "العودة إلى المشاريع" : "Back To The Projects Page"}
+            </span>
+          </Link> */}
         </div>
+      </div>
 
-        <hr className="w-full mx-auto border-white/30 my-4" />
+      {/* ── Page Body ── */}
+      <div className="px-6 sm:px-8 2xl:px-12 max-w-[1800px] mx-auto pb-20">
+        {/* Thin divider connecting hero to body */}
+        <div className="relative h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-10" />
 
         {/* Title and Description */}
         <div className="flex flex-col mb-16">
           <h2
             ref={titleRef}
-            className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ${isArabic ? "text-right" : "text-left"
-              }`}
+            className={`text-4xl sm:text-5xl md:text-5xl font-bold mb-5 ${
+              isArabic ? "text-right" : "text-left"
+            }`}
           >
             {project?.name}
           </h2>
 
           <div
             ref={descRef}
-            className={`text-base sm:text-lg md:text-xl max-w-5xl text-neutral-400 leading-relaxed ${isArabic ? "text-right" : "text-left"
-              }`}
+            className={`text-base sm:text-lg md:text-xl max-w-8xl text-neutral-400 leading-relaxed ${
+              isArabic ? "text-right" : "text-left"
+            }`}
             dangerouslySetInnerHTML={{ __html: project.long_desc }}
           />
 
@@ -169,8 +271,15 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
               <div className="relative">
                 <div className="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full animate-pulse" />
                 <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700 flex items-center justify-center shadow-2xl">
-                  <HardHat size={48} className="text-yellow-500/80" strokeWidth={1} />
-                  <Hammer size={38} className="absolute -bottom-2 -right-2 text-white/50 bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-full p-1" />
+                  <HardHat
+                    size={48}
+                    className="text-yellow-500/80"
+                    strokeWidth={1}
+                  />
+                  <Hammer
+                    size={38}
+                    className="absolute -bottom-2 -right-2 text-white/50 bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-full p-1"
+                  />
                 </div>
               </div>
               <div className="text-center space-y-3 px-6">
@@ -183,8 +292,9 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
               </div>
             </div>
           )}
+
           {projectImages.map((img, i) => {
-            let spanClass = "col-span-1"; // default: 1 per row
+            let spanClass = "col-span-1";
 
             if (i === 0) spanClass = "xl:col-span-8 xl:row-span-2";
             else if (i === 1 || i === 2)
@@ -205,7 +315,7 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
                   className="object-cover transition-all duration-700 group-hover:scale-105"
                   onLoad={() => handleImageLoad(i)}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/20 transition-all duration-500 rounded-2xl" />
               </div>
             );
@@ -269,76 +379,4 @@ export default function ProjectDetails({ projectApiData }: { projectApiData: Pro
       </div>
     </main>
   );
-}
-
-// const rawImages = data?.images ?? [];
-// // Extract image URLs from mixed shapes (string, StaticImageData, or { image, text })
-// const images =
-//   rawImages.map((img: unknown) => {
-//     // Direct string URL
-//     if (typeof img === "string") return img;
-
-//     if (img && typeof img === "object") {
-//       // Next.js StaticImageData directly
-//       if (
-//         "src" in img &&
-//         typeof (img as Record<string, unknown>).src === "string"
-//       ) {
-//         return (img as Record<string, string>).src;
-//       }
-
-//       // Wrapped object: { image: StaticImageData | string, text?: string }
-//       if ("image" in img) {
-//         const inner = (img as Record<string, unknown>).image;
-
-//         if (typeof inner === "string") return inner;
-//         if (inner && typeof inner === "object" && "src" in inner) {
-//           return (inner as Record<string, string>).src as string;
-//         }
-//       }
-//     }
-
-//     return "";
-//   }) ?? [];
-
-// // Extract titles aligned with the images; fallback to global project title
-// const titles =
-//   rawImages.map((img: unknown) => {
-//     if (img && typeof img === "object" && "text" in img) {
-//       return (img as Record<string, unknown>).text as string;
-//     }
-//     return data?.title ?? "";
-//   }) ?? [];
-
-// const [bend, setBend] = useState(0);
-
-// useEffect(() => {
-//   const updateBend = () => {
-//     if (window.innerWidth >= 1024) {
-//       setBend(3);
-//     } else {
-//       setBend(0);
-//     }
-//   };
-
-//   updateBend();
-//   window.addEventListener("resize", updateBend);
-//   return () => window.removeEventListener("resize", updateBend);
-// }, []);
-{
-  /* Gallery */
-}
-{
-  /* <div className="relative h-[600px] 2xl:h-[700px] mt-12">
-  <CircularGallery
-    images={images}
-    titles={titles}
-    bend={bend}
-    textColor="#f5f5f5"
-    borderRadius={0.04}
-    scrollSpeed={2}
-    scrollEase={0.07}
-    font="500 26px Figtree, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-  />
-</div>; */
 }

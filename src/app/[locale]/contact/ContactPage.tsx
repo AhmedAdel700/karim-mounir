@@ -351,7 +351,7 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
               className="pt-8 border-t border-[var(--color-deep-gray)]"
             >
               <h3 className="text-[var(--color-main-white)] font-semibold mb-6">
-                {locale === "en" ? "Follow Us" : "تابعنا"}
+                {locale === "en" ? "Connect" : "تابعنا"}
               </h3>
               <div className="flex gap-4">
                 {[

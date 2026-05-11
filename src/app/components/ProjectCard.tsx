@@ -71,7 +71,7 @@ export default function ProjectCard({
 
           {/* Description */}
           <p
-            className="text-zinc-400 text-base leading-relaxed line-clamp-2 font-light"
+            className="text-zinc-400 text-base leading-relaxed line-clamp-2 font-light capitalize"
             style={{
               fontFamily: "'Inter', sans-serif",
               letterSpacing: "0.01em",

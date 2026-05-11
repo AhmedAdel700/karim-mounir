@@ -198,9 +198,7 @@ export default function ProjectDetails({
             </Link>
 
             {/* Separator */}
-            <span className="text-white/25 select-none">
-              /
-            </span>
+            <span className="text-white/25 select-none">/</span>
 
             {/* Projects */}
             <Link
@@ -218,9 +216,7 @@ export default function ProjectDetails({
             </Link>
 
             {/* Separator */}
-            <span className="text-white/25 select-none">
-              /
-            </span>
+            <span className="text-white/25 select-none">/</span>
 
             {/* Current project — truncated */}
             <span className="text-white/90 font-medium truncate max-w-[200px] sm:max-w-xs">
@@ -263,7 +259,7 @@ export default function ProjectDetails({
 
           <div
             ref={descRef}
-            className={`text-base sm:text-lg md:text-xl max-w-8xl text-neutral-400 leading-relaxed ${
+            className={`text-base sm:text-lg md:text-xl max-w-8xl text-neutral-400 leading-relaxed capitalize ${
               isArabic ? "text-right" : "text-left"
             }`}
             dangerouslySetInnerHTML={{ __html: project.long_desc }}

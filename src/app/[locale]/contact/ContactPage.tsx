@@ -222,7 +222,7 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
           <h2 className="text-5xl md:text-6xl font-bold text-[var(--color-main-white)] mb-4">
             {contactApiData.data.contact_section.title}
           </h2>
-          <p className="text-[var(--color-mid-gray)] text-lg">
+          <p className="text-[var(--color-mid-gray)] text-lg capitalize">
             {contactApiData.data.contact_section.short_desc}
           </p>
         </div>
@@ -326,7 +326,8 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                       {
                         Icon: MapPin,
                         title: locale === "en" ? "Location" : "الموقع",
-                        info: contactApiData.data.contact_data.address[0].address,
+                        info: contactApiData.data.contact_data.address[0]
+                          .address,
                       },
                     ]
                   : []),

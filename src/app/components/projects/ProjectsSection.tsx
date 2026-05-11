@@ -449,7 +449,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                     </h2>
                   </div>
                   <div className="card-description max-w-4xl card-text-animate mx-auto">
-                    <p className="text-lg md:text-xl leading-relaxed text-white/85 mb-5">
+                    <p className="text-lg md:text-xl leading-relaxed text-white/85 mb-5 capitalize">
                       {project.short_desc}
                     </p>
                   </div>
@@ -490,9 +490,10 @@ export default function ProjectsSection({ categories, sections }: { categories: 
         className="relative flex flex-col gap-10 justify-center items-center w-full min-h-fit bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
-          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em]">
+          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em] capitalize">
             {outroSection?.long_desc ? (
               <span
+                className="capitalize"
                 dangerouslySetInnerHTML={{
                   __html: outroSection.long_desc,
                 }}
@@ -503,8 +504,8 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                 Merging <span className="text-mid-gray">Innovation</span>,
                 Technical <span className="text-mid-gray">Precistion</span>, And
                 Experssive <span className="text-mid-gray">Beauty</span> To
-                Create Spaces That <span className="text-mid-gray">Elevate</span>{" "}
-                Everyday Life
+                Create Spaces That{" "}
+                <span className="text-mid-gray">Elevate</span> Everyday Life
               </>
             )}
           </FlipText>
@@ -552,7 +553,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                       className="inline-block"
                     >
                       {visionSection?.long_desc ? (
-                        <span
+                        <span className="capitalize"
                           dangerouslySetInnerHTML={{
                             __html: visionSection.long_desc,
                           }}

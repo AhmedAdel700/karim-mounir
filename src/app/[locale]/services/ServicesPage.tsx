@@ -259,12 +259,11 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
             <FadeInWords text={breadcrumbSection?.title} />
           </div>
 
-          <div className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1">
+          <div className="text-xl md:text-3xl text-neutral-400 font-light tracking-wide mb-1 capitalize">
             <TextReveal>
               <div
                 dangerouslySetInnerHTML={{
-                  __html:
-                    breadcrumbSection?.long_desc,
+                  __html: breadcrumbSection?.long_desc,
                 }}
               />
             </TextReveal>
@@ -283,8 +282,9 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
-                className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${isLeft ? "" : "md:flex-row-reverse"
-                  }`}
+                className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${
+                  isLeft ? "" : "md:flex-row-reverse"
+                }`}
                 style={{ perspective: "1000px" }}
               >
                 {/* Text Content */}
@@ -301,7 +301,7 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                     className={`service-line h-px w-56 bg-gradient-to-r from-transparent via-white/20 to-white/40`}
                   ></div>
                   <div
-                    className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light"
+                    className="service-description text-lg md:text-xl text-gray-300/90 leading-[1.9] font-light capitalize"
                     dangerouslySetInnerHTML={{ __html: service.long_desc }}
                   ></div>
                 </div>
@@ -334,17 +334,15 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
             <FadeInWords text={integratedSection?.title} />
           </div>
 
-          <div className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light">
+          <div className="text-xl md:text-2xl text-gray-400 leading-relaxed font-light capitalize">
             <TextReveal>
               <div
                 dangerouslySetInnerHTML={{
-                  __html:
-                    integratedSection?.long_desc,
+                  __html: integratedSection?.long_desc,
                 }}
               />
             </TextReveal>
           </div>
-
         </div>
       </section>
 
@@ -361,10 +359,9 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                   {exploreSection?.title || t("Explore Our Work")}
                 </h2>
                 <div
-                  className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto"
+                  className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-3xl mx-auto capitalize"
                   dangerouslySetInnerHTML={{
-                    __html:
-                      exploreSection?.long_desc,
+                    __html: exploreSection?.long_desc,
                   }}
                 />
                 <div className="pt-4">
@@ -385,7 +382,9 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 </div>
                 <div className="flex items-center justify-center gap-3 pt-6">
                   <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-600"></div>
-                  <span className={`text-neutral-500 ${locale === "en" ? "text-xs" : "text-base"} tracking-[0.3em] uppercase font-normal`}>
+                  <span
+                    className={`text-neutral-500 ${locale === "en" ? "text-xs" : "text-base"} tracking-[0.3em] uppercase font-normal`}
+                  >
                     {t("From Concept to Completion")}
                   </span>
                   <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-600"></div>

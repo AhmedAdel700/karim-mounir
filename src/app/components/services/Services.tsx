@@ -84,7 +84,9 @@ export default function Services({ services }: { services: Service[] }) {
             className="text-lg md:text-2xl text-white/60 font-light max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: '"Montserrat", sans-serif' }}
           >
-            {t("Crafting exceptional spaces through thoughtful design, innovative thinking, and meticulous execution")}
+            {t(
+              "Crafting exceptional spaces through thoughtful design, innovative thinking, and meticulous execution",
+            )}
           </p>
         </div>
       </section>
@@ -121,7 +123,7 @@ export default function Services({ services }: { services: Service[] }) {
                       <div className="w-24 h-px bg-white/30 mx-auto transition-all duration-500 group-hover:w-32 group-hover:bg-white/60" />
 
                       <p
-                        className="text-lg md:text-xl text-white/60 leading-relaxed font-light max-w-2xl mx-auto"
+                        className="text-lg md:text-xl text-white/60 leading-relaxed font-light max-w-2xl mx-auto capitalize"
                         style={{ fontFamily: '"Montserrat", sans-serif' }}
                       >
                         {service.short_desc}

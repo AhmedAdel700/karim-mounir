@@ -214,7 +214,7 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
             <FadeInWords text={aboutApiData.data.about.title} />
           </div>
 
-          <div className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide">
+          <div className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide capitalize">
             <FadeInWords text={aboutApiData.data.about.short_desc} />
           </div>
         </div>

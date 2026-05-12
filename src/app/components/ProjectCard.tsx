@@ -63,7 +63,7 @@ export default function ProjectCard({
 
           {/* Title */}
           <h3
-            className="text-3xl font-light text-white tracking-tight leading-tight group-hover:tracking-wide transition-all duration-500"
+            className="text-[28px] font-light text-white tracking-tight leading-tight group-hover:tracking-wide transition-all duration-500 capitalize"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             {project.name}

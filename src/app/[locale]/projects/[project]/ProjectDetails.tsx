@@ -219,7 +219,7 @@ export default function ProjectDetails({
             <span className="text-white/25 select-none">/</span>
 
             {/* Current project — truncated */}
-            <span className="text-white/90 font-medium truncate max-w-[200px] sm:max-w-xs">
+            <span className="text-white/90 font-medium truncate max-w-[200px] sm:max-w-xs capitalize">
               {project?.name}
             </span>
           </nav>
@@ -250,7 +250,7 @@ export default function ProjectDetails({
         <div className="flex flex-col mb-16">
           <h2
             ref={titleRef}
-            className={`text-4xl sm:text-5xl md:text-5xl font-bold mb-5 ${
+            className={`text-4xl sm:text-5xl md:text-5xl font-bold mb-5 capitalize ${
               isArabic ? "text-right" : "text-left"
             }`}
           >

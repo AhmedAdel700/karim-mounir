@@ -282,18 +282,18 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 ref={(el) => {
                   servicesRef.current[index] = el;
                 }}
-                className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${
+                className={`flex flex-col md:flex-row items-center gap-12 2xl:gap-24 ${
                   isLeft ? "" : "md:flex-row-reverse"
                 }`}
                 style={{ perspective: "1000px" }}
               >
                 {/* Text Content */}
-                <div className="flex-1 space-y-8 text-start">
+                <div className="flex-1 space-y-8 text-start sm:max-w-[50%]">
                   <div className="space-y-4">
-                    <h3 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight leading-tight">
+                    <h3 className="text-2xl md:text-3xl font-extralight text-white tracking-tight leading-tight whitespace-nowrap">
                       {service.name}
                     </h3>
-                    <p className="service-subtitle text-base font-normal tracking-[0.25em] uppercase text-gray-500 font-light">
+                    <p className="service-subtitle text-base tracking-[0.25em] uppercase text-gray-500 font-light">
                       {service.short_desc}
                     </p>
                   </div>

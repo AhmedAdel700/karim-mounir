@@ -39,13 +39,19 @@ export default function FlipText({
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
+    // Detect if text contains Arabic characters to avoid splitting joined script into disjointed letters
+    const containsArabic = /[\u0600-\u06FF]/.test(textRef.current.textContent || "");
+
     const split = new SplitText(textRef.current, {
-      type: "chars",
+      type: containsArabic ? "words" : "chars",
       charsClass: "flip-char",
+      wordsClass: "flip-word",
     });
 
+    const animTargets = containsArabic ? split.words : split.chars;
+
     // Apply initial transform
-    gsap.set(split.chars, {
+    gsap.set(animTargets, {
       display: "inline-block",
       opacity: 0,
       rotateX: rotateFrom,
@@ -63,11 +69,11 @@ export default function FlipText({
       },
     });
 
-    tl.to(split.chars, {
+    tl.to(animTargets, {
       opacity: 1,
       rotateX: 0,
       stagger: {
-        each: stagger,
+        each: containsArabic ? stagger * 3 : stagger,
         ease: "power1.in",
       },
     });

@@ -8,7 +8,7 @@ import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
 import { useTransitionRouter } from "next-view-transitions";
 import FlipText from "../FlipText";
-import { FadeInWords, TextReveal } from "@/app/[locale]/about/AboutPage";
+import { TextReveal } from "@/app/[locale]/about/AboutPage";
 import { Link } from "@/navigations";
 import { slideInOut } from "@/lib/utils";
 import { Category, Section } from "@/types/homeApiTypes";
@@ -471,8 +471,8 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                       <span className="relative z-10 text-[var(--color-primary)]">
                         {project.name}
                       </span>
-                      <span className="relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]">
-                        <ArrowRight size={14} />
+                      <span className={`relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white transition-transform duration-300 ${locale === "ar" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1"} group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]`}>
+                        {locale === "ar" ? <ArrowLeft size={14} /> : <ArrowRight size={14} />}
                       </span>
                     </Link>
                   </div>
@@ -490,27 +490,28 @@ export default function ProjectsSection({ categories, sections }: { categories: 
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
           <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em] capitalize">
-            {outroSection?.long_desc ? (
-              <span
-                className="capitalize"
-                dangerouslySetInnerHTML={{
-                  __html: outroSection.long_desc,
-                }}
-              />
-            ) : (
+            {locale === "en" ? (
               <>
                 We <span className="text-mid-gray">Design</span> With Purpose
                 Merging <span className="text-mid-gray">Innovation</span>,
-                Technical <span className="text-mid-gray">Precistion</span>, And
-                Experssive <span className="text-mid-gray">Beauty</span> To
+                Technical <span className="text-mid-gray">Precision</span>, And
+                Expressive <span className="text-mid-gray">Beauty</span> To
                 Create Spaces That{" "}
                 <span className="text-mid-gray">Elevate</span> Everyday Life
+              </>
+            ) : (
+              <>
+                نحن <span className="text-mid-gray">نصمم</span> بغاية لنجمع بين{" "}
+                <span className="text-mid-gray">الابتكار</span>، و{" "}
+                <span className="text-mid-gray">الدقة</span> التقنية، و{" "}
+                <span className="text-mid-gray">الجمال</span> التعبيري لنصنع مساحات{" "}
+                <span className="text-mid-gray">ترتقي</span> بالحياة اليومية
               </>
             )}
           </FlipText>
         </div>
 
-        <div className="max-w-6xl mx-auto relative z-10 mb-[250px]">
+        <div className="max-w-7xl mx-auto relative z-10 mb-[250px]">
           <TextReveal>
             <div className="relative group">
               <div className="absolute -inset-[1.5px] bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-[25px] transition-all duration-1000 opacity-70 group-hover:opacity-100"></div>
@@ -575,7 +576,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                       }}
                     >
                       <span className="relative z-10 group-hover/btn:text-black transition-colors duration-300">
-                        View Projects
+                        {t("View Projects")}
                       </span>
 
                       {locale === "en" ? (

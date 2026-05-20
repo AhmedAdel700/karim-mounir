@@ -242,7 +242,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                   </p> */}
 
                   <h3
-                    className="text-end !text-2xl md:!text-5xl text-gray-200 font-semibold"
+                    className={`text-end !text-2xl md:!text-5xl text-gray-200 font-semibold ${
+                      locale === "ar" ? "text-start" : "text-end"
+                    }`}
                     dangerouslySetInnerHTML={{ __html: about.title2 }}
                   />
 

@@ -48,8 +48,8 @@ export default function ProjectsSection({ categories, sections }: { categories: 
     // Intro/outro text elements
     const introEls = introRef.current
       ? gsap.utils.toArray<HTMLElement>(
-          introRef.current.querySelectorAll(".intro-animate"),
-        )
+        introRef.current.querySelectorAll(".intro-animate"),
+      )
       : [];
 
     // Intro animation
@@ -302,7 +302,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
       (xPercents[length - 1] / 100) * widths[length - 1] -
       startX +
       items[length - 1].offsetWidth *
-        (gsap.getProperty(items[length - 1], "scaleX") as number) +
+      (gsap.getProperty(items[length - 1], "scaleX") as number) +
       (parseFloat(config.paddingRight) || 0);
 
     for (let i = 0; i < length; i++) {
@@ -394,9 +394,8 @@ export default function ProjectsSection({ categories, sections }: { categories: 
             ref={(el) => {
               if (el) cardsRef.current[index] = el;
             }}
-            className={`project-card card relative w-[100vw] h-screen ${
-              index === 1 ? "mt-[50vh]" : ""
-            }`}
+            className={`project-card card relative w-[100vw] h-screen ${index === 1 ? "mt-[50vh]" : ""
+              }`}
           >
             {/* Marquee - Only on first card */}
             {index === 0 && (
@@ -514,9 +513,9 @@ export default function ProjectsSection({ categories, sections }: { categories: 
         <div className="max-w-6xl mx-auto relative z-10 mb-[250px]">
           <TextReveal>
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-1000 opacity-75 group-hover:opacity-100"></div>
+              <div className="absolute -inset-[1.5px] bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-[25px] transition-all duration-1000 opacity-70 group-hover:opacity-100"></div>
 
-              <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-800/80 to-neutral-900/90 backdrop-blur-xl border border-neutral-700/50 rounded-3xl p-12 md:p-20 shadow-2xl">
+              <div className="relative bg-gradient-to-br from-neutral-900/95 via-neutral-800/90 to-neutral-900/95 border border-transparent rounded-[24px] p-12 md:p-20 shadow-2xl">
                 <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-neutral-600/50 rounded-tl-3xl"></div>
                 <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-neutral-600/50 rounded-br-3xl"></div>
 

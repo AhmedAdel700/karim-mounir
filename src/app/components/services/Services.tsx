@@ -59,7 +59,7 @@ export default function Services({ services }: { services: Service[] }) {
       className="services-section bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] min-h-fit text-white font-sans antialiased"
     >
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative max-h-fit lg:max-h-fit pt-10 sm:pt-20 lg:pt-0 lg:min-h-[60vh] flex items-center justify-center px-6 overflow-hidden">
         <div
           className="relative z-10 max-w-6xl mx-auto text-center"
           id="hero-services"
@@ -92,7 +92,7 @@ export default function Services({ services }: { services: Service[] }) {
       </section>
 
       {/* Services Section */}
-      <section className="services-section relative py-32 px-6">
+      <section className="services-section relative pt-12 pb-32 md:py-32 px-6">
         <div
           ref={servicesRef}
           className="max-w-7xl mx-auto space-y-24 min-h-fit"

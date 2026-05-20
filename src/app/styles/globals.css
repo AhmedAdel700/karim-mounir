@@ -37,6 +37,8 @@ button,
 
 .modern-cursor {
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 999999;
 
@@ -50,18 +52,15 @@ button,
 
   border: 1px solid rgba(255, 255, 255, 0.35);
 
-  /* The smoothing/follower effect is now handled by CSS transitions */
-  transform: translate(-50%, -50%);
-  transition: 
-    left 0.15s cubic-bezier(0.23, 1, 0.32, 1),
-    top 0.15s cubic-bezier(0.23, 1, 0.32, 1),
+  will-change: transform;
+
+  /* Transitions only for scale/appearance changes on hover */
+  transition:
     width 0.2s ease,
     height 0.2s ease,
     background-color 0.2s ease,
     border-color 0.2s ease,
     backdrop-filter 0.2s ease;
-  
-  will-change: left, top, width, height;
 }
 
 /* Hover = interactive glass */
@@ -79,17 +78,18 @@ button,
 /* Inner dot */
 .cursor-dot {
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 999999;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: white;
-  transform: translate(-50%, -50%);
-  
-  /* The dot is instant (no transition on left/top) */
+  will-change: transform;
+
+  /* The dot is instant */
   transition: width 0.2s ease, height 0.2s ease;
-  will-change: left, top;
 }
 
 /* Optional: scale dot on hover */
@@ -112,7 +112,8 @@ button,
   flex-wrap: nowrap;
   width: fit-content;
   will-change: transform;
-  background-color: var(--color-dark-gray); /* Match theme to hide sub-pixel gaps */
+  background-color: var(--color-dark-gray);
+  /* Match theme to hide sub-pixel gaps */
 }
 
 .scroll-section-horizontaliy {
@@ -132,7 +133,7 @@ button,
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
-  
+
   .scroll-section-inner {
     min-height: 100vh;
   }
@@ -143,6 +144,7 @@ button,
   text-transform: uppercase;
   font-size: 30px;
 }
+
 /* End Of About Sectio --- Scroll Horizolial (Css) */
 
 ::selection {
@@ -178,12 +180,15 @@ button,
 
 /* Hide scrollbar for all elements */
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
 }
 
 *::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
+  display: none;
+  /* Chrome, Safari, Edge */
 }
 
 section {
@@ -261,20 +266,27 @@ section {
 }
 
 .projects-cards .card:not(:first-child) .card-img {
-  border-radius: 0; /* allow later cards to fill as full-bleed backgrounds */
+  border-radius: 0;
+  /* allow later cards to fill as full-bleed backgrounds */
 }
 
 .projects-cards {
-  height: auto; /* allow all pinned cards to flow without clipping */
+  height: auto;
+  /* allow all pinned cards to flow without clipping */
   min-height: 100vh;
-  overflow: visible; /* keep scaled images fully visible */
+  overflow: visible;
+  /* keep scaled images fully visible */
 }
 
 .projects-cards .project-card {
-  overflow: visible; /* avoid cutting scaled images at card edges */
-  width: 100vw; /* ensure full viewport width */
-  min-height: 100vh; /* ensure full viewport height */
-  padding: 0; /* remove inner padding so media fills the frame */
+  overflow: visible;
+  /* avoid cutting scaled images at card edges */
+  width: 100vw;
+  /* ensure full viewport width */
+  min-height: 100vh;
+  /* ensure full viewport height */
+  padding: 0;
+  /* remove inner padding so media fills the frame */
 }
 
 @media (max-width: 900px) {

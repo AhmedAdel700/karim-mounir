@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-import ownerImg from "@/app/images/ownerImg.png";
 import Image from "next/image";
 import { AboutStruct, About as AboutType } from "@/types/homeApiTypes";
 
@@ -148,8 +147,6 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               ref={visionRef}
               className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] relative overflow-hidden will-change-transform"
             >
-              <div className="vision-decorator-2 absolute bottom-20 left-20 w-96 h-96 bg-[var(--color-primary)] rounded-full blur-3xl pointer-events-none" />
-
               <div className="vision-content max-w-4xl mx-auto px-8 py-8 lg:py-0 text-center relative z-10 w-full">
                 <h2
                   className="vision-title text-5xl md:text-8xl font-bold uppercase text-main-white mb-8 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
@@ -164,7 +161,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                   dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
                 />
 
-                <p
+                <div
                   className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 transition-all duration-[1000ms] ease-[cubic-bezier(0.6,0.01,0.1,0.99)]"
                   style={{
                     opacity: visionVisible ? 1 : 0,
@@ -232,7 +229,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                     {about.title}
                   </h2>
 
-                  <p
+                  <div
                     className="text-base md:text-xl text-gray-300 leading-relaxed mb-6"
                     dangerouslySetInnerHTML={{ __html: about.text }}
                   />
@@ -260,9 +257,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
         </div>
       ) : (
         <div className="flex flex-col gap-10 lg:gap-24 bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] min-h-fit">
-          <section
+          <div
             ref={visionRef}
-            className="px-6 py-6 lg:py-24 text-center max-h-fit"
+            className="px-6 py-6 lg:py-24 text-center w-full min-h-fit"
           >
             <h2
               className="text-4xl font-bold text-main-white mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
@@ -274,10 +271,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: visionVisible ? "blur(0px)" : "blur(12px)",
                 transitionDelay: visionVisible ? "200ms" : "0ms",
               }}
-            >
-              Our Vision
-            </h2>
-            <p
+              dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
+            />
+            <div
               className="text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: visionVisible ? 1 : 0,
@@ -287,15 +283,13 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: visionVisible ? "blur(0px)" : "blur(10px)",
                 transitionDelay: visionVisible ? "350ms" : "0ms",
               }}
-            >
-              Architecture that endures through function, identity, and timeless
-              impact.
-            </p>
-          </section>
+              dangerouslySetInnerHTML={{ __html: about_structs[0].text }}
+            />
+          </div>
 
-          <section
+          <div
             ref={ownerSectionRef}
-            className="px-6 pb-6 lg:pb-24 flex flex-col items-center text-center min-h-fit"
+            className="px-6 pb-6 lg:pb-24 flex flex-col items-center text-center w-full min-h-fit"
           >
             <div className="relative mb-8">
               <div
@@ -317,8 +311,8 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                   }}
                 >
                   <Image
-                    src={ownerImg}
-                    alt="Owner"
+                    src={about.image}
+                    alt={about.alt_image || "Owner"}
                     fill
                     className="object-cover"
                     priority
@@ -340,7 +334,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
             </div>
 
             <h2
-              className="text-3xl font-bold text-main-white mb-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start w-full sm:text-center text-3xl font-bold text-main-white mb-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
@@ -350,11 +344,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 transitionDelay: ownerVisible ? "1600ms" : "0ms",
               }}
             >
-              Meet Our Founder
+              {about.title}
             </h2>
 
-            <p
-              className="text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+            <div
+              className="text-start sm:text-center text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
@@ -363,30 +357,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
                 transitionDelay: ownerVisible ? "2100ms" : "0ms",
               }}
-            >
-              Karim Mounir leads an integrated design practice where
-              architecture and interiors are conceived as one unified system,
-              guided by clarity of purpose and restraint.
-            </p>
-
-            <p
-              className="text-base text-gray-300 leading-relaxed mb-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
-              style={{
-                opacity: ownerVisible ? 1 : 0,
-                transform: ownerVisible
-                  ? "translateY(0px)"
-                  : "translateY(32px)",
-                filter: ownerVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: ownerVisible ? "2600ms" : "0ms",
-              }}
-            >
-              His work approaches architecture as a spatial narrative shaped by
-              light, proportion, material, and human experience, creating
-              environments that are intelligent, enduring, and meaningful.
-            </p>
+              dangerouslySetInnerHTML={{ __html: about.text }}
+            />
 
             <h3
-              className="owner-subtitle text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start sm:text-center owner-subtitle text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
@@ -395,12 +370,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
                 transitionDelay: ownerVisible ? "3100ms" : "0ms",
               }}
-            >
-              Karim Mounir
-            </h3>
+              dangerouslySetInnerHTML={{ __html: about.title2 }}
+            />
 
             <h3
-              className="text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start sm:text-center text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
@@ -409,10 +383,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
                 transitionDelay: ownerVisible ? "3100ms" : "0ms",
               }}
-            >
-              Design Leader & Principal Architect
-            </h3>
-          </section>
+              dangerouslySetInnerHTML={{ __html: about.short_desc }}
+            />
+          </div>
         </div>
       )}
     </>

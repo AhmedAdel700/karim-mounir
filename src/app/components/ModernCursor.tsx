@@ -8,21 +8,39 @@ const ModernCursor = () => {
   const [hovering, setHovering] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const mouse = useRef({ x: 0, y: 0 });
-  const pos = useRef({ x: 0, y: 0 });
-
   // mark component as mounted
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // pointer tracking - updates CSS variables
+  // pointer tracking - updates transforms
   useEffect(() => {
     if (!mounted) return;
 
+    const cursor = cursorRef.current;
+    const dot = dotRef.current;
+    if (!cursor || !dot) return;
+
+    // Initialize positions and set centering transforms
+    gsap.set(cursor, { xPercent: -50, yPercent: -50, x: -100, y: -100 });
+    gsap.set(dot, { xPercent: -50, yPercent: -50, x: -100, y: -100 });
+
+    const mouse = { x: -100, y: -100 };
+    const pos = { x: -100, y: -100 };
+    const speed = 0.15; // outer circle lerp speed
+
     const move = (e: MouseEvent) => {
-      document.documentElement.style.setProperty("--cursor-x", `${e.clientX}px`);
-      document.documentElement.style.setProperty("--cursor-y", `${e.clientY}px`);
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+
+      // Update the dot position immediately for 0-latency tracking
+      gsap.set(dot, { x: e.clientX, y: e.clientY });
+    };
+
+    const updatePosition = () => {
+      pos.x += (mouse.x - pos.x) * speed;
+      pos.y += (mouse.y - pos.y) * speed;
+      gsap.set(cursor, { x: pos.x, y: pos.y });
     };
 
     const over = (e: MouseEvent) => {
@@ -38,11 +56,13 @@ const ModernCursor = () => {
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseover", over);
     window.addEventListener("mouseout", out);
+    gsap.ticker.add(updatePosition);
 
     return () => {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", over);
       window.removeEventListener("mouseout", out);
+      gsap.ticker.remove(updatePosition);
     };
   }, [mounted]);
 
@@ -51,18 +71,12 @@ const ModernCursor = () => {
   return (
     <>
       <div
+        ref={cursorRef}
         className={`modern-cursor ${hovering ? "hover" : ""}`}
-        style={{
-          left: "var(--cursor-x)",
-          top: "var(--cursor-y)",
-        }}
       />
       <div
+        ref={dotRef}
         className={`cursor-dot ${hovering ? "hover" : ""}`}
-        style={{
-          left: "var(--cursor-x)",
-          top: "var(--cursor-y)",
-        }}
       />
     </>
   );

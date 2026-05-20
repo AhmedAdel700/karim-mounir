@@ -7,15 +7,28 @@ const ModernCursor = () => {
   const dotRef = useRef<HTMLDivElement>(null); // inner dot
   const [hovering, setHovering] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
-  // mark component as mounted
+  // mark component as mounted and check if screen is desktop
   useEffect(() => {
     setMounted(true);
+
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(mediaQuery.matches);
+
+    const handleResize = (e: MediaQueryListEvent) => {
+      setIsDesktop(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleResize);
+    return () => {
+      mediaQuery.removeEventListener("change", handleResize);
+    };
   }, []);
 
   // pointer tracking - updates transforms
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !isDesktop) return;
 
     const cursor = cursorRef.current;
     const dot = dotRef.current;
@@ -64,9 +77,9 @@ const ModernCursor = () => {
       window.removeEventListener("mouseout", out);
       gsap.ticker.remove(updatePosition);
     };
-  }, [mounted]);
+  }, [mounted, isDesktop]);
 
-  if (!mounted) return null;
+  if (!mounted || !isDesktop) return null;
 
   return (
     <>

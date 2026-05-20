@@ -21,81 +21,91 @@ body {
   color: var(--color-main-white);
 }
 
-/* Hide native cursor */
-html,
-body {
-  cursor: none;
+/* Hide native cursor only on screens lg and up (1024px and wider) */
+@media (min-width: 1024px) {
+  html,
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  [role="button"],
+  .hoverable {
+    cursor: none !important;
+  }
 }
 
-a,
-button,
-[role="button"],
-.hoverable {
-  cursor: none !important;
+@media (max-width: 1023px) {
+  .modern-cursor,
+  .cursor-dot {
+    display: none !important;
+  }
 }
 
+@media (min-width: 1024px) {
+  .modern-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999;
 
-.modern-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 999999;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
 
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
+    will-change: transform;
 
-  will-change: transform;
+    /* Transitions only for scale/appearance changes on hover */
+    transition:
+      width 0.2s ease,
+      height 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      backdrop-filter 0.2s ease;
+  }
 
-  /* Transitions only for scale/appearance changes on hover */
-  transition:
-    width 0.2s ease,
-    height 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    backdrop-filter 0.2s ease;
-}
+  /* Hover = interactive glass */
+  .modern-cursor.hover {
+    width: 44px;
+    height: 44px;
 
-/* Hover = interactive glass */
-.modern-cursor.hover {
-  width: 44px;
-  height: 44px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-  background: rgba(255, 255, 255, 0.13);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(255, 255, 255, 0.65);
+  }
 
-  border-color: rgba(255, 255, 255, 0.65);
-}
+  /* Inner dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    will-change: transform;
 
-/* Inner dot */
-.cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 999999;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: white;
-  will-change: transform;
+    /* The dot is instant */
+    transition: width 0.2s ease, height 0.2s ease;
+  }
 
-  /* The dot is instant */
-  transition: width 0.2s ease, height 0.2s ease;
-}
-
-/* Optional: scale dot on hover */
-.cursor-dot.hover {
-  width: 10px;
-  height: 10px;
+  /* Optional: scale dot on hover */
+  .cursor-dot.hover {
+    width: 10px;
+    height: 10px;
+  }
 }
 
 /* Start Of About Sectio --- Scroll Horizolial (Css) */

@@ -705,9 +705,9 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
 
                   <div className="flex items-center justify-center gap-3 pt-6">
                     <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-600"></div>
-                    <span className={`text-neutral-400 tracking-[0.3em] uppercase font-normal ${locale === "ar" ? "text-lg" : "text-sm"}`}>
+                    <div className={`text-neutral-400 font-medium ${locale === "ar" ? "text-lg" : "text-sm"}`}>
                       {t("Karim Mounir")}
-                    </span>
+                    </div>
                     <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-600"></div>
                   </div>
                 </div>

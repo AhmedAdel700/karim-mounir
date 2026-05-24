@@ -533,7 +533,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
         className="relative flex flex-col gap-10 justify-center items-center w-full min-h-fit bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
-          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.35] tracking-[-0.05em] capitalize min-h-fit">
+          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.45] tracking-[-0.05em] capitalize min-h-fit">
             {locale === "en" ? (
               <>
                 We <span className="text-mid-gray">Design</span> With Purpose

@@ -15,18 +15,28 @@ import { Category, Section } from "@/types/homeApiTypes";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
-const marqueeTexts = [
-  "Design Beyond Boundaries",
-  "Built For Tomorrow",
-  "Real Impact",
-  "Digital Visions",
-];
+const marqueeTextsByLocale: Record<string, string[]> = {
+  en: [
+    "Design Beyond Boundaries",
+    "Built For Tomorrow",
+    "Real Impact",
+    "Digital Visions",
+  ],
+  ar: [
+    "تصميم يتجاوز الحدود",
+    "مبني للغد",
+    "أثر حقيقي",
+    "رؤى رقمية",
+  ],
+};
 
 export default function ProjectsSection({ categories, sections }: { categories: Category[], sections: Section[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLElement>(null);
   const outroRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const marqueeTimelineRef = useRef<any>(null);
   const lenis = useLenis();
   const viewRouter = useTransitionRouter();
   const t = useTranslations("home")
@@ -41,9 +51,6 @@ export default function ProjectsSection({ categories, sections }: { categories: 
   useEffect(() => {
     if (!lenis) return;
     gsap.registerPlugin(ScrollTrigger, SplitText);
-
-    // Setup marquee animation
-    setupMarqueeAnimation();
 
     // Intro/outro text elements
     const introEls = introRef.current
@@ -257,16 +264,34 @@ export default function ProjectsSection({ categories, sections }: { categories: 
     };
   }, [lenis]);
 
-  const setupMarqueeAnimation = () => {
-    const marqueeItems = gsap.utils.toArray(".marquee h2");
+  // Dedicated marquee effect — re-runs when locale changes so Arabic texts animate correctly
+  useEffect(() => {
+    if (!lenis) return;
 
-    if (marqueeItems.length > 0) {
-      horizontalLoop(marqueeItems, {
-        repeat: -1,
-        paddingRight: 30,
-      });
+    if (marqueeTimelineRef.current) {
+      marqueeTimelineRef.current.kill();
+      marqueeTimelineRef.current = null;
     }
-  };
+
+    const raf = requestAnimationFrame(() => {
+      const marqueeItems = gsap.utils.toArray(".marquee h2");
+      if (marqueeItems.length > 0) {
+        marqueeTimelineRef.current = horizontalLoop(marqueeItems, {
+          repeat: -1,
+          paddingRight: 30,
+        });
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (marqueeTimelineRef.current) {
+        marqueeTimelineRef.current.kill();
+        marqueeTimelineRef.current = null;
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lenis, locale]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const horizontalLoop = (items: any[], config: any) => {
@@ -399,16 +424,21 @@ export default function ProjectsSection({ categories, sections }: { categories: 
           >
             {/* Marquee - Only on first card */}
             {index === 0 && (
-              <div className="card-marquee absolute w-full top-1/2 left-0 -translate-y-1/2 overflow-hidden">
-                <div className="marquee flex">
-                  {marqueeTexts.map((text, i) => (
-                    <h2
-                      key={i}
-                      className="whitespace-nowrap text-[10vw] font-semibold mr-[30px]"
-                    >
-                      {text}
-                    </h2>
-                  ))}
+              <div
+                className="card-marquee absolute w-full top-1/2 -translate-y-1/2 overflow-hidden"
+                style={{ left: 0, right: 'unset' }}
+              >
+                <div className="marquee flex" dir="ltr">
+                  {Array.from({ length: 4 }, (_, rep) =>
+                    (marqueeTextsByLocale[locale] ?? marqueeTextsByLocale.en).map((text, i) => (
+                      <h2
+                        key={`${rep}-${i}`}
+                        className="whitespace-nowrap text-[10vw] font-semibold mr-[30px]"
+                      >
+                        {text}
+                      </h2>
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -440,7 +470,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                 <div className="card-copy max-w-4xl space-y-4 md:space-y-6 text-center flex flex-col items-center">
                   <div className="card-text-animate flex items-center justify-center gap-3 text-lg uppercase tracking-[0.28em] text-white">
                     <span className="h-px w-10 bg-white" />
-                    {t("Category")} 0{index + 1}
+                    <span className="whitespace-nowrap">{t("Category")} 0{index + 1}</span>
                   </div>
                   <div className="card-title text-center card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
@@ -489,7 +519,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
         className="relative flex flex-col gap-10 justify-center items-center w-full min-h-fit bg-gradient-to-t from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary) 75%,var(--color-dark-gray))] to-[var(--color-dark-gray)] text-white flex items-center px-6"
       >
         <div className="max-w-6xl mx-auto w-full space-y-8 text-center min-h-[100vh] flex flex-col gap-10 justify-center items-center">
-          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.25] tracking-[-0.05em] capitalize">
+          <FlipText className="outro-animate text-4xl md:text-5xl font-semibold leading-[1.35] tracking-[-0.05em] capitalize min-h-fit">
             {locale === "en" ? (
               <>
                 We <span className="text-mid-gray">Design</span> With Purpose

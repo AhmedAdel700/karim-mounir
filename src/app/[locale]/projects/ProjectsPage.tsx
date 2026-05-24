@@ -57,7 +57,7 @@ export default function ProjectsPage({projectsApiData}: {projectsApiData: Catego
   }, []);
 
   return (
-    <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black flex flex-col justify-center items-center pt-26 xl:pt-32 pb-10 2xl:pt-16">
+    <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black flex flex-col justify-center items-center pt-26 xl:pt-32 pb-10">
       <div className="container mx-auto px-5 xl:px-8 flex flex-col gap-6">
 
         <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6">

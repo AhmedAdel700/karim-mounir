@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { Mail, MapPin, Phone, Facebook, Linkedin, X, Send, Instagram, Youtube } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Facebook,
+  Linkedin,
+  X,
+  Send,
+  Instagram,
+  Youtube,
+} from "lucide-react";
 import { sendContactData } from "@/api/contactService";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -21,6 +31,8 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
   const locale = useLocale();
   const schema = createFormSchema(locale);
   type FormValues = z.infer<typeof schema>;
+
+  console.log("Contact API Data:", contactApiData);
 
   const {
     register,
@@ -59,7 +71,9 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
     const button = submitButtonRef.current;
     const social = socialRef.current;
 
-    const headerEls = section.querySelectorAll(".contact-header h2, .contact-header p");
+    const headerEls = section.querySelectorAll(
+      ".contact-header h2, .contact-header p",
+    );
     const formInputs = [...(form?.querySelectorAll(".form-input") || [])];
     const responseNote = form?.querySelector(".response-time");
     if (button) formInputs.push(button);
@@ -162,7 +176,11 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
         if (result.success) {
           button.innerHTML = locale === "en" ? "Sent!" : "تم الإرسال!";
           setSubmitStatus({
-            message: result.data.message || (locale === "en" ? "Message sent successfully" : "تم إرسال الرسالة بنجاح"),
+            message:
+              result.data.message ||
+              (locale === "en"
+                ? "Message sent successfully"
+                : "تم إرسال الرسالة بنجاح"),
             isError: false,
           });
           reset();
@@ -173,12 +191,14 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
               { transform: "scale(0.9)" },
               { transform: "scale(1)" },
             ],
-            { duration: 150, easing: "ease-in-out" }
+            { duration: 150, easing: "ease-in-out" },
           );
         } else {
           button.innerHTML = locale === "en" ? "Error!" : "خطأ!";
           setSubmitStatus({
-            message: result.message || (locale === "en" ? "Something went wrong" : "حدث خطأ ما"),
+            message:
+              result.message ||
+              (locale === "en" ? "Something went wrong" : "حدث خطأ ما"),
             isError: true,
           });
           console.error("Submission failed:", result.message);
@@ -311,6 +331,7 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                   Icon: Mail,
                   title: locale === "en" ? "Email" : "البريد الإلكتروني",
                   info: contactApiData.data.contact_data.email,
+                  href: `mailto:${contactApiData.data.contact_data.email}`,
                 },
                 ...(contactApiData.data.contact_data.phone.length > 0
                   ? [
@@ -318,6 +339,7 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                         Icon: Phone,
                         title: locale === "en" ? "Phone" : "الهاتف",
                         info: contactApiData.data.contact_data.phone[0].phone,
+                        href: `tel:${contactApiData.data.contact_data.phone[0].phone}`,
                       },
                     ]
                   : []),
@@ -328,13 +350,17 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                         title: locale === "en" ? "Location" : "الموقع",
                         info: contactApiData.data.contact_data.address[0]
                           .address,
+                        href: `https://maps.google.com/?q=${encodeURIComponent(contactApiData.data.contact_data.address[0].address)}`,
                       },
                     ]
                   : []),
-              ].map(({ Icon, title, info }) => (
-                <div
+              ].map(({ Icon, title, info, href }) => (
+                <a
                   key={title}
-                  className="flex items-start gap-4 group contact-item"
+                  href={href}
+                  target={href.startsWith("https") ? "_blank" : undefined}
+                  rel={href.startsWith("https") ? "noopener noreferrer" : undefined}
+                  className="flex items-start gap-4 group contact-item cursor-pointer"
                 >
                   <div className="w-12 h-12 bg-[color-mix(in_srgb,var(--color-main-white)_10%,transparent)] rounded-lg flex items-center justify-center group-hover:bg-[color-mix(in_srgb,var(--color-main-white)_20%,transparent)] transition-all duration-300">
                     <Icon className="w-5 h-5 text-[var(--color-mid-gray)]" />
@@ -343,9 +369,9 @@ const ContactPage: React.FC<{ contactApiData: ContactResponse }> = ({
                     <h3 className="text-[var(--color-main-white)] font-semibold mb-1">
                       {title}
                     </h3>
-                    <p className="text-[var(--color-deep-gray)]">{info}</p>
+                    <p className="text-[var(--color-deep-gray)] group-hover:text-[var(--color-mid-gray)] transition-colors duration-300">{info}</p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 

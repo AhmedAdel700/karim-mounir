@@ -419,25 +419,28 @@ export default function ProjectsSection({ categories, sections }: { categories: 
             ref={(el) => {
               if (el) cardsRef.current[index] = el;
             }}
-            className={`project-card card relative w-[100vw] h-screen ${index === 1 ? "mt-[50vh]" : ""
-              }`}
+            className={`project-card card relative w-[100vw] h-screen ${
+              index === 1 ? "mt-[50vh]" : ""
+            }`}
           >
             {/* Marquee - Only on first card */}
             {index === 0 && (
               <div
                 className="card-marquee absolute w-full top-1/2 -translate-y-1/2 overflow-hidden"
-                style={{ left: 0, right: 'unset' }}
+                style={{ left: 0, right: "unset" }}
               >
                 <div className="marquee flex" dir="ltr">
                   {Array.from({ length: 4 }, (_, rep) =>
-                    (marqueeTextsByLocale[locale] ?? marqueeTextsByLocale.en).map((text, i) => (
+                    (
+                      marqueeTextsByLocale[locale] ?? marqueeTextsByLocale.en
+                    ).map((text, i) => (
                       <h2
                         key={`${rep}-${i}`}
                         className="whitespace-nowrap text-[10vw] font-semibold mr-[30px]"
                       >
                         {text}
                       </h2>
-                    ))
+                    )),
                   )}
                 </div>
               </div>
@@ -470,7 +473,12 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                 <div className="card-copy max-w-4xl space-y-4 md:space-y-6 text-center flex flex-col items-center">
                   <div className="card-text-animate flex items-center justify-center gap-3 text-lg uppercase tracking-[0.28em] text-white">
                     <span className="h-px w-10 bg-white" />
-                    <span className="whitespace-nowrap">{t("Category")} 0{index + 1}</span>
+                    <span
+                      className="whitespace-nowrap inline-block"
+                      style={{ unicodeBidi: "isolate", direction: "rtl" }}
+                    >
+                      {t("Category")} 0{index + 1}
+                    </span>
                   </div>
                   <div className="card-title text-center card-text-animate">
                     <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
@@ -501,8 +509,14 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                       <span className="relative z-10 text-[var(--color-primary)]">
                         {project.name}
                       </span>
-                      <span className={`relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white transition-transform duration-300 ${locale === "ar" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1"} group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]`}>
-                        {locale === "ar" ? <ArrowLeft size={14} /> : <ArrowRight size={14} />}
+                      <span
+                        className={`relative z-10 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-white transition-transform duration-300 ${locale === "ar" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1"} group-hover:rotate-3 shadow-[0_0_18px_rgba(26,26,26,0.45)]`}
+                      >
+                        {locale === "ar" ? (
+                          <ArrowLeft size={14} />
+                        ) : (
+                          <ArrowRight size={14} />
+                        )}
                       </span>
                     </Link>
                   </div>
@@ -534,8 +548,9 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                 نحن <span className="text-mid-gray">نصمم</span> بغاية لنجمع بين{" "}
                 <span className="text-mid-gray">الابتكار</span>، و{" "}
                 <span className="text-mid-gray">الدقة</span> التقنية، و{" "}
-                <span className="text-mid-gray">الجمال</span> التعبيري لنصنع مساحات{" "}
-                <span className="text-mid-gray">ترتقي</span> بالحياة اليومية
+                <span className="text-mid-gray">الجمال</span> التعبيري لنصنع
+                مساحات <span className="text-mid-gray">ترتقي</span> بالحياة
+                اليومية
               </>
             )}
           </FlipText>
@@ -583,7 +598,8 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                       className="inline-block"
                     >
                       {visionSection?.long_desc ? (
-                        <span className="capitalize"
+                        <span
+                          className="capitalize"
                           dangerouslySetInnerHTML={{
                             __html: visionSection.long_desc,
                           }}

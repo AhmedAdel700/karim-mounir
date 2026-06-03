@@ -103,20 +103,35 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
             transformPerspective: 1000,
           });
 
-          // Title - character-by-character reveal
+          // Title - character-by-character reveal (split by words first to prevent breaking words on wrap)
           const title = service.querySelector("h3");
           if (title) {
             const titleText = title.textContent || "";
-            const items = locale === "ar" ? titleText.split(" ") : titleText.split("");
-            title.innerHTML = items
-              .map(
-                (item) =>
-                  `<span class="inline-block">${item === " " ? "&nbsp;" : item}${locale === "ar" ? "&nbsp;" : ""
-                  }</span>`,
-              )
-              .join("");
+            if (locale === "ar") {
+              const words = titleText.split(" ");
+              title.innerHTML = words
+                .map(
+                  (word) =>
+                    `<span class="char-span inline-block whitespace-nowrap">${word}&nbsp;</span>`,
+                )
+                .join("");
+            } else {
+              const words = titleText.split(" ");
+              title.innerHTML = words
+                .map(
+                  (word) =>
+                    `<span class="inline-block whitespace-nowrap">${word
+                      .split("")
+                      .map(
+                        (char) =>
+                          `<span class="char-span inline-block">${char === " " ? "&nbsp;" : char}</span>`,
+                      )
+                      .join("")}&nbsp;</span>`,
+                )
+                .join("");
+            }
             serviceTimeline.from(
-              title.querySelectorAll("span"),
+              title.querySelectorAll(".char-span"),
               {
                 opacity: 0,
                 y: 40,
@@ -272,7 +287,7 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
       </section>
 
       {/* Services Section */}
-      <section className="relative py-5 px-6 z-10 min-h-fit">
+      <section className="services-section relative py-5 px-6 z-10 min-h-fit">
         <div className="max-w-7xl mx-auto space-y-[100px] md:space-y-[250px] 2xl:space-y-[300px]">
           {servicesApiData.data.services.map((service, index) => {
             const isLeft = index % 2 === 0;
@@ -288,9 +303,9 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 style={{ perspective: "1000px" }}
               >
                 {/* Text Content */}
-                <div className="flex-1 space-y-8 text-start sm:max-w-[50%]">
+                <div className="flex-1 space-y-8 text-start w-full md:max-w-[50%]">
                   <div className="space-y-4">
-                    <h3 className="text-2xl md:text-3xl font-extralight text-white tracking-tight leading-tight whitespace-nowrap">
+                    <h3 className="text-2xl md:text-3xl font-extralight text-white tracking-tight leading-tight whitespace-normal">
                       {service.name}
                     </h3>
                     <p className="service-subtitle text-base tracking-[0.25em] uppercase text-gray-500 font-light">

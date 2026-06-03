@@ -363,7 +363,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
             />
 
             <h3
-              className="text-start sm:text-center owner-subtitle text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start sm:text-center owner-subtitle text-4xl lg:text-5xl text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible
@@ -376,7 +376,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
             />
 
             <h3
-              className="text-start sm:text-center text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start sm:text-center text-sm lg:text-lg text-gray-200 font-semibold transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible

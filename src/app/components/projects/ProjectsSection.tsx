@@ -41,9 +41,6 @@ export default function ProjectsSection({ categories, sections }: { categories: 
   const viewRouter = useTransitionRouter();
   const t = useTranslations("home")
   const locale = useLocale();
-  const outroSection = sections?.find(
-    (s) => s.key === "highlighted_home_section",
-  );
   const visionSection = sections?.find(
     (s) => s.key === "projects_section_home",
   );
@@ -366,51 +363,6 @@ export default function ProjectsSection({ categories, sections }: { categories: 
 
   return (
     <div ref={sectionRef} className="overflow-x-hidden">
-      {/* Intro Section */}
-      {/* <section
-        ref={introRef}
-        className="relative w-full h-screen bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray) 70%,var(--color-primary))] to-[var(--color-primary)] text-white flex items-center px-6"
-      >
-        <div className="max-w-6xl mx-auto w-full">
-          <div className="intro-animate flex items-center gap-3 text-sm uppercase tracking-[0.35em] text-white/60">
-            <span className="h-px w-12 bg-white/40" />
-            Project Categories
-          </div>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <h2 className="intro-animate text-4xl md:text-4xl font-semibold leading-[1.25] tracking-[-0.05em] md:max-w-3xl uppercase">
-              Every Project Is An Exploration Of Proportion, Light, Material And
-              The Stories They Hold
-            </h2>
-            <div className="flex flex-col gap-4 max-w-sm text-white/70">
-              <p className="intro-animate text-lg leading-relaxed">
-                Four experience categories that blend design, motion, and
-                interactivity to create spaces and products that inspire and
-                engage.
-              </p>
-
-              <div className="intro-animate grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-white/60">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                  COMMERCIAL
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                  RECREATIONAL
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                  RESIDENTAIL
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs text-white/80 bg-white/5 backdrop-blur-sm">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                  ADMINISTRATION
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
       {/* Cards Section */}
       <section className="projects-cards relative flex flex-col bg-[var(--color-primary)] text-white gap-[25vh]">
         {categories.map((project, index) => (
@@ -613,7 +565,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                   <div className="pt-4">
                     <Link
                       href="/projects"
-                      className="group/btn relative inline-flex items-center gap-3 text-xl font-light tracking-wide px-10 py-5 border border-white overflow-hidden transition-all duration-300 hover:scale-105"
+                      className="group/btn relative inline-flex items-center gap-3 text-xl font-light tracking-wide px-4 lg:px-10 py-5 border border-white overflow-hidden transition-all duration-300 hover:scale-105"
                       onClick={(e) => {
                         e.preventDefault();
                         viewRouter.push("/projects", {

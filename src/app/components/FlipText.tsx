@@ -8,17 +8,11 @@ import { SplitText } from "gsap/SplitText";
 interface FlipTextProps {
   children: React.ReactNode;
   className?: string;
-  /** When animation should start (default: "top 85%") */
   startTrigger?: string;
-  /** When animation should end (default: "bottom 40%") */
   endTrigger?: string;
-  /** Stagger delay between each character in seconds (default: 0.012) */
   stagger?: number;
-  /** Animation duration in seconds (default: 0.6) */
   duration?: number;
-  /** GSAP ease function (default: "back.out(1.7)") */
   ease?: string;
-  /** Initial rotation in degrees (default: 90) */
   rotateFrom?: number;
 }
 
@@ -39,18 +33,24 @@ export default function FlipText({
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    // Detect if text contains Arabic characters to avoid splitting joined script into disjointed letters
-    const containsArabic = /[\u0600-\u06FF]/.test(textRef.current.textContent || "");
+    const containsArabic = /[\u0600-\u06FF]/.test(
+      textRef.current.textContent || "",
+    );
 
     const split = new SplitText(textRef.current, {
-      type: containsArabic ? "words" : "chars",
+      type: containsArabic ? "words" : "chars, words", // ← also split words
       charsClass: "flip-char",
       wordsClass: "flip-word",
     });
 
+    // ✅ Keep word wrappers as inline-block and prevent wrapping inside them
+    gsap.set(split.words, {
+      display: "inline-block",
+      whiteSpace: "nowrap", // ← chars inside a word never break across lines
+    });
+
     const animTargets = containsArabic ? split.words : split.chars;
 
-    // Apply initial transform
     gsap.set(animTargets, {
       display: "inline-block",
       opacity: 0,
@@ -60,13 +60,9 @@ export default function FlipText({
       willChange: "transform, opacity",
     });
 
-    // Create animation timeline
     const tl = gsap.timeline({
       paused: true,
-      defaults: {
-        ease: ease,
-        duration: duration,
-      },
+      defaults: { ease, duration },
     });
 
     tl.to(animTargets, {
@@ -78,15 +74,13 @@ export default function FlipText({
       },
     });
 
-    // ScrollTrigger controls the timeline
     const trigger = ScrollTrigger.create({
       trigger: textRef.current,
       start: startTrigger,
       end: endTrigger,
       onEnter: () => tl.play(),
       onEnterBack: () => tl.play(),
-      // onLeave: () => tl.reverse(),
-      onLeaveBack: () => tl.reverse(),
+      onLeaveBack: () => tl.pause(0), // pause & reset without reverse
     });
 
     return () => {

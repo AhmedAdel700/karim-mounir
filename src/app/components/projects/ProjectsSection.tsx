@@ -433,19 +433,19 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                     </div>
                   </div>
                   <div className="card-title text-center card-text-animate">
-                    <h2 className="text-5xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
+                    <h2 className="text-4xl md:text-[5rem] font-semibold leading-[1.05] tracking-[-0.08em] drop-shadow-xl uppercase">
                       {project.name}
                     </h2>
                   </div>
                   <div className="card-description max-w-4xl card-text-animate mx-auto">
-                    <p className="text-lg md:text-xl leading-relaxed text-white/85 mb-5 capitalize">
+                    <p className="text-lg md:text-xl leading-relaxed text-white/85 capitalize">
                       {project.short_desc}
                     </p>
                   </div>
                   <div className="card-text-animate">
                     <Link
                       href={`/projects?category=${project.slug}`}
-                      className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold tracking-tight text-black transition duration-400 ease-out hover:-translate-y-0.5"
+                      className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-4 sm:px-6 py-3 text-sm font-semibold tracking-tight text-black transition duration-400 ease-out hover:-translate-y-0.5"
                       style={{
                         background:
                           "linear-gradient(135deg, var(--color-main-white), rgba(200,200,200,0.9) 45%, rgba(26,26,26,0.9) 140%)",
@@ -458,7 +458,7 @@ export default function ProjectsSection({ categories, sections }: { categories: 
                         <span className="absolute inset-0 bg-gradient-to-r from-[rgba(200,200,200,0.25)] via-[rgba(255,255,255,0.45)] to-[rgba(26,26,26,0.3)]" />
                       </span>
                       <span className="absolute inset-y-0 left-[-40%] w-[40%] -skew-x-12 bg-white/50 opacity-50 transition-all duration-700 group-hover:translate-x-[220%]" />
-                      <span className="relative z-10 text-[var(--color-primary)]">
+                      <span className="relative text-xs sm:text-sm z-10 text-[var(--color-primary)]">
                         {project.name}
                       </span>
                       <span

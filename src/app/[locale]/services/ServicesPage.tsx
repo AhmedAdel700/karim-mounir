@@ -322,7 +322,7 @@ export default function ServicesPage({ servicesApiData }: { servicesApiData: Ser
                 </div>
 
                 {/* Image Content */}
-                <div className="service-image-container flex-1 w-full aspect-[4/3] md:aspect-[3/4] lg:aspect-[4/3] relative overflow-hidden rounded-2xl border border-white/10 group">
+                <div className="service-image-container -mt-2 sm:mt-0 flex-1 w-full aspect-[4/3] md:aspect-[3/4] lg:aspect-[4/3] relative overflow-hidden rounded-2xl border border-white/10 group">
                   <Image
                     src={service.image}
                     alt={service.alt_image || service.name}

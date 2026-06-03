@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -52,6 +52,8 @@ export default function Services({ services }: { services: Service[] }) {
     },
     { scope: container },
   );
+
+  console.log(services)
 
   return (
     <div
@@ -123,10 +125,9 @@ export default function Services({ services }: { services: Service[] }) {
                       <div className="w-24 h-px bg-white/30 mx-auto transition-all duration-500 group-hover:w-32 group-hover:bg-white/60" />
 
                       <p
-                        className="text-lg md:text-xl text-white/60 leading-relaxed font-light max-w-2xl mx-auto capitalize"
+                        className="text-base md:text-lg text-white/60 leading-relaxed font-light max-w-full mx-auto capitalize"
                         style={{ fontFamily: '"Montserrat", sans-serif' }}
-                      >
-                        {service.short_desc}
+                        dangerouslySetInnerHTML={{ __html: service.long_desc }}>
                       </p>
                     </div>
                   </div>

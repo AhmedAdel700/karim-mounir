@@ -225,9 +225,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 </div>
 
                 <div className="flex-1 max-w-4xl about-animate">
-                  <h2 className="text-4xl md:text-5xl font-bold text-main-white mb-4">
+                  {/* <h2 className="text-4xl md:text-5xl font-bold text-main-white mb-4">
                     {about.title}
-                  </h2>
+                  </h2> */}
 
                   <div
                     className="text-base md:text-xl text-gray-300 leading-relaxed mb-6"

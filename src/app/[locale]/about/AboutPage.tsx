@@ -6,13 +6,15 @@ import Image from "next/image";
 import { usePageReady } from "@/app/hooks/usePageReady";
 import { AboutResponse } from "@/types/aboutApiTypes";
 import { useLocale, useTranslations } from "next-intl";
+import { Compass, Layers, Hexagon, Shield } from "lucide-react";
 
 interface TextRevealProps {
   children: ReactNode;
   delay?: number;
+  className?: string;
 }
 
-export function TextReveal({ children, delay = 0 }: TextRevealProps) {
+export function TextReveal({ children, delay = 0, className = "" }: TextRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,7 +45,7 @@ export function TextReveal({ children, delay = 0 }: TextRevealProps) {
     <div
       ref={ref}
       className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        } ${className}`}
     >
       {children}
     </div>
@@ -156,6 +158,153 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   );
 }
 
+const getValueConfig = (index: number) => {
+  const configs = [
+    {
+      hoverBg: "from-blue-500/5 to-transparent",
+      glow: "from-blue-500/20 to-purple-500/20",
+      renderIcon: () => (
+        <svg className="w-full h-full relative z-10" viewBox="0 0 80 80">
+          <circle
+            cx="40"
+            cy="40"
+            r="30"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="text-neutral-600 group-hover:text-blue-400 transition-colors duration-500"
+          />
+          <path
+            d="M40,10 L40,70 M10,40 L70,40"
+            stroke="currentColor"
+            strokeWidth="1"
+            className="text-neutral-600 group-hover:text-blue-400 transition-colors duration-500"
+          />
+          <circle
+            cx="40"
+            cy="40"
+            r="12"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            className="text-neutral-500 group-hover:text-blue-300 transition-colors duration-500"
+          />
+        </svg>
+      ),
+    },
+    {
+      hoverBg: "from-purple-500/5 to-transparent",
+      glow: "from-purple-500/20 to-pink-500/20",
+      renderIcon: () => (
+        <svg className="w-full h-full relative z-10" viewBox="0 0 80 80">
+          <rect
+            x="10"
+            y="10"
+            width="60"
+            height="60"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="text-neutral-600 group-hover:text-purple-400 transition-colors duration-500"
+            rx="4"
+          />
+          <rect
+            x="20"
+            y="20"
+            width="40"
+            height="40"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            className="text-neutral-500 group-hover:text-purple-300 transition-colors duration-500"
+            rx="2"
+          />
+          <path
+            d="M40,10 L40,20 M40,60 L40,70 M10,40 L20,40 M60,40 L70,40"
+            stroke="currentColor"
+            strokeWidth="1"
+            className="text-neutral-600 group-hover:text-purple-400 transition-colors duration-500"
+          />
+        </svg>
+      ),
+    },
+    {
+      hoverBg: "from-pink-500/5 to-transparent",
+      glow: "from-pink-500/20 to-orange-500/20",
+      renderIcon: () => (
+        <svg className="w-full h-full relative z-10" viewBox="0 0 80 80">
+          <circle
+            cx="40"
+            cy="40"
+            r="30"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="text-neutral-600 group-hover:text-pink-400 transition-colors duration-500"
+          />
+          <circle
+            cx="40"
+            cy="40"
+            r="20"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="text-neutral-600 group-hover:text-pink-400 transition-colors duration-500"
+          />
+          <path
+            d="M40,20 L45,35 L60,40 L45,45 L40,60 L35,45 L20,40 L35,35 Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            className="text-neutral-500 group-hover:text-pink-300 transition-colors duration-500"
+          />
+        </svg>
+      ),
+    },
+    {
+      hoverBg: "from-emerald-500/5 to-transparent",
+      glow: "from-emerald-500/20 to-teal-500/20",
+      renderIcon: () => (
+        <Compass
+          size={60}
+          className="relative z-10 stroke-[1.2] text-neutral-600 group-hover:text-emerald-400 transition-colors duration-500"
+        />
+      ),
+    },
+    {
+      hoverBg: "from-amber-500/5 to-transparent",
+      glow: "from-amber-500/20 to-orange-500/20",
+      renderIcon: () => (
+        <Layers
+          size={60}
+          className="relative z-10 stroke-[1.2] text-neutral-600 group-hover:text-amber-400 transition-colors duration-500"
+        />
+      ),
+    },
+    {
+      hoverBg: "from-cyan-500/5 to-transparent",
+      glow: "from-cyan-500/20 to-blue-500/20",
+      renderIcon: () => (
+        <Hexagon
+          size={60}
+          className="relative z-10 stroke-[1.2] text-neutral-600 group-hover:text-cyan-400 transition-colors duration-500"
+        />
+      ),
+    },
+    {
+      hoverBg: "from-indigo-500/5 to-transparent",
+      glow: "from-indigo-500/20 to-purple-500/20",
+      renderIcon: () => (
+        <Shield
+          size={60}
+          className="relative z-10 stroke-[1.2] text-neutral-600 group-hover:text-indigo-400 transition-colors duration-500"
+        />
+      ),
+    },
+  ];
+
+  return configs[index % configs.length];
+};
 
 export default function AboutPage({ aboutApiData }: { aboutApiData: AboutResponse }) {
   const t = useTranslations("home");
@@ -253,7 +402,7 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
           </svg>
         </div>
 
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
             <FadeInWords text={aboutApiData.data.about.text} />
           </div>
@@ -481,149 +630,34 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
             </h2>
           </TextReveal>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <TextReveal delay={100}>
-              <div className="group relative bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 backdrop-blur-sm border border-neutral-700/30 rounded-2xl p-8 hover:border-neutral-600/50 transition-all duration-500 hover:transform hover:scale-105 flex flex-col h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {aboutApiData?.data?.our_values?.values?.map((value, index) => {
+              if (!value || !value.title) return null;
+              const config = getValueConfig(index);
+              return (
+                <TextReveal
+                  key={value.id || index}
+                  delay={(index + 1) * 100}
+                  className="w-full md:w-[350px] flex flex-col"
+                >
+                  <div className="group relative bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 backdrop-blur-sm border border-neutral-700/30 rounded-2xl p-8 hover:border-neutral-600/50 transition-all duration-500 hover:transform hover:scale-105 flex flex-col h-full">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${config.hoverBg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
 
-                <div className="relative z-10 flex flex-col flex-1">
-                  <div className="w-20 h-20 mx-auto mb-6 relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <svg
-                      className="w-full h-full relative z-10"
-                      viewBox="0 0 80 80"
-                    >
-                      <circle
-                        cx="40"
-                        cy="40"
-                        r="35"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        fill="none"
-                        className="text-neutral-600 group-hover:text-blue-400 transition-colors duration-500"
-                      />
-                      <path
-                        d="M40,10 L40,70 M10,40 L70,40"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        className="text-neutral-600 group-hover:text-blue-400 transition-colors duration-500"
-                      />
-                      <circle
-                        cx="40"
-                        cy="40"
-                        r="15"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                        className="text-neutral-500 group-hover:text-blue-300 transition-colors duration-500"
-                      />
-                    </svg>
+                    <div className="relative z-10 flex flex-col flex-1">
+                      <div className="w-20 h-20 mx-auto mb-6 relative flex-shrink-0 flex items-center justify-center">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${config.glow} rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                        {config.renderIcon()}
+                      </div>
+                      <div className="flex-1 flex items-center justify-center">
+                        <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
+                          {value.title}
+                        </h3>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      {aboutApiData.data.our_values.values[0].title}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </TextReveal>
-
-            <TextReveal delay={200}>
-              <div className="group relative bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 backdrop-blur-sm border border-neutral-700/30 rounded-2xl p-8 hover:border-neutral-600/50 transition-all duration-500 hover:transform hover:scale-105 flex flex-col h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-                <div className="relative z-10 flex flex-col flex-1">
-                  <div className="w-20 h-20 mx-auto mb-6 relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <svg
-                      className="w-full h-full relative z-10"
-                      viewBox="0 0 80 80"
-                    >
-                      <rect
-                        x="15"
-                        y="15"
-                        width="50"
-                        height="50"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        fill="none"
-                        className="text-neutral-600 group-hover:text-purple-400 transition-colors duration-500"
-                        rx="2"
-                      />
-                      <rect
-                        x="25"
-                        y="25"
-                        width="30"
-                        height="30"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                        className="text-neutral-500 group-hover:text-purple-300 transition-colors duration-500"
-                        rx="2"
-                      />
-                      <path
-                        d="M40,15 L40,25 M40,55 L40,65 M15,40 L25,40 M55,40 L65,40"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        className="text-neutral-600 group-hover:text-purple-400 transition-colors duration-500"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      {aboutApiData.data.our_values.values[1].title}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </TextReveal>
-
-            <TextReveal delay={300}>
-              <div className="group relative bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 backdrop-blur-sm border border-neutral-700/30 rounded-2xl p-8 hover:border-neutral-600/50 transition-all duration-500 hover:transform hover:scale-105 flex flex-col h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-                <div className="relative z-10 flex flex-col flex-1">
-                  <div className="w-20 h-20 mx-auto mb-6 relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-orange-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <svg
-                      className="w-full h-full relative z-10"
-                      viewBox="0 0 80 80"
-                    >
-                      <circle
-                        cx="40"
-                        cy="40"
-                        r="30"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        fill="none"
-                        className="text-neutral-600 group-hover:text-pink-400 transition-colors duration-500"
-                      />
-                      <circle
-                        cx="40"
-                        cy="40"
-                        r="20"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        fill="none"
-                        className="text-neutral-600 group-hover:text-pink-400 transition-colors duration-500"
-                      />
-                      <path
-                        d="M40,20 L45,35 L60,40 L45,45 L40,60 L35,45 L20,40 L35,35 Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                        className="text-neutral-500 group-hover:text-pink-300 transition-colors duration-500"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <h3 className="text-2xl font-light tracking-wide text-center text-neutral-200 group-hover:text-neutral-100 transition-colors duration-300">
-                      {aboutApiData.data.our_values.values[2].title}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </TextReveal>
+                </TextReveal>
+              );
+            })}
           </div>
         </div>
       </section>

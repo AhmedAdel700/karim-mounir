@@ -234,13 +234,6 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                     dangerouslySetInnerHTML={{ __html: about.text }}
                   />
 
-                  {/* <p className="text-base md:text-xl text-gray-300 leading-relaxed mb-6">
-                    His work approaches architecture as a spatial narrative
-                    shaped by light, proportion, material, and human experience,
-                    creating environments that are intelligent, enduring, and
-                    meaningful.
-                  </p> */}
-
                   <h3
                     className={`text-end !text-2xl md:!text-5xl text-gray-200 font-semibold ${
                       locale === "ar" ? "text-start" : "text-end"

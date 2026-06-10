@@ -260,7 +260,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               }}
               dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
             /> */}
-            <div className="text-xl text-gray-300 leading-relaxed !text-justify [&_p]:!text-justify">
+            <div className="text-xl text-gray-300 leading-relaxed !text-center">
               <FadeInWords text={about_structs[0].text} />
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
             </h2> */}
 
             <div
-              className="text-start sm:text-center text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] [&_p]:!text-start sm:[&_p]:!text-center"
+              className="text-center text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] [&_p]:!text-center"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible

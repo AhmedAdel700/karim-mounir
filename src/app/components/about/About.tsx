@@ -260,18 +260,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               }}
               dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
             /> */}
-            <div
-              className="text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] !text-justify [&_p]:!text-justify"
-              style={{
-                opacity: visionVisible ? 1 : 0,
-                transform: visionVisible
-                  ? "translateY(0px)"
-                  : "translateY(28px)",
-                filter: visionVisible ? "blur(0px)" : "blur(10px)",
-                transitionDelay: visionVisible ? "350ms" : "0ms",
-              }}
-              dangerouslySetInnerHTML={{ __html: about_structs[0].text }}
-            />
+            <div className="text-xl text-gray-300 leading-relaxed !text-justify [&_p]:!text-justify">
+              <FadeInWords text={about_structs[0].text} />
+            </div>
           </div>
 
           <div

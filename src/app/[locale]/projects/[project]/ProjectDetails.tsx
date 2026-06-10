@@ -259,9 +259,7 @@ export default function ProjectDetails({
 
           <div
             ref={descRef}
-            className={`text-base sm:text-lg md:text-xl max-w-8xl text-neutral-400 leading-relaxed capitalize ${
-              isArabic ? "text-right" : "text-left"
-            }`}
+            className="text-base sm:text-lg md:text-xl max-w-8xl text-neutral-400 leading-relaxed capitalize !text-justify [&_p]:!text-justify"
             dangerouslySetInnerHTML={{ __html: project.long_desc }}
           />
 

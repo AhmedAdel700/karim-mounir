@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 
 import Image from "next/image";
 import { AboutStruct, About as AboutType } from "@/types/homeApiTypes";
+import { FadeInWords } from "@/app/[locale]/about/AboutPage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -147,8 +148,8 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               ref={visionRef}
               className="scroll-section-horizontaliy bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] relative overflow-hidden will-change-transform"
             >
-              <div className="vision-content max-w-4xl mx-auto px-8 py-8 lg:py-0 text-center relative z-10 w-full">
-                <h2
+              <div className="vision-content max-w-[900px] mx-auto px-8 py-8 lg:py-0 text-center relative z-10 w-full">
+                {/* <h2
                   className="vision-title text-5xl md:text-8xl font-bold uppercase text-main-white mb-8 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
                   style={{
                     opacity: visionVisible ? 1 : 0,
@@ -159,20 +160,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                     transitionDelay: visionVisible ? "200ms" : "0ms",
                   }}
                   dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
-                />
+                /> */}
 
-                <div
-                  className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 transition-all duration-[1000ms] ease-[cubic-bezier(0.6,0.01,0.1,0.99)]"
-                  style={{
-                    opacity: visionVisible ? 1 : 0,
-                    transform: visionVisible
-                      ? "translateY(0px) translateX(0px) scale(1) skewY(0deg)"
-                      : "translateY(30px) translateX(-10px) scale(0.97) skewY(-2deg)",
-                    filter: visionVisible ? "blur(0px)" : "blur(12px)",
-                    transitionDelay: visionVisible ? "800ms" : "0ms",
-                  }}
-                  dangerouslySetInnerHTML={{ __html: about_structs[0].text }}
-                />
+                <div className="vision-para-1 text-xl md:text-3xl text-gray-200 leading-relaxed mb-6 !text-justify [&_p]:!text-justify">
+                  <FadeInWords text={about_structs[0].text} />
+                </div>
               </div>
             </div>
 
@@ -230,7 +222,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                   </h2> */}
 
                   <div
-                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6"
+                    className="text-base md:text-xl text-gray-300 leading-relaxed mb-6 !text-justify [&_p]:!text-justify"
                     dangerouslySetInnerHTML={{ __html: about.text }}
                   />
 
@@ -254,9 +246,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
         <div className="flex flex-col gap-10 lg:gap-24 bg-gradient-to-b from-[var(--color-dark-gray)] via-[color-mix(in_srgb,var(--color-dark-gray)_70%,var(--color-primary))] to-[var(--color-primary)] min-h-fit">
           <div
             ref={visionRef}
-            className="px-6 py-6 lg:py-24 text-center w-full min-h-fit"
+            className="px-6 pt-24 pb-6 lg:py-24 text-center w-full min-h-fit"
           >
-            <h2
+            {/* <h2
               className="text-4xl font-bold text-main-white mb-4 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: visionVisible ? 1 : 0,
@@ -267,9 +259,9 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 transitionDelay: visionVisible ? "200ms" : "0ms",
               }}
               dangerouslySetInnerHTML={{ __html: about_structs[0].title }}
-            />
+            /> */}
             <div
-              className="text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-lg text-gray-300 leading-relaxed transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] !text-justify [&_p]:!text-justify"
               style={{
                 opacity: visionVisible ? 1 : 0,
                 transform: visionVisible
@@ -328,7 +320,7 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               />
             </div>
 
-            <h2
+            {/* <h2
               className="text-start w-full sm:text-center text-3xl font-bold text-main-white mb-2 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
               style={{
                 opacity: ownerVisible ? 1 : 0,
@@ -340,10 +332,10 @@ export default function About({ about, about_structs }: { about: AboutType, abou
               }}
             >
               {about.title}
-            </h2>
+            </h2> */}
 
             <div
-              className="text-start sm:text-center text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+              className="text-start sm:text-center text-base text-gray-300 leading-relaxed mb-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] [&_p]:!text-start sm:[&_p]:!text-center"
               style={{
                 opacity: ownerVisible ? 1 : 0,
                 transform: ownerVisible

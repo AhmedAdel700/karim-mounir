@@ -411,12 +411,12 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
 
       {/* Section 3: Role and Vision */}
       <section className="min-h-fit md:min-h-screen flex items-center px-6 py-20">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <TextReveal>
-            <div className="relative">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center w-full">
+          <TextReveal className="w-full">
+            <div className="relative w-full">
               {/* Main image with permanent clip-path */}
               <div
-                className="aspect-[3/4] bg-gradient-to-br from-neutral-800 via-neutral-850 to-neutral-900 shadow-2xl relative overflow-hidden"
+                className="aspect-[3/4] w-full bg-gradient-to-br from-neutral-800 via-neutral-850 to-neutral-900 shadow-2xl relative overflow-hidden"
                 style={{
                   clipPath: "polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%)",
                 }}
@@ -435,12 +435,12 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                 <div className="absolute bottom-0 right-0 w-32 h-32 border-l-2 border-t-2 border-white opacity-50"></div>
 
                 {/* Bottom label */}
-                <div className="absolute bottom-8 left-8 right-8">
+                {/* <div className="absolute bottom-8 left-8 right-8">
                   <div className="h-px bg-gradient-to-r from-transparent via-white to-transparent mb-4"></div>
                   <p className="text-white text-xs tracking-[0.3em] font-light uppercase">
                     {t("Principal Architect")}
                   </p>
-                </div>
+                </div> */}
               </div>
 
               {/* Top-right accent polygon, now always visible */}
@@ -453,8 +453,8 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
             </div>
           </TextReveal>
 
-          <TextReveal delay={200}>
-            <div className="space-y-6">
+          <TextReveal delay={200} className="w-full">
+            <div className="space-y-6 w-full">
               <div className="inline-block">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-px bg-neutral-600"></div>
@@ -473,7 +473,7 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 pt-8">
+              {/* <div className="grid grid-cols-2 gap-6 pt-8">
                 <div className="border-t border-neutral-800 pt-4">
                   <p className="text-3xl font-light text-white">
                     {aboutApiData.data.about.statistics.years_of_experience}+
@@ -490,7 +490,75 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                     {t("Projects Completed")}
                   </p>
                 </div>
+              </div> */}
+            </div>
+          </TextReveal>
+        </div>
+      </section>
+
+      {/* Section 4: Approach and Execution (Mirrored layout) */}
+      <section className="min-h-fit md:min-h-screen flex items-center px-6 py-20">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center w-full">
+          {/* Text block */}
+          <TextReveal className="w-full">
+            <div className="space-y-6 w-full">
+              <div className="inline-block">
+                <div
+                  className={`flex items-center gap-3 mb-2`}
+                >
+                  <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
+                    {t("Approach")}
+                  </span>
+                  <div className="w-12 h-px bg-neutral-600"></div>
+                </div>
+                <h2
+                  className={`text-5xl md:text-6xl font-extralight tracking-tight text-neutral-100`}
+                >
+                  <FadeInWords text={t("Crafting Timeless Spaces")} />
+                </h2>
               </div>
+
+              <div
+                className={`space-y-4`}
+              >
+                <div className="text-lg md:text-xl font-light leading-relaxed text-neutral-300">
+                  <FadeInWords text={t("Approach description")} />
+                </div>
+              </div>
+            </div>
+          </TextReveal>
+
+          {/* Image block */}
+          <TextReveal delay={200} className="w-full">
+            <div className="relative w-full">
+              {/* Main image with permanent clip-path */}
+              <div
+                className="aspect-[3/4] w-full bg-gradient-to-br from-neutral-800 via-neutral-850 to-neutral-900 shadow-2xl relative overflow-hidden"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 15% 100%, 0 85%)",
+                }}
+              >
+                {/* === IMAGE === */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Image
+                    src="/about_vision_mirror.png"
+                    alt="Approach Illustration"
+                    className="opacity-70 object-cover"
+                    fill
+                  />
+                </div>
+
+                {/* Bottom-left decorative corner */}
+                <div className="absolute bottom-0 left-0 w-32 h-32 border-r-2 border-t-2 border-white opacity-50"></div>
+              </div>
+
+              {/* Top-left accent polygon */}
+              <div
+                className="absolute -top-4 -left-4 w-24 h-24 border border-white opacity-50 transition-opacity duration-500"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 30% 100%, 0 70%)",
+                }}
+              ></div>
             </div>
           </TextReveal>
         </div>

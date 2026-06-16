@@ -21,6 +21,7 @@ export interface About {
   studio_section: StudioSection;
   team_company_section: TeamCompanySection;
   about_section: AboutSection;
+  approach_section: ApproachSection;
 }
 
 // Vision
@@ -29,6 +30,15 @@ export interface Vision {
   text: string;
   image: string;
   alt_image: string | null;
+}
+
+// Approach Section
+export interface ApproachSection {
+  title: string;
+  text: string;
+  image: string;
+  alt_image: string | null;
+  subtitle: string;
 }
 
 // Statistics

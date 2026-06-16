@@ -495,7 +495,7 @@ export default function AboutPage({
               <div className="inline-block">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-px bg-neutral-600"></div>
-                  <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
+                  <span className="text-neutral-500 text-sm tracking-[0.3em] font-normal uppercase">
                     {t("Vision")}
                   </span>
                 </div>
@@ -541,21 +541,25 @@ export default function AboutPage({
             <div className="space-y-6 w-full">
               <div className="inline-block">
                 <div className={`flex items-center gap-3 mb-2`}>
-                  <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
+                  <div className="w-12 h-px bg-neutral-600"></div>
+                  <span className="text-neutral-500 text-sm tracking-[0.3em] font-normal uppercase">
                     {t("Approach")}
                   </span>
-                  <div className="w-12 h-px bg-neutral-600"></div>
                 </div>
                 <h2
                   className={`text-5xl md:text-6xl font-extralight tracking-tight text-neutral-100`}
                 >
-                  <FadeInWords text={t("Crafting Timeless Spaces")} />
+                  <FadeInWords
+                    text={aboutApiData.data.about.approach_section.title}
+                  />
                 </h2>
               </div>
 
               <div className={`space-y-4`}>
                 <div className="text-lg md:text-xl font-light leading-relaxed text-neutral-300">
-                  <FadeInWords text={t("Approach description")} />
+                  <FadeInWords
+                    text={aboutApiData.data.about.approach_section.text}
+                  />
                 </div>
               </div>
             </div>
@@ -574,8 +578,11 @@ export default function AboutPage({
                 {/* === IMAGE === */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Image
-                    src="/about_vision_mirror.png"
-                    alt="Approach Illustration"
+                    src={aboutApiData.data.about.approach_section.image}
+                    alt={
+                      aboutApiData.data.about.approach_section.alt_image ||
+                      "Approach Illustration"
+                    }
                     className="opacity-70 object-cover"
                     fill
                   />

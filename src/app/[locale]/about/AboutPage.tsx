@@ -458,9 +458,10 @@ export default function AboutPage({
                 {/* === IMAGE === */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Image
-                    src={aboutApiData.data.about.icon}
+                    src={aboutApiData.data.about.vision.image}
                     alt={
-                      aboutApiData.data.about.alt_icon || "Idea Illustration"
+                      aboutApiData.data.about.vision.alt_image ||
+                      "Idea Illustration"
                     }
                     className="opacity-70 object-cover"
                     fill

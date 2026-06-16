@@ -14,7 +14,11 @@ interface TextRevealProps {
   className?: string;
 }
 
-export function TextReveal({ children, delay = 0, className = "" }: TextRevealProps) {
+export function TextReveal({
+  children,
+  delay = 0,
+  className = "",
+}: TextRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -44,8 +48,9 @@ export function TextReveal({ children, delay = 0, className = "" }: TextRevealPr
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        } ${className}`}
+      className={`transition-all duration-1000 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } ${className}`}
     >
       {children}
     </div>
@@ -56,7 +61,6 @@ interface FadeInWordsProps {
   text: string;
   delay?: number;
 }
-
 
 export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
   const pageReady = usePageReady(600);
@@ -78,7 +82,7 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
           setTimeout(() => setIsVisible(true), delay);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (ref.current) observer.observe(ref.current);
@@ -100,7 +104,9 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
         const words = (node.textContent || "").split(/(\s+)/);
         return words.map((word, i) => {
           if (word.match(/^\s+$/)) {
-            return <React.Fragment key={`${path}-s-${i}`}>{word}</React.Fragment>;
+            return (
+              <React.Fragment key={`${path}-s-${i}`}>{word}</React.Fragment>
+            );
           }
           if (!word) return null;
 
@@ -108,8 +114,11 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
           return (
             <span
               key={`${path}-w-${i}`}
-              className={`inline-block transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+              className={`inline-block transition-all duration-700 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+              }`}
               style={{ transitionDelay: `${currentIdx * 50}ms` }}
             >
               {word}
@@ -130,7 +139,22 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
           attrs[name === "class" ? "className" : name] = attr.value;
         });
 
-        const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+        const VOID_ELEMENTS = new Set([
+          "area",
+          "base",
+          "br",
+          "col",
+          "embed",
+          "hr",
+          "img",
+          "input",
+          "link",
+          "meta",
+          "param",
+          "source",
+          "track",
+          "wbr",
+        ]);
 
         if (VOID_ELEMENTS.has(Tag)) {
           return <Tag key={path} {...attrs} />;
@@ -138,7 +162,9 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
 
         return (
           <Tag key={path} {...attrs}>
-            {Array.from(el.childNodes).map((child, i) => traverse(child, `${path}-${i}`))}
+            {Array.from(el.childNodes).map((child, i) =>
+              traverse(child, `${path}-${i}`),
+            )}
           </Tag>
         );
       }
@@ -146,9 +172,11 @@ export function FadeInWords({ text, delay = 0 }: FadeInWordsProps) {
       return null;
     };
 
-    return Array.from(doc.body.childNodes).map((node, i) =>
-      <React.Fragment key={`root-${i}`}>{traverse(node, `root-${i}`)}</React.Fragment>
-    );
+    return Array.from(doc.body.childNodes).map((node, i) => (
+      <React.Fragment key={`root-${i}`}>
+        {traverse(node, `root-${i}`)}
+      </React.Fragment>
+    ));
   }, [text, isVisible, mounted]);
 
   return (
@@ -306,9 +334,16 @@ const getValueConfig = (index: number) => {
   return configs[index % configs.length];
 };
 
-export default function AboutPage({ aboutApiData }: { aboutApiData: AboutResponse }) {
+export default function AboutPage({
+  aboutApiData,
+}: {
+  aboutApiData: AboutResponse;
+}) {
   const t = useTranslations("home");
   const locale = useLocale();
+
+  console.log("AboutPage render with locale:", aboutApiData);
+
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100">
       <style jsx global>{`
@@ -357,7 +392,6 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
 
       {/* Section 1: Introduction */}
       <section className="min-h-screen flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden">
-
         <div className="max-w-4xl text-center relative z-10">
           <div className="text-6xl md:text-8xl font-medium tracking-tight mb-4">
             <FadeInWords text={aboutApiData.data.about.title} />
@@ -425,7 +459,9 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Image
                     src={aboutApiData.data.about.icon}
-                    alt={aboutApiData.data.about.alt_icon || "Idea Illustration"}
+                    alt={
+                      aboutApiData.data.about.alt_icon || "Idea Illustration"
+                    }
                     className="opacity-70 object-cover"
                     fill
                   />
@@ -503,9 +539,7 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
           <TextReveal className="w-full">
             <div className="space-y-6 w-full">
               <div className="inline-block">
-                <div
-                  className={`flex items-center gap-3 mb-2`}
-                >
+                <div className={`flex items-center gap-3 mb-2`}>
                   <span className="text-neutral-500 text-xs tracking-[0.3em] font-light uppercase">
                     {t("Approach")}
                   </span>
@@ -518,9 +552,7 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                 </h2>
               </div>
 
-              <div
-                className={`space-y-4`}
-              >
+              <div className={`space-y-4`}>
                 <div className="text-lg md:text-xl font-light leading-relaxed text-neutral-300">
                   <FadeInWords text={t("Approach description")} />
                 </div>
@@ -585,11 +617,15 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                   className="w-full md:w-[350px] flex flex-col"
                 >
                   <div className="group relative bg-gradient-to-br from-neutral-900/50 to-neutral-800/30 backdrop-blur-sm border border-neutral-700/30 rounded-2xl p-8 hover:border-neutral-600/50 transition-all duration-500 hover:transform hover:scale-105 flex flex-col h-full">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${config.hoverBg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${config.hoverBg} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}
+                    ></div>
 
                     <div className="relative z-10 flex flex-col flex-1">
                       <div className="w-20 h-20 mx-auto mb-6 relative flex-shrink-0 flex items-center justify-center">
-                        <div className={`absolute inset-0 bg-gradient-to-br ${config.glow} rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-br ${config.glow} rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                        ></div>
                         {config.renderIcon()}
                       </div>
                       <div className="flex-1 flex items-center justify-center">
@@ -648,13 +684,21 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl group-hover:blur-2xl transition-all duration-1000 opacity-75 group-hover:opacity-100"></div>
 
               <div className="relative bg-gradient-to-br from-neutral-900/90 via-neutral-800/80 to-neutral-900/90 border border-neutral-700/50 rounded-3xl p-12 md:p-20 shadow-2xl">
-                <div className={`absolute top-0 ${locale === "ar" ? "right-0" : "left-0"} w-20 h-20 border-t-2 ${locale === "ar" ? "border-r-2 rounded-tr-3xl" : "border-l-2 rounded-tl-3xl"} border-neutral-600/50`}></div>
-                <div className={`absolute bottom-0 ${locale === "ar" ? "left-0" : "right-0"} w-20 h-20 border-b-2 ${locale === "ar" ? "border-l-2 rounded-bl-3xl" : "border-r-2 rounded-br-3xl"} border-neutral-600/50`}></div>
+                <div
+                  className={`absolute top-0 ${locale === "ar" ? "right-0" : "left-0"} w-20 h-20 border-t-2 ${locale === "ar" ? "border-r-2 rounded-tr-3xl" : "border-l-2 rounded-tl-3xl"} border-neutral-600/50`}
+                ></div>
+                <div
+                  className={`absolute bottom-0 ${locale === "ar" ? "left-0" : "right-0"} w-20 h-20 border-b-2 ${locale === "ar" ? "border-l-2 rounded-bl-3xl" : "border-r-2 rounded-br-3xl"} border-neutral-600/50`}
+                ></div>
 
-                <div className={`absolute top-8 ${locale === "ar" ? "right-8" : "left-8"} text-neutral-700/30 text-8xl font-serif leading-none`}>
+                <div
+                  className={`absolute top-8 ${locale === "ar" ? "right-8" : "left-8"} text-neutral-700/30 text-8xl font-serif leading-none`}
+                >
                   &quot;
                 </div>
-                <div className={`absolute bottom-8 ${locale === "ar" ? "left-8" : "right-8"} text-neutral-700/30 text-8xl font-serif leading-none transform rotate-180`}>
+                <div
+                  className={`absolute bottom-8 ${locale === "ar" ? "left-8" : "right-8"} text-neutral-700/30 text-8xl font-serif leading-none transform rotate-180`}
+                >
                   &quot;
                 </div>
 
@@ -678,12 +722,19 @@ export default function AboutPage({ aboutApiData }: { aboutApiData: AboutRespons
                   </div>
 
                   <blockquote className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-neutral-100">
-                    <FadeInWords text={t("We design not just for today, but for a timeless future")}/>
+                    <FadeInWords
+                      text={
+                        aboutApiData.data.about.about_section.title ||
+                        aboutApiData.data.about.about_section.text
+                      }
+                    />
                   </blockquote>
 
                   <div className="flex items-center justify-center gap-3 pt-6">
                     <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-600"></div>
-                    <div className={`text-neutral-400 font-medium ${locale === "ar" ? "text-lg" : "text-sm"}`}>
+                    <div
+                      className={`text-neutral-400 font-medium ${locale === "ar" ? "text-lg" : "text-sm"}`}
+                    >
                       {t("Karim Mounir")}
                     </div>
                     <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-600"></div>

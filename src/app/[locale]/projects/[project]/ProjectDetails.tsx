@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import {
-  StepBack,
-  StepForward,
   X,
   ChevronLeft,
   ChevronRight,
@@ -16,12 +14,12 @@ import {
 import { useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { slideInOut } from "@/lib/utils";
-import Image from "next/image";
 import fallbackImg from "@/app/images/pd1.jpg";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ProjectResponse } from "@/types/singleProjectApiType";
+import Image from "next/image";
 
 export default function ProjectDetails({
   projectApiData,
@@ -159,9 +157,9 @@ export default function ProjectDetails({
         <Image
           src={heroBgImage}
           alt={project?.name || "Project"}
+          className="object-cover object-center"
           fill
           priority
-          className="object-cover object-center"
         />
 
         {/* Layered overlays for depth */}
@@ -323,11 +321,9 @@ export default function ProjectDetails({
                 className={`relative overflow-hidden rounded-2xl cursor-pointer group ${spanClass}`}
                 onClick={() => setSelectedImage(i)}
               >
-                <Image
+                <img
                   src={getImageUrl(img.path)}
                   alt={img.file_name || `Project image ${i}`}
-                  fill
-                  priority={i === 0}
                   className="object-cover transition-all duration-700 group-hover:scale-105"
                   onLoad={() => handleImageLoad(i)}
                 />
@@ -360,10 +356,9 @@ export default function ProjectDetails({
               className="relative w-full h-full flex items-center justify-center p-4 md:p-20"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
+              <img
                 src={getImageUrl(projectImages[selectedImage].path)}
                 alt={`Project image ${selectedImage + 1}`}
-                fill
                 className="object-contain"
               />
             </div>

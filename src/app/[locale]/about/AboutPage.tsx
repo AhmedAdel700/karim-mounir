@@ -466,7 +466,7 @@ export default function AboutPage({
                       aboutApiData.data.about.vision.alt_image ||
                       "Idea Illustration"
                     }
-                    className="opacity-70 object-cover"
+                    className="opacity-70 object-cover w-full h-full"
                   />
                 </div>
 
@@ -585,7 +585,7 @@ export default function AboutPage({
                       aboutApiData.data.about.approach_section.alt_image ||
                       "Approach Illustration"
                     }
-                    className="opacity-70 object-cover"
+                    className="opacity-70 object-cover w-full h-full"
   
                   />
                 </div>

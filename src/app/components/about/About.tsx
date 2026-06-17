@@ -234,10 +234,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                   />
 
                   <h3
-                    className="text-end !text-lg text-gray-200 font-semibold capitalize"
-                    
+                    className={`!text-lg text-gray-200 font-semibold capitalize ${locale === "ar" ? "text-start" : "text-end"}`}
                   >
-                    {locale === "ar" ? "المؤسس و المهندس المعمارى الرئيسي" : "Design Leader & Principal Architect"}
+                    {locale === "ar"
+                      ? "المؤسس و المهندس المعمارى الرئيسي"
+                      : "Design Leader & Principal Architect"}
                   </h3>
                 </div>
               </div>
@@ -363,8 +364,11 @@ export default function About({ about, about_structs }: { about: AboutType, abou
                 filter: ownerVisible ? "blur(0px)" : "blur(10px)",
                 transitionDelay: ownerVisible ? "3100ms" : "0ms",
               }}
-              dangerouslySetInnerHTML={{ __html: about.short_desc }}
-            />
+            >
+              {locale === "ar"
+                ? "المؤسس و المهندس المعمارى الرئيسي"
+                : "Design Leader & Principal Architect"}
+            </h3>
           </div>
         </div>
       )}

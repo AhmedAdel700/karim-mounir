@@ -2,7 +2,6 @@
 "use client";
 import React, { useEffect, useRef, useState, ReactNode, useMemo } from "react";
 
-import Image from "next/image";
 import { usePageReady } from "@/app/hooks/usePageReady";
 import { AboutResponse } from "@/types/aboutApiTypes";
 import { useLocale, useTranslations } from "next-intl";
@@ -342,8 +341,6 @@ export default function AboutPage({
   const t = useTranslations("home");
   const locale = useLocale();
 
-  console.log("AboutPage render with locale:", aboutApiData);
-
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black via-neutral-900 to-black text-neutral-100">
       <style jsx global>{`
@@ -463,14 +460,13 @@ export default function AboutPage({
               >
                 {/* === IMAGE === */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Image
+                  <img
                     src={aboutApiData.data.about.vision.image}
                     alt={
                       aboutApiData.data.about.vision.alt_image ||
                       "Idea Illustration"
                     }
                     className="opacity-70 object-cover"
-                    fill
                   />
                 </div>
 
@@ -583,14 +579,14 @@ export default function AboutPage({
               >
                 {/* === IMAGE === */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Image
+                  <img
                     src={aboutApiData.data.about.approach_section.image}
                     alt={
                       aboutApiData.data.about.approach_section.alt_image ||
                       "Approach Illustration"
                     }
                     className="opacity-70 object-cover"
-                    fill
+  
                   />
                 </div>
 

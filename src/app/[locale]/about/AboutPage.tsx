@@ -398,7 +398,13 @@ export default function AboutPage({
           </div>
 
           <div className="text-xl md:text-4xl text-neutral-400 font-light tracking-wide capitalize">
-            <FadeInWords text={aboutApiData.data.about.short_desc} />
+            <FadeInWords
+              text={
+                locale === "en"
+                  ? "Design Leader & Principal Architect"
+                  : "  المؤسس و المهندس المعمارى الرئيسي"
+              }
+            />
           </div>
         </div>
       </section>
@@ -438,7 +444,7 @@ export default function AboutPage({
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-3xl md:text-4xl font-extralight leading-relaxed text-neutral-200 text-center">
-            <FadeInWords text={aboutApiData.data.about.text} />
+            <FadeInWords text={aboutApiData.data.about.short_desc} />
           </div>
         </div>
       </section>

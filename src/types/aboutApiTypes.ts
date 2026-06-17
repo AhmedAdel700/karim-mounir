@@ -11,6 +11,7 @@ export interface About {
   title: string;
   title2: string | null;
   short_desc: string;
+  long_desc: string;
   text: string;
   image: string;
   alt_image: string | null;

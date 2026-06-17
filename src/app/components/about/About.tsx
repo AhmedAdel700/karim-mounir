@@ -235,8 +235,10 @@ export default function About({ about, about_structs }: { about: AboutType, abou
 
                   <h3
                     className="text-end !text-lg text-gray-200 font-semibold capitalize"
-                    dangerouslySetInnerHTML={{ __html: about.short_desc }}
-                  />
+                    
+                  >
+                    {locale === "ar" ? "المؤسس و المهندس المعمارى الرئيسي" : "Design Leader & Principal Architect"}
+                  </h3>
                 </div>
               </div>
             </div>
